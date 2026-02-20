@@ -1,9 +1,11 @@
-using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] Image TransitionPanel;
+
     void Start()
     {
         
@@ -13,6 +15,15 @@ public class MainMenu : MonoBehaviour
 
     public void PlayButtonPressed()
     {
-        SceneManager.LoadSceneAsync(1);
+        // Transition
+        TransitionPanel.gameObject.SetActive(true);
+        LeanTween.value(TransitionPanel.gameObject, (float val) =>
+        {
+            Color c = TransitionPanel.color;
+            c.a = val;
+            TransitionPanel.color = c;
+        }, 0f, 1f, .5f)
+        .setEase(LeanTweenType.easeInSine)
+        .setOnComplete(() => SceneManager.LoadSceneAsync(1)); // 1: TestLevel;
     }
 }
