@@ -8,7 +8,7 @@ public abstract class Tower : Entity
 
     // protected Behavior b;
 
-    protected Tower( /* Behaviour b */) : base(null)
+    protected Tower( /* Behaviour b */)
     { 
         //this.b = b;
     }

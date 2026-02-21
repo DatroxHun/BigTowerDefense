@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,9 +10,9 @@ public class MainMenu : MonoBehaviour
 {
     public static MainMenu? Instance { get; private set; } = null;
 
-    [SerializeField] private Image TransitionPanel;
-    [SerializeField] private RectTransform LevelSelectorHolder;
-    [SerializeField] private RectTransform ButtonHolder;
+    [SerializeField] private Image TransitionPanel = null!;
+    [SerializeField] private RectTransform LevelSelectorHolder = null!;
+    [SerializeField] private RectTransform ButtonHolder = null!;
 
     private void Awake()
     {
