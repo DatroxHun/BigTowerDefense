@@ -1,4 +1,6 @@
+using System;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -6,8 +8,8 @@ public class Road : MonoBehaviour
 {
     [SerializeField] private int resolution = 100;
 
-    [SerializeField] private SplineContainer splineContainer;
-    [SerializeField] private LineRenderer lineRenderer;
+    [field: SerializeField] public SplineContainer SplineContainer { get; private set; }
+    [field: SerializeField] public LineRenderer LineRenderer { get; private set; }
 
     public float Length { get; private set; }
     public Vector3[] Positions
@@ -15,26 +17,26 @@ public class Road : MonoBehaviour
         get
         {
             Vector3[] poses = new Vector3[0];
-            lineRenderer.GetPositions(poses);
+            LineRenderer.GetPositions(poses);
             return poses;
         }
     }
 
     void Start()
     {
-        lineRenderer.positionCount = resolution;
+        LineRenderer.positionCount = resolution;
         for (int i = 0; i < resolution; i++)
         {
             float t = i / (float)(resolution - 1);
-            lineRenderer.SetPosition(i, splineContainer.transform.position + (Vector3)splineContainer.Spline.EvaluatePosition(t));
+            LineRenderer.SetPosition(i, SplineContainer.transform.position + (Vector3)SplineContainer.Spline.EvaluatePosition(t));
         }
 
-        Length = splineContainer.Spline.GetLength();
+        Length = SplineContainer.Spline.GetLength();
     }
 
     public Vector2 EvaluatePosition(float t)
     {
-        float3 result = splineContainer.Spline.EvaluatePosition(t);
+        float3 result = SplineContainer.Spline.EvaluatePosition(t);
         return new Vector2(result.x, result.y);
     }
 }
