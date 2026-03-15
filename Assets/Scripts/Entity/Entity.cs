@@ -26,8 +26,25 @@ public class Shield : IShield
     ...
 }
 */
-public abstract class Entity // : MonoBehaviour ???
+
+// implement actual target recommendations later
+// (could be point, entitiy, collection of either)
+// -K
+public interface ITarget { }
+
+
+public abstract class Entity : MonoBehaviour
 {
+
+    // exposed in inspector
+    [SerializeField]
+    private int maxHitPoints;
+    public int MaxHitPoints
+    {
+        get { return maxHitPoints; }
+        private set { maxHitPoints = value; }
+    }
+
     public int HitPoints { get; private set; }
     protected List<Status> Status;
     protected List<DamageType> Vulnerabilities;
@@ -36,6 +53,8 @@ public abstract class Entity // : MonoBehaviour ???
     protected TimeSpan RestTime; // TimeSpan?
                                  // protected IShield? shield;
 
+    // all entitites have targets, even support class ones
+    public ITarget CurrentTarget { get; private set; }
 
     // practical shield representation
     public int MaxShield { get; private set; }

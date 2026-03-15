@@ -8,8 +8,14 @@ public abstract class Tower : Entity
 
     // protected Behavior b;
 
-    protected Tower( /* Behaviour b */)
-    { 
-        //this.b = b;
+    private void Start()
+    {
+        // nothing to put here yet
+    }
+
+    private void Update()
+    {
+        Target();
+        Action();
     }
 }
