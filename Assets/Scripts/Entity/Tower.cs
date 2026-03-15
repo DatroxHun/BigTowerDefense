@@ -1,7 +1,5 @@
 using UnityEngine;
 
-public class ComponentModule { }
-
 public abstract class Tower : Entity
 {
     protected ComponentModule module;
