@@ -7,6 +7,6 @@ public interface IPoolable
     GameObject Object { get; }
     IObjectPool<IPoolable> Pool { get; set; }
 
-    void SpawnAction(Vector2 position);
+    void SpawnAction(Vector3 position);
     void Return2Pool();
 }

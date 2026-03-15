@@ -26,7 +26,7 @@ public class Shield : IShield
     ...
 }
 */
-public abstract class Entity // : MonoBehaviour ???
+public abstract class Entity : MonoBehaviour
 {
     public int HitPoints { get; private set; }
     protected List<Status> Status;

@@ -1,20 +1,20 @@
 #nullable enable
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Road road;
-    [SerializeField] private SpawnObject spawnObject;
+    [SerializeField] private Road road = null!;
+    [SerializeField] private SpawnObject spawnObject = null!;
+
+    [SerializeField] private float spawnRadius = .1f;
 
     public int CurrentWave { get; private set; } = 0;
 
-    public event Action ToggleNextWave = null!;
+    public event System.Action ToggleNextWave = null!;
     public Dictionary<int, ObjectPool<IPoolable>> objectPools { get; set; } = new();
 
 
@@ -27,10 +27,13 @@ public class Spawner : MonoBehaviour
 
         ToggleNextWave += () =>
         {
+            // if wave is ongoing, do nothing
             if (waveCoroutine != null) return;
 
             waveCoroutine = StartCoroutine(ExecuteWave(CurrentWave++));
         };
+
+        ToggleNextWave.Invoke();
     }
 
     private void InitializePools()
@@ -41,7 +44,7 @@ public class Spawner : MonoBehaviour
         {
             foreach (Batch batch in wave.batches)
             {
-                if (!objectPools.ContainsKey(batch.enemy.GetHashCode()))
+                if (!objectPools.ContainsKey(batch.enemy.GetInstanceID()))
                 {
                     ObjectPool<IPoolable> newPool = null!;
 
@@ -49,10 +52,17 @@ public class Spawner : MonoBehaviour
                     (
                         createFunc: () =>
                         {
-                            GameObject obj = Instantiate(batch.enemy);
+                            GameObject obj = Instantiate(batch.enemy.gameObject);
                             obj.SetActive(false);
 
-                            IPoolable poolable = obj.GetComponent<IPoolable>();
+                            if (!obj.TryGetComponent<Enemy>(out Enemy enemy))
+                                throw new MissingComponentException("Spawner: Enemy component is missing from enemy.");
+
+                            enemy.SetRoad(road);
+
+                            if (!obj.TryGetComponent<IPoolable>(out IPoolable poolable))
+                                throw new MissingComponentException("Spawner: IPoolable component is missing from enemy.");
+                            
                             poolable.Pool = newPool;
 
                             return poolable;
@@ -78,7 +88,8 @@ public class Spawner : MonoBehaviour
             for (int i = 0; i < batch.amount; i++)
             {
                 IPoolable pooled = objectPools[batch.enemy.GetInstanceID()].Get();
-                pooled.SpawnAction(road.SplineContainer.gameObject.transform.position);
+                Vector3 offset = (Vector3)Random.insideUnitCircle * spawnRadius;
+                pooled.SpawnAction(road.SplineContainer.gameObject.transform.position + offset);
 
                 if (batch.burstDelay > 0f)
                     yield return new WaitForSeconds(batch.burstDelay);
