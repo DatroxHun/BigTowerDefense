@@ -1,14 +1,12 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
-
 
 public abstract class AttackArchetype { }
 public abstract class DefendArchetype { }
 public abstract class TargetArchetype { } // I can't think of examples right now so this may not be needed
-public delegate void AttackAction(ReadOnlySpan<Enemy> targets); // ReadOnlySpan works really well if all of our targetting is physics based
+public delegate void AttackAction(ReadOnlySpan<Enemy> targets,IStatProvider stats); // ReadOnlySpan works really well if all of our targetting is physics based
+public delegate void FinalAttack(ReadOnlySpan<Enemy> targets); // maybe rename later
 public class DefendAction { }
 public class TargetAction { }
 
@@ -17,14 +15,8 @@ public abstract class ComponentModule
     private ArchetypeComponent _archetypeComponent;
     private List<AdvancedTowerComponent> _advancedComponents;
     private List<BasicTowerComponent> _basicComponents;
-    private bool _isAttackDirty; 
+    private bool _isAttackDirty;
     private IStatProvider _statProvider;
-    private AttackAction _attackAction;
-    public AttackAction AttackAction
-    {
-        get { if (_isAttackDirty){ RecalculateAttack(); }; return _attackAction; }
-        // we can create a setter if needed private set { _attackAction = value; }
-    }
 
     public string GenerateDescription() // style later, or maybe instead of putting the string together here we should just return a list of string and let the UI handle the putting together
     {
@@ -42,7 +34,19 @@ public abstract class ComponentModule
         if (!_isAttackDirty) {  return; }
 
 
+        // Recreate _statProvider (Archetype then merge Advanceds then modify values based on Basics)
+        // Clear previous subscribtions and subscribe all AdvancedComponents to the Archetypes hooks
+        _archetypeComponent.ClearHooks();
+        foreach (var component in _advancedComponents)
+        {
+            component.SubscribeHooks(_archetypeComponent);
+        }
         _isAttackDirty = false;
     }
 
+    public FinalAttack GetAttack()
+    {
+        RecalculateAttack();
+        return (x => _archetypeComponent.AttackAction(x, _statProvider));
+    }
 }
