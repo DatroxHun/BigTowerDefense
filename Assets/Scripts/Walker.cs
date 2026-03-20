@@ -16,10 +16,10 @@ public class Walker : MonoBehaviour
     // Spline
     private Road? road = null;
     private float? distTraversed = null;
+    private float roadSidewaysCoeff = 0.0f;
 
     // Coord
     private Vector3? destination = null;
-
 
     void Awake()
     {
@@ -45,6 +45,7 @@ public class Walker : MonoBehaviour
                 walkAction = WalkOnRoad;
                 break;
             case WalkModes.Coordinate:
+                distTraversed = null;
                 walkAction = Walk2Coord;
                 break;
             case WalkModes.Stop:
@@ -75,7 +76,10 @@ public class Walker : MonoBehaviour
             
             // Get global coords of closest point and set distance traveled on spline accordingly
             destination = road.SplineContainer.transform.TransformPoint(closestLocalPos); // to global coord system            
-            distTraversed = road.T2Dist(t); // get distance traversed on spline         
+            distTraversed = road.T2Dist(t); // get distance traversed on spline
+
+            // Recalculate sideways-translation on road. Constant for an uninterrrupted road-traversing process
+            roadSidewaysCoeff = Random.Range(-.2f, .2f) * road.Width;
         }
 
         // Check if arrived
@@ -94,12 +98,12 @@ public class Walker : MonoBehaviour
         Walk2Coord(() =>
         {
             // Calculate next point on spline
-            distTraversed += 1f; // arbitrary step size
+            distTraversed += Random.Range(0.5f, 1.0f); // arbitrary step size
             float t = road.Dist2T(distTraversed.Value);
 
             // Add random offset
             Vector3 localUp = road.EvaluateUpVector(t);
-            destination = road.EvaluatePosition(t) + localUp * Random.Range(-.5f, .5f) * road.Width * .2f;
+            destination = road.EvaluatePosition(t) + localUp * roadSidewaysCoeff; // can add per-step perturbance here as a randomly generated multiplyer
 
             // Continue walking on road with same callback
             SetMode(WalkModes.Road, callback);
