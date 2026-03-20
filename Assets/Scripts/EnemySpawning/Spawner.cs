@@ -67,8 +67,25 @@ public class Spawner : MonoBehaviour
 
                             return poolable;
                         },
-                        actionOnGet: (obj) => obj.Object.SetActive(true),
-                        actionOnRelease: (obj) => obj.Object.SetActive(false),
+
+                        actionOnGet: (obj) =>
+                        {
+                            obj.Object.SetActive(true);
+
+                            if (!obj.Object.TryGetComponent<Enemy>(out Enemy enemy))
+                                throw new MissingComponentException("Spawner: Enemy component is missing from enemy.");
+                            else
+                                EnemyManager.instance.AddEnemy(enemy);
+                        },
+
+                        actionOnRelease: (obj) =>
+                        {
+                            obj.Object.SetActive(false);
+                            if (!obj.Object.TryGetComponent<Enemy>(out Enemy enemy))
+                                throw new MissingComponentException("Spawner: Enemy component is missing from enemy.");
+                            else
+                                EnemyManager.instance.RemoveEnemy(enemy);
+                        },
                         actionOnDestroy: (obj) => Destroy(obj.Object),
                         collectionCheck: true,
                         defaultCapacity: 20,

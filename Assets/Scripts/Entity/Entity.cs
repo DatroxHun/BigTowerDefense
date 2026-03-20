@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Status { }
 
@@ -30,11 +32,38 @@ public class Shield : IShield
 // implement actual target recommendations later
 // (could be point, entitiy, collection of either)
 // -K
-public interface ITarget { }
-
-
-public abstract class Entity : MonoBehaviour
+public interface ITarget
 {
+    List<Vector3> GetCoordinates();
+}
+
+public class  PointTarget : ITarget
+{
+    private readonly Vector3 _point;
+    public PointTarget(Vector3 point)
+    {
+        _point = point;
+    }
+    public List<Vector3> GetCoordinates() => new List<Vector3> { _point };
+}
+
+public class MultiTarget : ITarget
+{
+    private readonly List<ITarget> _targets;
+    public MultiTarget(List<ITarget> targets)
+    {
+        _targets = targets;
+    }
+    public List<Vector3> GetCoordinates() => _targets
+        .Select(t => t.GetCoordinates())
+        .SelectMany(x => x)
+        .ToList();
+}
+
+
+public abstract class Entity : MonoBehaviour, ITarget
+{
+
 
     // exposed in inspector
     [SerializeField]
@@ -60,6 +89,7 @@ public abstract class Entity : MonoBehaviour
     public int MaxShield { get; private set; }
     public int CurrentShield { get; private set; }
     public float ShieldRegenerationSpeed { get; private set; } // what type?
+    public List<Vector3> GetCoordinates() => new List<Vector3> { transform.position };
 
 
 
