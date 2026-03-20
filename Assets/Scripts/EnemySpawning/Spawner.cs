@@ -53,6 +53,7 @@ public class Spawner : MonoBehaviour
                         createFunc: () =>
                         {
                             GameObject obj = Instantiate(batch.enemy.gameObject);
+                            obj.transform.parent = EnemyManager.instance.gameObject.transform;
                             obj.SetActive(false);
 
                             if (!obj.TryGetComponent<Enemy>(out Enemy enemy))

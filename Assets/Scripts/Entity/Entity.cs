@@ -75,12 +75,27 @@ public abstract class Entity : MonoBehaviour, ITarget
     }
 
     public int HitPoints { get; private set; }
-    protected List<Status> Status;
-    protected List<DamageType> Vulnerabilities;
-    protected List<DamageType> Resistances;
+    public List<Status> Status { get; private set; }
+    public List<DamageType> Vulnerabilities { get; private set; }
+    public List<DamageType> Resistances { get; private set; }
     // Dictionary: dmgtype-multiplier
-    protected TimeSpan RestTime; // TimeSpan?
-                                 // protected IShield? shield;
+
+
+    /// <summary>
+    /// Time between (re)targeting attempts
+    /// </summary>
+    [SerializeField]
+    protected float retargetDelaySeconds = 10.0f;
+
+    /// <summary>
+    /// Time it takes to choose a target
+    /// </summary>
+    [SerializeField]
+    protected float targetTimeSeconds = 2.0f;
+
+
+    [SerializeField]
+    protected float actiondelaySeconds = 2.0f;
 
     // all entitites have targets, even support class ones
     public ITarget CurrentTarget { get; private set; }
