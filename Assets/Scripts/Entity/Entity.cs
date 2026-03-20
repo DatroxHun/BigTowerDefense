@@ -98,7 +98,7 @@ public abstract class Entity : MonoBehaviour, ITarget
     protected float actiondelaySeconds = 2.0f;
 
     // all entitites have targets, even support class ones
-    public ITarget CurrentTarget { get; private set; }
+    public ITarget CurrentTarget { get; protected set; }
 
     // practical shield representation
     public int MaxShield { get; private set; }

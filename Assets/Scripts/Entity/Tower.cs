@@ -14,6 +14,9 @@ public abstract class Tower : Entity
     protected bool idle = true;
     private Coroutine targeting = null!;
 
+    [SerializeField]
+    protected float range;
+
 
     // protected Behavior b;
 
