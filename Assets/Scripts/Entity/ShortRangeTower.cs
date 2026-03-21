@@ -17,9 +17,11 @@ public class ShortRangeTower : Tower
     {
         List<Enemy> enemies = EnemyManager.instance.Enemies;
 
+        
+
         List<ITarget> targets = enemies
             .Where(t =>
-                Vector3.Distance(t.transform.position, this.transform.position) <= this.range)
+                rangeCollider.OverlapPoint(t.transform.position))
                 .Select(e => e as ITarget).ToList();
 
         this.CurrentTarget = new MultiTarget(targets);

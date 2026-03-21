@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7836650312847440324}
   - component: {fileID: 4791538688249010430}
   - component: {fileID: 8701009199588949086}
+  - component: {fileID: 3054112977039775549}
   m_Layer: 0
   m_Name: BaseTower
   m_TagString: Untagged
@@ -152,3 +153,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseTower
   maxHitPoints: 1000
+  retargetDelaySeconds: 10
+  targetTimeSeconds: 2
+  actiondelaySeconds: 2
+  range: 0
+  range_collider: {fileID: 3054112977039775549}
+--- !u!58 &3054112977039775549
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6075348386924849759}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 3
