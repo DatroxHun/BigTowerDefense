@@ -28,10 +28,13 @@ public class ShortRangeTower : Tower
 
         // for testing; delete later
         // - K
+        Debug.Log($"[TESLA COIL] : ELIGABLE TARGETS: {targets.Count}");
+        /*
         foreach (var target in targets)
         {
             Enemy e = target as Enemy;
             Debug.Log(e.transform.position);
         }
+         */
     }
 }

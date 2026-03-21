@@ -7,7 +7,7 @@ public class EnemyManager : MonoBehaviour
 
     public void Awake()
     {
-        if (instance is null)
+        if (instance == null)
         {
             instance = this;
             enemies = new List<Enemy>();
