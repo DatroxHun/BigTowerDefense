@@ -1,7 +1,10 @@
 #nullable enable
 
 using System;
+using System.Drawing;
+using NUnit.Framework.Internal;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -24,6 +27,7 @@ public class Walker : MonoBehaviour
     // Coord
     private Vector3? destination = null;
 
+
     void Awake()
     {
         SetMode(WalkModes.Stop);
@@ -31,8 +35,6 @@ public class Walker : MonoBehaviour
 
     void Start()
     {
-        Agent.enabled = true;
-
         Agent.speed = Speed;
         Agent.updateRotation = false;
         Agent.updateUpAxis = false;
@@ -40,27 +42,69 @@ public class Walker : MonoBehaviour
 
     void Update()
     {
-        // walkAction.Invoke(globalCallback);
+        walkAction.Invoke(globalCallback);
 
+        // DEBUG TOOL!!!
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             // Convert mouse position to world space
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             mousePos.z = 0; // Ensure we stay on the 2D plane
 
-            Agent.SetDestination(mousePos);
+            WalkOnPath(mousePos, 1f, () => Debug.Log("Arrived!"));
         }
-
-
     }
 
+    #region Public Methods
 
-    public void SetRoad(Road road) => this.road = road;
-    public void SetDestination(Vector3 dest) => destination = dest;
+    public void WalkOnRoad(Road? newRoad = null, Action? globalCallback = null)
+    {
+        SetRoad(newRoad);
+        SetMode(WalkModes.Road, globalCallback);
+    }
 
-    public void SetMode(WalkModes mode, Action? globalCallback = null)
+    public void Walk2Coord(Vector3 dest, Action? globalCallback = null)
+    {
+        SetDestination(dest);
+        SetMode(WalkModes.Coordinate, globalCallback);
+    }
+
+    public void WalkOnPath(Vector3 dest, float radius, Action? globalCallback = null)
+    {
+        SetMode(WalkModes.Pathfind, globalCallback);
+        SetPathEndPoint(dest, radius);    
+    }
+
+    public void Stop(Action? globalCallback = null)
+    {
+        SetMode(WalkModes.Stop, globalCallback);
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void SetRoad(Road? newRoad)
+    {
+        this.road = newRoad ?? this.road;
+        distTraversed = null;
+    }
+
+    private void SetDestination(Vector3 dest) => destination = dest;
+
+    private void SetPathEndPoint(Vector3 dest, float radius)
+    {
+        Agent.avoidancePriority = Random.Range(0, 99);
+
+        float angle = Random.Range(0f, 2f * Mathf.PI);
+        Vector3 endPoint = dest + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius;
+        Agent.SetDestination(endPoint);
+    }
+
+    private void SetMode(WalkModes mode, Action? globalCallback = null)
     {
         this.globalCallback = globalCallback;
+        Agent.enabled = false;
 
         switch (mode)
         {
@@ -71,8 +115,12 @@ public class Walker : MonoBehaviour
                 distTraversed = null;
                 walkAction = Walk2Coord;
                 break;
+            case WalkModes.Pathfind:
+                Agent.enabled = true;
+                walkAction = WalkOnPath;
+                break;
             case WalkModes.Stop:
-                walkAction = Stop;
+                walkAction = StopAction;
                 break;
             default:
                 walkAction = WalkOnRoad;
@@ -102,18 +150,17 @@ public class Walker : MonoBehaviour
             distTraversed = road.T2Dist(t); // get distance traversed on spline
 
             // Recalculate sideways-translation on road. Constant for an uninterrrupted road-traversing process
-            roadSidewaysCoeff = Random.Range(-.2f, .2f) * road.Width;
+            roadSidewaysCoeff = Random.Range(-.5f, .5f) * road.Width * .4f;
         }
 
         // Check if arrived
         float currentT = road.Dist2T(distTraversed.Value);
-        if (currentT >= 1f - 1e-3f) // End of Spline
+        if (currentT >= 1f - 1e-4f) // End of Spline
         {
             // Set distTraversed to null, showing that no longer "attached" to spline
             distTraversed = null;          
-            SetMode(WalkModes.Stop);
+            SetMode(WalkModes.Stop, callback);
 
-            callback?.Invoke();
             return;
         }
 
@@ -152,9 +199,8 @@ public class Walker : MonoBehaviour
 
             // Set destination to null, showing that no longer towards coord
             destination = null;
-            SetMode(WalkModes.Stop);
-
-            callback?.Invoke();
+            SetMode(WalkModes.Stop, callback);
+         
             return;
         }
 
@@ -162,17 +208,38 @@ public class Walker : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, target, step);
     }
 
-    private void Stop(Action? callback = null)
+    private void WalkOnPath(Action? callback = null)
+    {
+        // Check if arrived
+        if (!Agent.pathPending)
+        {
+            if (Agent.remainingDistance <= Agent.stoppingDistance)
+            {
+                if (!Agent.hasPath || Agent.velocity.sqrMagnitude < 1e-2f)
+                {
+                    Agent.enabled = false;
+                    SetMode(WalkModes.Stop, callback);
+                    
+                    return;
+                }
+            }
+        }
+    }
+
+    private void StopAction(Action? callback = null)
     {
         // clear globalCallback so it only runs once
         globalCallback = null;
         callback?.Invoke();
     }
+
+    #endregion
 }
 
 public enum WalkModes
 {
     Road,
     Coordinate,
+    Pathfind,
     Stop
 }
