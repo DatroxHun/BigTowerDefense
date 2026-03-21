@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7036385594375159615}
   - component: {fileID: 7836650312847440324}
   - component: {fileID: 4791538688249010430}
-  - component: {fileID: 1479861918098904763}
+  - component: {fileID: 2559041847625762935}
   - component: {fileID: 3054112977039775549}
   m_Layer: 0
   m_Name: GunnerTower
@@ -140,7 +140,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2, y: 1.2}
   m_EdgeRadius: 0
---- !u!114 &1479861918098904763
+--- !u!114 &2559041847625762935
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,14 +149,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 6075348386924849759}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7491f103b6adcac46b0d5c69f2c1e310, type: 3}
+  m_Script: {fileID: 11500000, guid: ec650088295263641928095895030ae9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShortRangeTower
+  m_EditorClassIdentifier: Assembly-CSharp::LongRangeTower
   maxHitPoints: 0
   retargetDelaySeconds: 10
   targetTimeSeconds: 2
   actiondelaySeconds: 2
   rangeCollider: {fileID: 3054112977039775549}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!58 &3054112977039775549
 CircleCollider2D:
   m_ObjectHideFlags: 0
