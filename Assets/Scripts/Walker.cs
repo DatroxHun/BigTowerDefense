@@ -3,12 +3,15 @@
 using System;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 using Random = UnityEngine.Random;
 
 public class Walker : MonoBehaviour
 {
-    [SerializeField] public float speed;
+    [field: SerializeField] public float Speed { get; private set; }
+    [field: SerializeField] public NavMeshAgent Agent { get; private set; } = null!;
 
     private Action<Action?> walkAction = null!;
     private Action? globalCallback = null;
@@ -26,9 +29,29 @@ public class Walker : MonoBehaviour
         SetMode(WalkModes.Stop);
     }
 
+    void Start()
+    {
+        Agent.enabled = true;
+
+        Agent.speed = Speed;
+        Agent.updateRotation = false;
+        Agent.updateUpAxis = false;
+    }
+
     void Update()
     {
-        walkAction.Invoke(globalCallback);
+        // walkAction.Invoke(globalCallback);
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            // Convert mouse position to world space
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            mousePos.z = 0; // Ensure we stay on the 2D plane
+
+            Agent.SetDestination(mousePos);
+        }
+
+
     }
 
 
@@ -119,7 +142,7 @@ public class Walker : MonoBehaviour
             return;
         }
 
-        float step = speed * Time.deltaTime;
+        float step = Speed * Time.deltaTime;
         Vector3 target = destination.Value;
 
         // Check if arrived
