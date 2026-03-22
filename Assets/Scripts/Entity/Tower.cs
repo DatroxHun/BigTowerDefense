@@ -15,8 +15,7 @@ public abstract class Tower : Entity
     private Coroutine targeting = null!;
 
     [SerializeField]
-    protected float range;
-
+    protected CircleCollider2D rangeCollider;
 
     // protected Behavior b;
 
