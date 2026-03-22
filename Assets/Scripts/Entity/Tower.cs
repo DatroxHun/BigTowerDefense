@@ -1,9 +1,10 @@
-using UnityEngine;
-using UnityEngine.Splines.ExtrusionShapes;
-using UnityEngine.Pool;
-using System.Collections;
 using NUnit.Framework;
+using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Pool;
+using UnityEngine.Splines.ExtrusionShapes;
+using static UnityEngine.GraphicsBuffer;
 
 public class ComponentModule { }
 
@@ -13,16 +14,17 @@ public abstract class Tower : Entity
     protected bool hiding = false;
     protected bool idle = true;
     private Coroutine targeting = null!;
+    private Coroutine acting = null!;
 
     [SerializeField]
     protected CircleCollider2D rangeCollider;
 
     // protected Behavior b;
 
-    private void Start()
+    protected void Start()
     {
         targeting = StartCoroutine(Targeting());
-
+        acting = StartCoroutine(Acting());
 
     }
 
@@ -50,11 +52,13 @@ public abstract class Tower : Entity
     protected void OnDestruction()
     {
         StopCoroutine(targeting);
+        StopCoroutine(acting);
     }
 
     protected void OnRepair()
     {
         targeting = StartCoroutine(Targeting());
+        acting = StartCoroutine(Acting());
     }
 
     private IEnumerator Targeting()
@@ -65,14 +69,36 @@ public abstract class Tower : Entity
             {
                 idle = false;
                 yield return new WaitForSeconds(targetTimeSeconds);
+                //Debug.Log($"[TOWER] : TARGETIMG");
                 Target();
                 idle = true;
             } 
 
             yield return new WaitForSeconds(retargetDelaySeconds);
             yield return new WaitUntil(() => !hiding);
-
         }
+    }
 
+    private IEnumerator Acting()
+    {
+        // idea: do idle status checking with WaitUntil instead of this
+        // because it could case some weird patterns in time
+        // -K
+        while (true)
+        {
+            if (idle)
+            {
+                idle = false;
+
+                // még nincs ilyen
+                //yield return new WaitForSeconds(actionTimeSeconds);
+                //Debug.Log($"[TOWER] : ACTING");
+                Action();
+                idle = true;
+            }
+
+            yield return new WaitForSeconds(actiondelaySeconds);
+            yield return new WaitUntil(() => !hiding);
+        }
     }
 }
