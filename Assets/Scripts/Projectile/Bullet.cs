@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Pool;
 
-public class Bullet : MonoBehaviour, IPoolable
+public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float speed = 1.0f;
@@ -22,24 +22,13 @@ public class Bullet : MonoBehaviour, IPoolable
 
     public GameObject Object => throw new NotImplementedException();
 
-    public IObjectPool<IPoolable> Pool { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public void Launch(Vector3 target, Action<Enemy> impactEffect)
+    private ObjectPool<Bullet> pool;
+    public void Launch(Vector3 target, Action<Enemy> impactEffect, ObjectPool<Bullet> pool)
     {
+        this.pool = pool;
         this.target = target;
         this.impactEffect = impactEffect;
-    }
-
-    public void SpawnAction(Vector3 position)
-    {
-        this.transform.position = position;
         isFlying = true;
-    }
-
-    public void Return2Pool()
-    {
-        isFlying = false;
-        Pool.Release(this);
     }
 
     void Update()
