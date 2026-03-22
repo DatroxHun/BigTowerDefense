@@ -62,9 +62,7 @@ public class LongRangeTower : Tower
 
     protected override void Target()
     {
-        List<Enemy> enemies = EnemyManager.instance.Enemies;
-
-        
+        List<Enemy> enemies = EnemyManager.instance.Enemies; 
 
         List<ITarget> targets = enemies
             .Where(t =>
