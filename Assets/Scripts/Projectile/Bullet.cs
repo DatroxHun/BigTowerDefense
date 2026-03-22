@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Pool;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour, IPoolable
 {
     [SerializeField]
-    private float speed = 10.0f;
+    private float speed = 1.0f;
     [SerializeField]
     private LayerMask enemyLayer;
     [SerializeField]
@@ -19,18 +20,27 @@ public class Bullet : MonoBehaviour
 
     private bool isFlying = false;
 
+    public GameObject Object => throw new NotImplementedException();
+
+    public IObjectPool<IPoolable> Pool { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     public void Launch(Vector3 target, Action<Enemy> impactEffect)
     {
         this.target = target;
         this.impactEffect = impactEffect;
+    }
+
+    public void SpawnAction(Vector3 position)
+    {
+        this.transform.position = position;
         isFlying = true;
     }
 
-    void Start()
+    public void Return2Pool()
     {
-
+        isFlying = false;
+        Pool.Release(this);
     }
-
 
     void Update()
     {
@@ -62,4 +72,13 @@ public class Bullet : MonoBehaviour
             .ForEach(enemy => impactEffect?.Invoke(enemy));
 
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("GameBounds"))
+        {
+            isFlying = false;
+        }
+    }
+
 }
