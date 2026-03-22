@@ -54,6 +54,13 @@ public class MultiTarget : ITarget
     {
         _targets = targets;
     }
+    public MultiTarget(List<Entity> entities)
+    {
+        _targets = entities
+            .Select(e => 
+                new PointTarget(e.transform.position) as ITarget)
+            .ToList();
+    }
     public List<Vector3> GetCoordinates() => _targets
         .Select(t => t.GetCoordinates())
         .SelectMany(x => x)
@@ -61,7 +68,7 @@ public class MultiTarget : ITarget
 }
 
 
-public abstract class Entity : MonoBehaviour, ITarget
+public abstract class Entity : MonoBehaviour
 {
 
 

@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
 
     private bool isFlying = false;
 
-    public GameObject Object => throw new NotImplementedException();
+    public GameObject Object => gameObject;
 
     private ObjectPool<Bullet> pool;
     public void Launch(Vector3 target, Action<Enemy> impactEffect, ObjectPool<Bullet> pool)
@@ -38,10 +38,19 @@ public class Bullet : MonoBehaviour
 
         this.transform.position =
             Vector3.MoveTowards(this.transform.position, target, speed * Time.deltaTime);
+        
+        // idea: allow bullet to go further, not just "hit the ground" at the target
 
-
-        if (Vector3.Distance(transform.position, target) < 0.1f || CheckObstacle())
+        if (Vector3.Distance(transform.position, target) < 0.001f)
+        {
+            Debug.Log($"[BULLET] : HIT TARGET");
             Arrive();
+        }
+        else if (CheckObstacle())
+        {
+            Debug.Log($"[BULLET] : HIT OBSTACLE");
+            Arrive();
+        }
 
     }
     private bool CheckObstacle() => 
@@ -59,7 +68,7 @@ public class Bullet : MonoBehaviour
                 impactCollider.OverlapPoint(t.transform.position))
             .ToList()
             .ForEach(enemy => impactEffect?.Invoke(enemy));
-
+        pool.Release(this);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -67,6 +76,8 @@ public class Bullet : MonoBehaviour
         if (collision.CompareTag("GameBounds"))
         {
             isFlying = false;
+            Debug.Log($"[BULLET] : ESCAPED");
+            pool.Release(this);
         }
     }
 

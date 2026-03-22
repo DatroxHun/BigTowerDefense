@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
+
 public class LongRangeTower : Tower
 {
     [SerializeField]
@@ -41,6 +42,9 @@ public class LongRangeTower : Tower
             defaultCapacity: 20,
             maxSize: 100
         );
+        Debug.Log($"[GUNNER] : SETUP DONE");
+
+        base.Start();
     }
 
     private void Shoot(Vector3 targetPoint, Action<Enemy> impactEffect)
@@ -57,31 +61,41 @@ public class LongRangeTower : Tower
 
     protected override void Action()
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"[GUNNER] : TRYING TO SHOOT");
+        if (CurrentTarget == null || !CurrentTarget.GetCoordinates().Any())
+            return;
+
+        Debug.Log($"[GUNNER] : SHOOTING");
+
+        Vector3 randomTarget = CurrentTarget
+            .GetCoordinates()
+            .OrderBy(x => UnityEngine.Random.value)
+            .First();
+
+        Shoot(randomTarget,
+            (enemy) =>
+            {
+                enemy.Return2Pool();
+            }
+            );
     }
 
     protected override void Target()
     {
         List<Enemy> enemies = EnemyManager.instance.Enemies; 
 
-        List<ITarget> targets = enemies
+        List<Entity> targets = enemies
             .Where(t =>
-                rangeCollider.OverlapPoint(t.transform.position) && 
+                rangeCollider.OverlapPoint(t.transform.position) &&
                 IsDetectable(t.transform.position))
-                .Select(e => e as ITarget).ToList();
+            .Select(e => e as Entity)
+            .ToList();
 
         this.CurrentTarget = new MultiTarget(targets);
 
         // for testing; delete later
         // - K
         Debug.Log($"[GUNNER] : ELIGABLE TARGETS: {targets.Count}");
-        /*
-        foreach (var target in targets)
-        {
-            Enemy e = target as Enemy;
-            Debug.Log(e.transform.position);
-        }
-         */
     }
 
     /// <summary>

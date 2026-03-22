@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 
 // rename to Tesla Coil tower or something similar
@@ -10,7 +11,7 @@ public class ShortRangeTower : Tower
 
     protected override void Action()
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"[TESLA COIL] : NO ELECTRICITY");
     }
 
     protected override void Target()
@@ -19,10 +20,11 @@ public class ShortRangeTower : Tower
 
         
 
-        List<ITarget> targets = enemies
+        List<Entity> targets = enemies
             .Where(t =>
                 rangeCollider.OverlapPoint(t.transform.position))
-                .Select(e => e as ITarget).ToList();
+            .Select(e => e as Entity)
+            .ToList();
 
         this.CurrentTarget = new MultiTarget(targets);
 
