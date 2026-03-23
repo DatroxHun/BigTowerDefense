@@ -63,6 +63,10 @@ public class Bullet : MonoBehaviour
         
         List<Enemy> enemies = EnemyManager.instance.Enemies;
 
+
+        // if enemies have a collider, then here we need to
+        // check if the impactC and the enemyC overlap !
+        // -K
         enemies
             .Where(t =>
                 impactCollider.OverlapPoint(t.transform.position))
