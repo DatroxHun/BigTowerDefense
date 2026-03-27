@@ -16,6 +16,22 @@ public abstract class Tower : Entity
     private Coroutine targeting = null!;
     private Coroutine acting = null!;
 
+    /// <summary>
+    /// Time between (re)targeting attempts
+    /// </summary>
+    [SerializeField]
+    protected float retargetDelaySeconds = 10.0f;
+
+    /// <summary>
+    /// Time it takes to choose a target
+    /// </summary>
+    [SerializeField]
+    protected float targetTimeSeconds = 2.0f;
+
+
+    [SerializeField]
+    protected float actiondelaySeconds = 2.0f;
+
     [SerializeField]
     protected CircleCollider2D rangeCollider;
 
@@ -100,5 +116,10 @@ public abstract class Tower : Entity
             yield return new WaitForSeconds(actiondelaySeconds);
             yield return new WaitUntil(() => !hiding);
         }
+    }
+
+    protected override void JustDied()
+    {
+        
     }
 }

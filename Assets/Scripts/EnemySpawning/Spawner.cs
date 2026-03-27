@@ -15,7 +15,7 @@ public class Spawner : MonoBehaviour
     public int CurrentWave { get; private set; } = 0;
 
     public event System.Action ToggleNextWave = null!;
-    public Dictionary<int, ObjectPool<IPoolable>> objectPools { get; set; } = new();
+    public Dictionary<int, ObjectPool<IPoolable>> ObjectPools { get; private set; } = new();
 
 
     private Coroutine? waveCoroutine = null;
@@ -38,13 +38,13 @@ public class Spawner : MonoBehaviour
 
     private void InitializePools()
     {
-        objectPools.Clear();
+        ObjectPools.Clear();
 
         foreach (Wave wave in spawnObject.waves)
         {
             foreach (Batch batch in wave.batches)
             {
-                if (!objectPools.ContainsKey(batch.enemy.GetInstanceID()))
+                if (!ObjectPools.ContainsKey(batch.enemy.GetInstanceID()))
                 {
                     ObjectPool<IPoolable> newPool = null!;
 
@@ -93,7 +93,7 @@ public class Spawner : MonoBehaviour
                         maxSize: 100
                     );
 
-                    objectPools.Add(batch.enemy.GetInstanceID(), newPool);
+                    ObjectPools.Add(batch.enemy.GetInstanceID(), newPool);
                 }
             }
         }
@@ -105,9 +105,9 @@ public class Spawner : MonoBehaviour
         {
             for (int i = 0; i < batch.amount; i++)
             {
-                IPoolable pooled = objectPools[batch.enemy.GetInstanceID()].Get();
+                IPoolable pooled = ObjectPools[batch.enemy.GetInstanceID()].Get();
                 Vector3 offset = (Vector3)Random.insideUnitCircle * spawnRadius;
-                pooled.SpawnAction(road.SplineContainer.gameObject.transform.position + offset);
+                pooled.SpawnAction(road.SplineContainer.gameObject.transform.position + offset + (Vector3)Random.insideUnitCircle * 10f);
 
                 if (batch.burstDelay > 0f)
                     yield return new WaitForSeconds(batch.burstDelay);

@@ -156,8 +156,7 @@ MonoBehaviour:
   retargetDelaySeconds: 10
   targetTimeSeconds: 2
   actiondelaySeconds: 2
-  range: 0
-  range_collider: {fileID: 3054112977039775549}
+  rangeCollider: {fileID: 3054112977039775549}
 --- !u!58 &3054112977039775549
 CircleCollider2D:
   m_ObjectHideFlags: 0

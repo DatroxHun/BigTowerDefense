@@ -1,13 +1,9 @@
 #nullable enable
 
 using System;
-using System.Drawing;
-using NUnit.Framework.Internal;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 using Random = UnityEngine.Random;
 
@@ -16,6 +12,7 @@ public class Walker : MonoBehaviour
     [field: SerializeField] public float Speed { get; private set; }
     [field: SerializeField] public NavMeshAgent Agent { get; private set; } = null!;
 
+    public WalkModes Mode { get; private set; }
     private Action<Action?> walkAction = null!;
     private Action? globalCallback = null;
 
@@ -36,6 +33,9 @@ public class Walker : MonoBehaviour
     void Start()
     {
         Agent.speed = Speed;
+        Agent.avoidancePriority = Random.Range(0, 99);
+        Agent.stoppingDistance = 0f;
+
         Agent.updateRotation = false;
         Agent.updateUpAxis = false;
     }
@@ -43,16 +43,17 @@ public class Walker : MonoBehaviour
     void Update()
     {
         walkAction.Invoke(globalCallback);
+        Debug.Log(Mode);
 
-        // DEBUG TOOL!!!
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            // Convert mouse position to world space
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            mousePos.z = 0; // Ensure we stay on the 2D plane
+        //// DEBUG TOOL!!!
+        //if (Mouse.current.leftButton.wasPressedThisFrame)
+        //{
+        //    // Convert mouse position to world space
+        //    Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        //    mousePos.z = 0; // Ensure we stay on the 2D plane
 
-            WalkOnPath(mousePos, 1f, () => Debug.Log("Arrived!"));
-        }
+        //    WalkOnPath(mousePos, 1f, () => Debug.Log("Arrived!"));
+        //}
     }
 
     #region Public Methods
@@ -94,8 +95,6 @@ public class Walker : MonoBehaviour
 
     private void SetPathEndPoint(Vector3 dest, float radius)
     {
-        Agent.avoidancePriority = Random.Range(0, 99);
-
         float angle = Random.Range(0f, 2f * Mathf.PI);
         Vector3 endPoint = dest + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius;
         Agent.SetDestination(endPoint);
@@ -103,8 +102,9 @@ public class Walker : MonoBehaviour
 
     private void SetMode(WalkModes mode, Action? globalCallback = null)
     {
+        Mode = mode;
         this.globalCallback = globalCallback;
-        Agent.enabled = false;
+        Agent.enabled = false;        
 
         switch (mode)
         {
@@ -151,6 +151,17 @@ public class Walker : MonoBehaviour
 
             // Recalculate sideways-translation on road. Constant for an uninterrrupted road-traversing process
             roadSidewaysCoeff = Random.Range(-.5f, .5f) * road.Width * .4f;
+
+            // If too far from road, find path to it first
+            if (Vector3.Distance(transform.position, destination.Value) > road.Width / 2f)
+            {
+                WalkOnPath(destination.Value, 0f, () =>
+                {
+                    WalkOnRoad(road, callback);
+                });
+
+                return;
+            }
         }
 
         // Check if arrived
@@ -158,14 +169,16 @@ public class Walker : MonoBehaviour
         if (currentT >= 1f - 1e-4f) // End of Spline
         {
             // Set distTraversed to null, showing that no longer "attached" to spline
-            distTraversed = null;          
-            SetMode(WalkModes.Stop, callback);
+            distTraversed = null;
+            SetMode(WalkModes.Stop);
+            callback?.Invoke();
 
             return;
         }
 
         // Walk to current destination, then update point
         Walk2Coord(() =>
+        //WalkOnPath(destination ?? Vector3.zero, 0f, () =>
         {
             // Calculate next point on spline
             distTraversed += Random.Range(0.5f, 1.0f); // arbitrary step size
@@ -199,7 +212,8 @@ public class Walker : MonoBehaviour
 
             // Set destination to null, showing that no longer towards coord
             destination = null;
-            SetMode(WalkModes.Stop, callback);
+            SetMode(WalkModes.Stop);
+            callback?.Invoke();
          
             return;
         }
@@ -217,8 +231,10 @@ public class Walker : MonoBehaviour
             {
                 if (!Agent.hasPath || Agent.velocity.sqrMagnitude < 1e-2f)
                 {
-                    Agent.enabled = false;
-                    SetMode(WalkModes.Stop, callback);
+                    Agent.enabled = false;                    
+
+                    SetMode(WalkModes.Stop);
+                    callback?.Invoke();
                     
                     return;
                 }

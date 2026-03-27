@@ -1,10 +1,9 @@
+#nullable enable
+
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Status { }
 
@@ -29,83 +28,21 @@ public class Shield : IShield
 }
 */
 
-// implement actual target recommendations later
-// (could be point, entitiy, collection of either)
-// -K
-public interface ITarget
-{
-    List<Vector3> GetCoordinates();
-}
-
-public class  PointTarget : ITarget
-{
-    private readonly Vector3 _point;
-    public PointTarget(Vector3 point)
-    {
-        _point = point;
-    }
-    public List<Vector3> GetCoordinates() => new List<Vector3> { _point };
-}
-
-public class MultiTarget : ITarget
-{
-    private readonly List<ITarget> _targets;
-    public MultiTarget(List<ITarget> targets)
-    {
-        _targets = targets;
-    }
-    public MultiTarget(List<Entity> entities)
-    {
-        _targets = entities
-            .Select(e => 
-                new PointTarget(e.transform.position) as ITarget)
-            .ToList();
-    }
-    public List<Vector3> GetCoordinates() => _targets
-        .Select(t => t.GetCoordinates())
-        .SelectMany(x => x)
-        .ToList();
-}
-
-
 public abstract class Entity : MonoBehaviour
 {
-
-
-    // exposed in inspector
-    [SerializeField]
-    private int maxHitPoints;
-    public int MaxHitPoints
-    {
-        get { return maxHitPoints; }
-        private set { maxHitPoints = value; }
-    }
+    [field: SerializeField]
+    public int MaxHitPoints { get; private set; }
 
     public int HitPoints { get; private set; }
+    public bool IsAlive => HitPoints > 0;
     public List<Status> Status { get; private set; }
     public List<DamageType> Vulnerabilities { get; private set; }
     public List<DamageType> Resistances { get; private set; }
     // Dictionary: dmgtype-multiplier
 
 
-    /// <summary>
-    /// Time between (re)targeting attempts
-    /// </summary>
-    [SerializeField]
-    protected float retargetDelaySeconds = 10.0f;
-
-    /// <summary>
-    /// Time it takes to choose a target
-    /// </summary>
-    [SerializeField]
-    protected float targetTimeSeconds = 2.0f;
-
-
-    [SerializeField]
-    protected float actiondelaySeconds = 2.0f;
-
     // all entitites have targets, even support class ones
-    public ITarget CurrentTarget { get; protected set; }
+    public ITarget? CurrentTarget { get; protected set; }
 
     // practical shield representation
     public int MaxShield { get; private set; }
@@ -130,5 +67,24 @@ public abstract class Entity : MonoBehaviour
     protected abstract void Action();
     protected abstract void Target();
 
+    public Coroutine ApplyEffect(IEnumerator effect) 
+    {
+        return StartCoroutine(effect);
+    }
 
+    protected void ClearAllEffect()
+    {
+
+    }
+
+
+    // should be written uniformly for all entities (use vulnerabilities and resistances)
+    public void ApplyDamage(DamageObj dobj)
+    {
+        if (!IsAlive) JustDied();
+    }
+
+    protected abstract void JustDied();
 }
+
+public class DamageObj { }

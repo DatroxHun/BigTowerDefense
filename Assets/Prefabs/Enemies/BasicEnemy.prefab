@@ -47,10 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df0537ab0f4c314481fd8ffc8fd431e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  maxHitPoints: 0
-  retargetDelaySeconds: 10
-  targetTimeSeconds: 2
-  actiondelaySeconds: 2
+  <MaxHitPoints>k__BackingField: 0
   walker: {fileID: 871284484800307019}
 --- !u!114 &871284484800307019
 MonoBehaviour:
@@ -73,7 +70,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735166972616930786}
-  m_Enabled: 0
+  m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.125
   m_Speed: 1
