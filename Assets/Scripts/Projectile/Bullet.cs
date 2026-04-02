@@ -8,22 +8,24 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float speed = 1.0f;
+
     [SerializeField]
     private LayerMask enemyLayer;
     [SerializeField]
     private LayerMask obstacleLayer;
+
     [SerializeField]
     private CircleCollider2D impactCollider;
 
     private Vector3 target;
-    private Action<Enemy> impactEffect;
+    private Action<Entity> impactEffect;
 
     private bool isFlying = false;
 
     public GameObject Object => gameObject;
 
     private ObjectPool<Bullet> pool;
-    public void Launch(Vector3 target, Action<Enemy> impactEffect, ObjectPool<Bullet> pool)
+    public void Launch(Vector3 target, Action<Entity> impactEffect, ObjectPool<Bullet> pool)
     {
         this.pool = pool;
         this.target = target;
