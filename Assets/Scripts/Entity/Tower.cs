@@ -39,11 +39,15 @@ public abstract class Tower : Entity
         set { rangeCollider.radius = value; }
     }
 
+    private void Awake()
+    {
+        HitPoints = MaxHitPoints;
+    }
+
     protected void Start()
     {
         transform.parent = TowerManager.instance.transform;
         TowerManager.instance.AddTower(this);
-        Debug.Log(TowerManager.instance.Towers.Count);
 
         targeting = StartCoroutine(Targeting());
         acting = StartCoroutine(Acting());
@@ -138,6 +142,6 @@ public abstract class Tower : Entity
 
     protected override void JustDied()
     {
-        
+        base.JustDied();   
     }
 }

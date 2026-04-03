@@ -77,27 +77,29 @@ public class LongRangeTower : Tower
 
         // crlist = defaultcr ++ CM.GetCroutines()
 
-        rangeCollider.radius += 10;
+        DamageObj dmg = new DamageObj
+        {
+            physical = 6f
+        };
+
+        List<Func<Enemy, IEnumerator>> effects = new()
+        {
+            enemy => Effects.InstantDamage(enemy, dmg)
+        };
 
         Shoot(randomTarget,
-            (e) =>
+            (entity) =>
             {
-                if (e is Enemy enemy)
+                if (entity is Enemy enemy)
                 {
                     // foreach cr in crlist : StartCoroutine(cr(enemy))
-
-                    enemy.Return2Pool();
+                    foreach (var effect in effects)
+                    {
+                        enemy.ApplyEffect(effect(enemy));
+                    }
                 }
             }
             );
-    }
-
-    IEnumerator DefaultDamage(Enemy enemy)
-    {
-        //                           V--- get actual DMGObject that gets updated upon component updates
-        // enemy.applydamage(new DMGOBJ(physical, 10))
-        // aaaaaaaaaaaaaaa
-        yield return null;
     }
 
     protected override void Target()

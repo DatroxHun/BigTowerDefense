@@ -102,7 +102,7 @@ public class Enemy : Entity, IPoolable
 
                 if (CurrentTarget is EntityTarget target)
                 {
-                    WalkToEntity(target.entity, 0f); // hard coded radius!!!!!!!!
+                    WalkToEntity(target.entity, 1f); // hard coded radius!!!!!!!!
                 }
                 else
                 {
@@ -129,8 +129,8 @@ public class Enemy : Entity, IPoolable
             // if not pathfinding or avg speed is too low -> go back on road and scan
             if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f)
             {
-                doCheck = false;                
-                WalkOnRoad(scanDelay: 5f); // starts scanning after delay 
+                doCheck = false;
+                WalkOnRoad(scanDelay: 5f); // starts scanning after delay
             }
 
             prevPos = walker.transform.position;
@@ -144,6 +144,8 @@ public class Enemy : Entity, IPoolable
         {
             yield return new WaitForSeconds(attackInterval);
 
+            Debug.Log("a");
+
             if (CurrentTarget is EntityTarget target)
             {
                 // if target is alive -> attack
@@ -154,7 +156,8 @@ public class Enemy : Entity, IPoolable
                 else // if not alive -> stop attacking and got back to road
                 {
                     doAttack = false;
-                    WalkOnRoad(scanDelay: 5f); // starts scanning after delay 
+                    CurrentTarget = null;
+                    WalkOnRoad(scanDelay: 1f); // starts scanning after delay 
                 }
             }
             else
@@ -165,12 +168,25 @@ public class Enemy : Entity, IPoolable
     }
 
     // Actions
-    protected override void Action() { }
+    protected override void Action()
+    {
+        Debug.Log("Enemy Action");
+
+        if (CurrentTarget is EntityTarget target && target.entity != null)
+        {
+            DamageObj dmg = new DamageObj()
+            {
+                physical = 5f
+            };
+
+            target.entity.ApplyEffect(Effects.InstantDamage(target.entity, dmg));
+        }
+    }
 
     protected override void Target()
     {
         IEnumerable<Entity> targets = TowerManager.instance.Towers
-            .Where(t => rangeCollider.OverlapPoint(t.transform.position))
+            .Where(t => t.IsAlive && rangeCollider.OverlapPoint(t.transform.position))
             .Select(t => t as Entity);
 
         if (targets.Any())
@@ -181,6 +197,7 @@ public class Enemy : Entity, IPoolable
 
     protected override void JustDied()
     {
+        base.JustDied();
         Return2Pool();
     }
 }

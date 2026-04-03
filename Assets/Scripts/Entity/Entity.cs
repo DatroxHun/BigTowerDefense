@@ -1,17 +1,8 @@
 #nullable enable
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
-using static UnityEngine.RuleTile.TilingRuleOutput;
-
-public class Status { }
-
-public class DamageType { }
 
 
 // OOP hell
@@ -34,68 +25,71 @@ public class Shield : IShield
 
 public abstract class Entity : MonoBehaviour
 {
-    [field: SerializeField]
-    public int MaxHitPoints { get; private set; }
-
     [SerializeField]
-    protected CircleCollider2D rangeCollider;
+    protected CircleCollider2D rangeCollider = null!;
 
-    public int HitPoints { get; private set; }
+    [field: SerializeField]
+    public float MaxHitPoints { get; protected set; }
+
+    [field: SerializeField]
+    private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
+
+    public float HitPoints { get; protected set; }
     public bool IsAlive => HitPoints > 0;
-    public List<Status> Status { get; private set; }
-    public List<DamageType> Vulnerabilities { get; private set; }
-    public List<DamageType> Resistances { get; private set; }
-    // Dictionary: dmgtype-multiplier
 
 
     // all entitites have targets, even support class ones
     public ITarget? CurrentTarget { get; protected set; }
 
     // practical shield representation
-    public int MaxShield { get; private set; }
-    public int CurrentShield { get; private set; }
-    public float ShieldRegenerationSpeed { get; private set; } // what type?
+    public float MaxShield { get; protected set; }
+    public float CurrentShield { get; protected set; }
+    public float ShieldRegenerationSpeed { get; protected set; } // what type?
     public List<Vector3> GetCoordinates() => new List<Vector3> { transform.position };
 
-
-
-    // OOP hell
-    // public bool Shielded() => shield is not null;
-    // public int GetMaxShield() => shield?.GetMaxShield() ?? 0;
-    // public int GetCurretnShield => shield?.GetCurrentShield() ?? 0;
-    
-    /*
-    protected Entity(IShield? shield)
-    {
-        this.shield = shield;
-    }
-    */
+    private List<Coroutine> statusEffects = new List<Coroutine>();
 
     protected abstract void Action();
     protected abstract void Target();
 
     public Coroutine ApplyEffect(IEnumerator effect) 
     {
-        return StartCoroutine(effect);
+        Coroutine coroutine = StartCoroutine(effect);
+        statusEffects.Add(coroutine);
+        return coroutine;
     }
 
     protected void ClearAllEffect()
     {
-
+        foreach (Coroutine effect in statusEffects)
+        {
+            if (effect != null) StopCoroutine(effect);
+        }
     }
 
-
-    // should be written uniformly for all entities (use vulnerabilities and resistances)
     public void ApplyDamage(DamageObj dobj)
     {
-        // DO STUFF
+        DamageObj finalDmg = dobj * Vulnerabilities;
+
+        HitPoints -= finalDmg.direct;
+        HitPoints -= finalDmg.physical;
+        HitPoints -= finalDmg.fire;
+        HitPoints -= finalDmg.electric;
+        HitPoints -= finalDmg.poison;
+
+        Debug.Log(HitPoints);
 
         if (!IsAlive) JustDied();
     }
 
-    protected abstract void JustDied();
+    protected virtual void JustDied()
+    {
+        Debug.Log("Just Died");
+        ClearAllEffect();
+    }
 }
 
+[System.Serializable]
 public class DamageObj
 {
     public float direct;
@@ -103,4 +97,39 @@ public class DamageObj
     public float fire;
     public float electric;
     public float poison;
+
+    public static DamageObj operator +(DamageObj a, DamageObj b)
+    {
+        DamageObj result = new DamageObj();
+        result.direct = a.direct + b.direct;
+        result.physical = a.physical + b.physical;
+        result.fire = a.fire + b.fire;
+        result.electric = a.electric + b.electric;
+        result.poison = a.poison + b.poison;
+
+        return result;
+    }
+
+    public static DamageObj operator *(DamageObj a, DamageObj b)
+    {
+        DamageObj result = new DamageObj();
+        result.direct = a.direct * b.direct;
+        result.physical = a.physical * b.physical;
+        result.fire = a.fire * b.fire;
+        result.electric = a.electric * b.electric;
+        result.poison = a.poison * b.poison;
+
+        return result;
+    }
+
+    public static DamageObj One
+    {
+        get
+        {
+            DamageObj result = new DamageObj();
+            result.direct = result.physical = 1;
+            result.fire = result.electric = result.poison = 1;
+            return result;
+        }
+    } 
 }

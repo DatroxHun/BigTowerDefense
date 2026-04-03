@@ -43,7 +43,7 @@ public class Walker : MonoBehaviour
     void Update()
     {
         walkAction.Invoke(globalCallback);
-        Debug.Log(Mode);
+        //Debug.Log(Mode);
 
         //// DEBUG TOOL!!!
         //if (Mouse.current.leftButton.wasPressedThisFrame)

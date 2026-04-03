@@ -1124,7 +1124,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 392
   m_UseGeometry: 1
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -1164,7 +1164,7 @@ GameObject:
   - component: {fileID: 1881477463}
   - component: {fileID: 1881477464}
   - component: {fileID: 1881477465}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: GameFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
