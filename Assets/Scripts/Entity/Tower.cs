@@ -6,6 +6,7 @@ using UnityEngine.Pool;
 using UnityEngine.Splines.ExtrusionShapes;
 using static UnityEngine.GraphicsBuffer;
 
+
 public class ComponentModule { }
 
 public abstract class Tower : Entity
@@ -32,7 +33,31 @@ public abstract class Tower : Entity
     [SerializeField]
     protected float actiondelaySeconds = 2.0f;
 
-    // protected Behavior b;
+    protected float Range
+    {
+        get { return rangeCollider.radius; }
+        set { rangeCollider.radius = value; }
+    }
+
+
+
+    // health, shield, rangeMod, delays
+    public void ModifyBase(StatProvider2 sp)
+    {
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     protected void Start()
     {
@@ -65,14 +90,27 @@ public abstract class Tower : Entity
         hiding = true;
     }
 
+    private void SafeStopCoroutine(Coroutine cr)
+    {
+        if (cr != null)
+            StopCoroutine(cr);
+    }
+
     protected void OnDestruction()
     {
-        StopCoroutine(targeting);
-        StopCoroutine(acting);
+        SafeStopCoroutine(targeting);
+        SafeStopCoroutine(acting);
     }
 
     protected void OnRepair()
     {
+        // avoid duplicate coroutines
+        SafeStopCoroutine(targeting);
+        SafeStopCoroutine(acting);
+
+        // maybe TODO: StopCoroutines function
+
+        // start for real
         targeting = StartCoroutine(Targeting());
         acting = StartCoroutine(Acting());
     }
@@ -98,7 +136,7 @@ public abstract class Tower : Entity
     private IEnumerator Acting()
     {
         // idea: do idle status checking with WaitUntil instead of this
-        // because it could case some weird patterns in time
+        // because it could cause some weird patterns in time
         // -K
         while (true)
         {

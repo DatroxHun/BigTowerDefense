@@ -18,8 +18,6 @@ public class ShortRangeTower : Tower
     {
         List<Enemy> enemies = EnemyManager.instance.Enemies;
 
-        
-
         List<Entity> targets = enemies
             .Where(t =>
                 rangeCollider.OverlapPoint(t.transform.position))

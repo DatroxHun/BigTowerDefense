@@ -18,5 +18,5 @@ MonoBehaviour:
     batches:
     - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
       amount: 15
-      burstDelay: 0.3
+      burstDelay: 0.5
       duration: 1
