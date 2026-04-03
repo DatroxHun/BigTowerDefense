@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
-
+// gunner tower
 public class LongRangeTower : Tower
 {
     [SerializeField]
@@ -15,9 +16,9 @@ public class LongRangeTower : Tower
 
     private ObjectPool<Bullet> bulletPool;
 
-    private void Start()
+    private new void Start()
     {
-        bulletPool= new ObjectPool<Bullet>
+        bulletPool = new ObjectPool<Bullet>
         (
             createFunc: () =>
             {
@@ -47,7 +48,7 @@ public class LongRangeTower : Tower
         base.Start();
     }
 
-    private void Shoot(Vector3 targetPoint, Action<Enemy> impactEffect)
+    private void Shoot(Vector3 targetPoint, Action<Entity> impactEffect)
     {
         Bullet bullet = bulletPool.Get();
 
@@ -72,16 +73,36 @@ public class LongRangeTower : Tower
             .OrderBy(x => UnityEngine.Random.value)
             .First();
 
+        //ComponentModule.AugmentTargetChoice(CurrentTarget, ActuallyPrioritizedTarget(=randomTarget))
+
+        // crlist = defaultcr ++ CM.GetCroutines()
+
+        rangeCollider.radius += 10;
+
         Shoot(randomTarget,
-            (enemy) =>
+            (e) =>
             {
-                enemy.Return2Pool();
+                if (e is Enemy enemy)
+                {
+                    // foreach cr in crlist : StartCoroutine(cr(enemy))
+
+                    enemy.Return2Pool();
+                }
             }
             );
     }
 
+    IEnumerator DefaultDamage(Enemy enemy)
+    {
+        //                           V--- get actual DMGObject that gets updated upon component updates
+        // enemy.applydamage(new DMGOBJ(physical, 10))
+        // aaaaaaaaaaaaaaa
+        yield return null;
+    }
+
     protected override void Target()
     {
+
         List<Enemy> enemies = EnemyManager.instance.Enemies; 
 
         List<Entity> targets = enemies
@@ -97,6 +118,7 @@ public class LongRangeTower : Tower
         // - K
         Debug.Log($"[GUNNER] : ELIGABLE TARGETS: {targets.Count}");
     }
+
 
     /// <summary>
     /// Check if line-of-sight from tower to target is unobstructed.

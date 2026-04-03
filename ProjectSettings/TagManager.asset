@@ -39,8 +39,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: ground
+    uniqueID: 2018059775
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: air
+    uniqueID: 3253091403
     locked: 0
   m_RenderingLayers:
   - Default

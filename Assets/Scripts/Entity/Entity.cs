@@ -50,6 +50,7 @@ public class  PointTarget : ITarget
 public class MultiTarget : ITarget
 {
     private readonly List<ITarget> _targets;
+    
     public MultiTarget(List<ITarget> targets)
     {
         _targets = targets;
@@ -61,6 +62,7 @@ public class MultiTarget : ITarget
                 new PointTarget(e.transform.position) as ITarget)
             .ToList();
     }
+
     public List<Vector3> GetCoordinates() => _targets
         .Select(t => t.GetCoordinates())
         .SelectMany(x => x)
