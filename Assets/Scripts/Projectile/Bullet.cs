@@ -55,9 +55,11 @@ public class Bullet : MonoBehaviour
         }
 
     }
-    private bool CheckObstacle() => 
-        Physics2D.OverlapPoint(this.transform.position, obstacleLayer) ||
-        Physics2D.OverlapPoint(this.transform.position, enemyLayer);
+
+    // commented section is for enemies to stop the bullets
+    private bool CheckObstacle() =>
+        Physics2D.OverlapPoint(this.transform.position, obstacleLayer);// ||
+        //Physics2D.OverlapPoint(this.transform.position, enemyLayer);
 
     void Arrive()
     {
@@ -69,11 +71,14 @@ public class Bullet : MonoBehaviour
         // if enemies have a collider, then here we need to
         // check if the impactC and the enemyC overlap !
         // -K
+        
+        // if not overlap is written here and enemies stop bullets -> breaks damaging!
         enemies
             .Where(t =>
                 impactCollider.OverlapPoint(t.transform.position))
             .ToList()
             .ForEach(enemy => impactEffect?.Invoke(enemy));
+
         pool.Release(this);
     }
 
