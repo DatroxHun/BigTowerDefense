@@ -33,6 +33,9 @@ public abstract class Entity : MonoBehaviour
     [field: SerializeField]
     public int MaxHitPoints { get; private set; }
 
+    [SerializeField]
+    protected CircleCollider2D rangeCollider;
+
     public int HitPoints { get; private set; }
     public bool IsAlive => HitPoints > 0;
     public List<Status> Status { get; private set; }
@@ -81,10 +84,19 @@ public abstract class Entity : MonoBehaviour
     // should be written uniformly for all entities (use vulnerabilities and resistances)
     public void ApplyDamage(DamageObj dobj)
     {
+        // DO STUFF
+
         if (!IsAlive) JustDied();
     }
 
     protected abstract void JustDied();
 }
 
-public class DamageObj { }
+public class DamageObj
+{
+    public float direct;
+    public float physical;
+    public float fire;
+    public float electric;
+    public float poison;
+}

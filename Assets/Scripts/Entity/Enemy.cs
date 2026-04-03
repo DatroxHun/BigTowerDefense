@@ -1,11 +1,20 @@
 #nullable enable
 
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class Enemy : Entity, IPoolable
 {
+    // Attack
+    public float DetectionRange
+    {
+        get => rangeCollider.radius;
+        private set => rangeCollider.radius = value;
+    }
+
     // Walking
     [SerializeField] private Walker walker = null!;
     private Road road = null!;
@@ -93,7 +102,7 @@ public class Enemy : Entity, IPoolable
 
                 if (CurrentTarget is EntityTarget target)
                 {
-                    WalkToEntity(target.entity, 1f); // hard coded radius!!!!!!!!
+                    WalkToEntity(target.entity, 0f); // hard coded radius!!!!!!!!
                 }
                 else
                 {
@@ -158,7 +167,17 @@ public class Enemy : Entity, IPoolable
     // Actions
     protected override void Action() { }
 
-    protected override void Target() { }
+    protected override void Target()
+    {
+        IEnumerable<Entity> targets = TowerManager.instance.Towers
+            .Where(t => rangeCollider.OverlapPoint(t.transform.position))
+            .Select(t => t as Entity);
+
+        if (targets.Any())
+        {
+            this.CurrentTarget = new EntityTarget(targets.First());
+        }
+    }
 
     protected override void JustDied()
     {

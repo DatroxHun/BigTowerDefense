@@ -32,16 +32,16 @@ public abstract class Tower : Entity
     [SerializeField]
     protected float actiondelaySeconds = 2.0f;
 
-    [SerializeField]
-    protected CircleCollider2D rangeCollider;
-
     // protected Behavior b;
 
     protected void Start()
     {
+        transform.parent = TowerManager.instance.transform;
+        TowerManager.instance.AddTower(this);
+        Debug.Log(TowerManager.instance.Towers.Count);
+
         targeting = StartCoroutine(Targeting());
         acting = StartCoroutine(Acting());
-
     }
 
     private void Update()
