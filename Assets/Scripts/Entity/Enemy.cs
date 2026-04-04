@@ -37,6 +37,9 @@ public class Enemy : Entity, IPoolable
         transform.position = position;
         CurrentTarget = null;
 
+        // regenerate health
+        HitPoints = MaxHitPoints;
+
         WalkOnRoad();
         //walker.WalkOnRoad(road, globalCallback: Return2Pool);
     }

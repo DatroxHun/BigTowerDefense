@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 // OOP hell
@@ -25,17 +26,29 @@ public class Shield : IShield
 
 public abstract class Entity : MonoBehaviour
 {
-    [SerializeField]
-    protected CircleCollider2D rangeCollider = null!;
+    [SerializeField] protected Slider healthbar = null!;
 
-    [field: SerializeField]
-    public float MaxHitPoints { get; protected set; }
+    [SerializeField] protected CircleCollider2D rangeCollider = null!;
 
-    [field: SerializeField]
-    private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
+    [field: SerializeField] public float MaxHitPoints { get; protected set; }
 
-    public float HitPoints { get; protected set; }
-    public bool IsAlive => HitPoints > 0;
+    [field: SerializeField] private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
+
+
+    private float hitpoints;
+    public float HitPoints
+    { 
+        get => hitpoints; 
+        protected set
+        {
+            hitpoints = value;
+
+            if (healthbar != null)
+                healthbar.value = HitPoints / MaxHitPoints;
+        }
+    }
+
+    public bool IsAlive => HitPoints > 1e-3f;
 
 
     // all entitites have targets, even support class ones
@@ -51,6 +64,11 @@ public abstract class Entity : MonoBehaviour
 
     protected abstract void Action();
     protected abstract void Target();
+
+    private void Start()
+    {
+        HitPoints = MaxHitPoints;
+    }
 
     public Coroutine ApplyEffect(IEnumerator effect) 
     {
