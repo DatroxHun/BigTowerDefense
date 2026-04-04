@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 7036385594375159615}
   - component: {fileID: 7836650312847440324}
   - component: {fileID: 1458311268953355091}
-  m_Layer: 0
+  - component: {fileID: 6620928459822136179}
+  m_Layer: 3
   m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,3 +139,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.13, y: 3.15}
   m_EdgeRadius: 0
+--- !u!114 &6620928459822136179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6075348386924849759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NavMeshPlus::NavMeshPlus.Components.NavMeshModifier
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff

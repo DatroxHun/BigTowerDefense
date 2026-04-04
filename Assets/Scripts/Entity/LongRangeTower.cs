@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
-
+// gunner tower
 public class LongRangeTower : Tower
 {
     [SerializeField]
@@ -15,9 +16,9 @@ public class LongRangeTower : Tower
 
     private ObjectPool<Bullet> bulletPool;
 
-    private void Start()
+    private new void Start()
     {
-        bulletPool= new ObjectPool<Bullet>
+        bulletPool = new ObjectPool<Bullet>
         (
             createFunc: () =>
             {
@@ -47,7 +48,7 @@ public class LongRangeTower : Tower
         base.Start();
     }
 
-    private void Shoot(Vector3 targetPoint, Action<Enemy> impactEffect)
+    private void Shoot(Vector3 targetPoint, Action<Entity> impactEffect)
     {
         Bullet bullet = bulletPool.Get();
 
@@ -72,16 +73,38 @@ public class LongRangeTower : Tower
             .OrderBy(x => UnityEngine.Random.value)
             .First();
 
+        //ComponentModule.AugmentTargetChoice(CurrentTarget, ActuallyPrioritizedTarget(=randomTarget))
+
+        // crlist = defaultcr ++ CM.GetCroutines()
+
+        DamageObj dmg = new DamageObj
+        {
+            physical = 6f
+        };
+
+        List<Func<Enemy, IEnumerator>> effects = new()
+        {
+            enemy => Effects.InstantDamage(enemy, dmg)
+        };
+
         Shoot(randomTarget,
-            (enemy) =>
+            (entity) =>
             {
-                enemy.Return2Pool();
+                if (entity is Enemy enemy)
+                {
+                    // foreach cr in crlist : StartCoroutine(cr(enemy))
+                    foreach (var effect in effects)
+                    {
+                        enemy.ApplyEffect(effect(enemy));
+                    }
+                }
             }
             );
     }
 
     protected override void Target()
     {
+
         List<Enemy> enemies = EnemyManager.instance.Enemies; 
 
         List<Entity> targets = enemies
@@ -97,6 +120,7 @@ public class LongRangeTower : Tower
         // - K
         Debug.Log($"[GUNNER] : ELIGABLE TARGETS: {targets.Count}");
     }
+
 
     /// <summary>
     /// Check if line-of-sight from tower to target is unobstructed.
