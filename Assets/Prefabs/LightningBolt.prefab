@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5720627153089215852}
   - component: {fileID: 1051899491576768927}
+  - component: {fileID: 4960104078287712160}
   m_Layer: 0
   m_Name: LightningBolt
   m_TagString: Untagged
@@ -86,13 +87,13 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.93125
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -142,3 +143,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &4960104078287712160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5338929258772597517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c075770c7cae3974b90e8f56eb71f682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightningBolt
+  flashTime: 0.2
+  segments: 5
+  perturbance: 0.2
+  impactRadius: 0.5
+  lr: {fileID: 1051899491576768927}

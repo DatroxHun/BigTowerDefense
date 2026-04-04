@@ -20,12 +20,10 @@ public class LightningBolt : MonoBehaviour
     [SerializeField]
     private float impactRadius = 0.5f;
 
+    [SerializeField]
     private LineRenderer lr;
 
-    void Awake()
-    {
-        lr = GetComponent<LineRenderer>();
-    }
+    public GameObject Object => gameObject;
     
     public void Launch(Vector3 start, Vector3 end, Action<Entity> impactEffect, ObjectPool<LightningBolt> pool)
     {

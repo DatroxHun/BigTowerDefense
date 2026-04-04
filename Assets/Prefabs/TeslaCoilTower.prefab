@@ -152,11 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7491f103b6adcac46b0d5c69f2c1e310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShortRangeTower
-  maxHitPoints: 0
-  retargetDelaySeconds: 10
-  targetTimeSeconds: 2
-  actiondelaySeconds: 2
+  maxHitPoints: 100
+  retargetDelaySeconds: 1
+  targetTimeSeconds: 0.5
+  actiondelaySeconds: 4
   rangeCollider: {fileID: 3054112977039775549}
+  boltPrefab: {fileID: 4960104078287712160, guid: f45044b94452916448e925117ae04e40, type: 3}
 --- !u!58 &3054112977039775549
 CircleCollider2D:
   m_ObjectHideFlags: 0
