@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -56,7 +57,15 @@ public class ShortRangeTower : Tower
             .OrderBy(x => Vector3.Distance(transform.position, x))
             .Take(3);
 
-        rangeCollider.radius += 10;
+        DamageObj dmg = new DamageObj
+        {
+            electric = 15f
+        };
+
+        List<Func<Enemy, IEnumerator>> effects = new()
+        {
+            enemy => Effects.InstantDamage(enemy, dmg)
+        };
 
         foreach (Vector3 target in closestTargets)
         {
@@ -65,7 +74,10 @@ public class ShortRangeTower : Tower
                {
                    if (entity is Enemy enemy)
                     {
-                        // foreach cr in crlist : StartCoroutine(cr(enemy))
+                       foreach (Func<Enemy, IEnumerator> effect in effects)
+                       {
+                           enemy.ApplyEffect(effect(enemy));
+                       }
 
                         
                     }

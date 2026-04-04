@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 4791538688249010430}
   - component: {fileID: 1479861918098904763}
   - component: {fileID: 3054112977039775549}
-  m_Layer: 0
+  - component: {fileID: 1991164496507857412}
+  m_Layer: 7
   m_Name: TeslaCoilTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +129,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.25}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -138,7 +139,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.2, y: 1.2}
+  m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &1479861918098904763
 MonoBehaviour:
@@ -152,11 +153,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7491f103b6adcac46b0d5c69f2c1e310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShortRangeTower
-  maxHitPoints: 100
+  rangeCollider: {fileID: 3054112977039775549}
+  <MaxHitPoints>k__BackingField: 100
+  <Vulnerabilities>k__BackingField:
+    direct: 1
+    physical: 1
+    fire: 1
+    electric: 1
+    poison: 1
   retargetDelaySeconds: 1
   targetTimeSeconds: 0.5
-  actiondelaySeconds: 4
-  rangeCollider: {fileID: 3054112977039775549}
+  actiondelaySeconds: 3
   boltPrefab: {fileID: 4960104078287712160, guid: f45044b94452916448e925117ae04e40, type: 3}
 --- !u!58 &3054112977039775549
 CircleCollider2D:
@@ -194,3 +201,19 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 2
+--- !u!114 &1991164496507857412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6075348386924849759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NavMeshPlus::NavMeshPlus.Components.NavMeshModifier
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
