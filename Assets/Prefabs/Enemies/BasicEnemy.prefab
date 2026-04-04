@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   rangeCollider: {fileID: 9067605995542005407}
-  <MaxHitPoints>k__BackingField: 10
+  <MaxHitPoints>k__BackingField: 20
   <Vulnerabilities>k__BackingField:
     direct: 1
     physical: 1

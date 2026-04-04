@@ -6,12 +6,6 @@ public class Shop : MonoBehaviour
     private bool openShop = false;
     private bool animatingShop = false;
 
-    private void Start()
-    {
-        Debug.Log($"{transform.localPosition}");
-        Debug.Log($"{transform.position}");
-    }
-
     // Button Press Callbacks
     public void CloseButtonPressed()
     {
