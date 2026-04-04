@@ -23,10 +23,14 @@ public class LightningBolt : MonoBehaviour
     [SerializeField]
     private LineRenderer lr;
 
+    [SerializeField]
+    private ParticleSystem ps;
     public GameObject Object => gameObject;
     
     public void Launch(Vector3 start, Vector3 end, Action<Entity> impactEffect, ObjectPool<LightningBolt> pool)
     {
+        
+
         RenderLine(start, end);
 
         Strike(end, impactEffect);
@@ -49,12 +53,14 @@ public class LightningBolt : MonoBehaviour
     private IEnumerator ReleaseWithDelay(ObjectPool<LightningBolt> pool)
     {
         yield return new WaitForSeconds(flashTime);
-        
+        lr.enabled = false;
+        yield return new WaitUntil(() => ps == null || !ps.isEmitting);
         pool.Release(this);
     }
 
     public void RenderLine(Vector3 start, Vector3 end)
     {
+        lr.enabled = true;
         lr.positionCount = segments + 1;
 
         for (int i = 0; i <= segments; i++)
@@ -69,5 +75,10 @@ public class LightningBolt : MonoBehaviour
             }
             lr.SetPosition(i, pos);
         }
+
+        
+        ps.transform.position = end;
+        ps.Play();
+
     }
 }
