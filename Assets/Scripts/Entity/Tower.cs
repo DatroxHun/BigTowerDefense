@@ -24,26 +24,6 @@ public abstract class Tower : Entity
         set { rangeCollider.radius = value; }
     }
 
-
-
-    // health, shield, rangeMod, delays
-    public void ModifyBase(StatProvider2 sp)
-    {
-        
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
     protected void Start()
     {
         targeting = StartCoroutine(Targeting());
