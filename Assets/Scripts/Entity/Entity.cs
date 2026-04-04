@@ -77,8 +77,6 @@ public abstract class Entity : MonoBehaviour
         HitPoints -= finalDmg.electric;
         HitPoints -= finalDmg.poison;
 
-        Debug.Log(HitPoints);
-
         if (!IsAlive) JustDied();
     }
 
