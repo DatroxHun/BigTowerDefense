@@ -161,9 +161,13 @@ MonoBehaviour:
     fire: 1
     electric: 1
     poison: 1
-  retargetDelaySeconds: 10
-  targetTimeSeconds: 2
-  actiondelaySeconds: 2
+  retargetDelaySeconds: 1
+  targetTimeSeconds: 0.5
+  actiondelaySeconds: 4
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  bulletPrefab: {fileID: 4624881190423285408, guid: b505674290453504db69aba290f92efb, type: 3}
 --- !u!58 &3054112977039775549
 CircleCollider2D:
   m_ObjectHideFlags: 0

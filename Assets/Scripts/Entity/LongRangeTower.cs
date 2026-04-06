@@ -104,7 +104,6 @@ public class LongRangeTower : Tower
 
     protected override void Target()
     {
-
         List<Enemy> enemies = EnemyManager.instance.Enemies; 
 
         List<Entity> targets = enemies
