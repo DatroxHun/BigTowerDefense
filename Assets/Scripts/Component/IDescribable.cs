@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IDescribable
 {
-    public string Description(IStatProvider statProvider);
+    public string Description(Dictionary<TowerStats, float> stats);
 }
