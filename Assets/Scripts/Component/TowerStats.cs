@@ -2,5 +2,14 @@ using UnityEngine;
 
 public enum TowerStats
 {
-    // Separate different archetypes
+    TowerMaxHealth,
+    TowerRange,
+
+    PhysicalDamage,
+    PoisonDamage,
+
+    PhysicalDamageResistance,
+
+
+
 }
