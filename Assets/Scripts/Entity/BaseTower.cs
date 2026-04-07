@@ -120,4 +120,11 @@ public class BaseTower : Tower
         else
             return false;
     }
+
+    protected override void JustDied()
+    {
+        base.JustDied();
+
+        GameOver.Instance.Toggle();
+    }
 }
