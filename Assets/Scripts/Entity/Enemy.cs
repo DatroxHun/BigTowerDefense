@@ -37,6 +37,9 @@ public class Enemy : Entity, IPoolable
         transform.position = position;
         CurrentTarget = null;
 
+        // regenerate health
+        HitPoints = MaxHitPoints;
+
         WalkOnRoad();
         //walker.WalkOnRoad(road, globalCallback: Return2Pool);
     }
@@ -121,15 +124,27 @@ public class Enemy : Entity, IPoolable
         {
             yield return new WaitForSeconds(motivationCheckInterval);
 
+            // get target entity
+            Entity? tower = null;
+            if (CurrentTarget is EntityTarget target && target.entity != null)
+            {
+                tower = target.entity;
+            }
+            else
+            {
+                throw new System.Exception("Not intended target class!");
+            }
+
             // calculate average speed for last motivationCheckInterval
             float avgSpeed = float.PositiveInfinity;
             if (prevPos != null)
                 avgSpeed = Vector3.Distance(walker.transform.position, prevPos.Value) / motivationCheckInterval;
 
-            // if not pathfinding or avg speed is too low -> go back on road and scan
-            if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f)
+            // if not pathfinding or avg speed is too low or entity no longer exists -> go back on road and scan
+            if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f || tower == null || !tower.IsAlive)
             {
                 doCheck = false;
+                CurrentTarget = null;
                 WalkOnRoad(scanDelay: 5f); // starts scanning after delay
             }
 

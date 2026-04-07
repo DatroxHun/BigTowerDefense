@@ -13,4 +13,11 @@ public class BaseTower : Tower
     {
         
     }
+
+    protected override void JustDied()
+    {
+        base.JustDied();
+
+        GameOver.Instance.Toggle();
+    }
 }

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Rendering.Universal;
 
 public class Spawner : MonoBehaviour
 {
@@ -14,18 +15,21 @@ public class Spawner : MonoBehaviour
 
     public int CurrentWave { get; private set; } = 0;
 
-    public event System.Action ToggleNextWave = null!;
+    public event System.Action WaveStarted = null!;
+    public event System.Action WaveEnded = null!;
+
     public Dictionary<int, ObjectPool<IPoolable>> ObjectPools { get; private set; } = new();
 
 
     private Coroutine? waveCoroutine = null;
+    public bool waveOnGoing { get => waveCoroutine != null; }
 
 
     void Start()
     {
         InitializePools();
 
-        ToggleNextWave += () =>
+        WaveStarted += () =>
         {
             // if wave is ongoing, do nothing
             if (waveCoroutine != null) return;
@@ -33,7 +37,12 @@ public class Spawner : MonoBehaviour
             waveCoroutine = StartCoroutine(ExecuteWave(CurrentWave++));
         };
 
-        ToggleNextWave.Invoke();
+        WaveEnded += () => Debug.Log("Wave Ended");
+    }
+
+    public void StartWave()
+    {
+        if (!waveOnGoing && CurrentWave < spawnObject.waves.Count) WaveStarted?.Invoke();
     }
 
     private void InitializePools()
@@ -129,6 +138,7 @@ public class Spawner : MonoBehaviour
             yield return new WaitForSeconds(batch.duration);
         }
 
+        WaveEnded?.Invoke();
         waveCoroutine = null;     
     }
 }
