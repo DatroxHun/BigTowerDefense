@@ -99,7 +99,7 @@ public class Spawner : MonoBehaviour
                         actionOnDestroy: (obj) => Destroy(obj.Object),
                         collectionCheck: true,
                         defaultCapacity: 20,
-                        maxSize: 100
+                        maxSize: 500
                     );
 
                     ObjectPools.Add(batch.enemy.GetInstanceID(), newPool);

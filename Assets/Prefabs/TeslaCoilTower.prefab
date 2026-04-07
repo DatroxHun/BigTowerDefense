@@ -265,9 +265,10 @@ MonoBehaviour:
     fire: 1
     electric: 1
     poison: 1
-  retargetDelaySeconds: 10
-  targetTimeSeconds: 2
-  actiondelaySeconds: 2
+  retargetDelaySeconds: 1
+  targetTimeSeconds: 0.5
+  actiondelaySeconds: 3
+  boltPrefab: {fileID: 4960104078287712160, guid: f45044b94452916448e925117ae04e40, type: 3}
 --- !u!58 &3054112977039775549
 CircleCollider2D:
   m_ObjectHideFlags: 0

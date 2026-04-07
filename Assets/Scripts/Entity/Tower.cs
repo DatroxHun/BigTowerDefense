@@ -80,12 +80,14 @@ public abstract class Tower : Entity
             StopCoroutine(cr);
     }
 
-    protected void OnDestruction()
+    private void OnDestruction()
     {
         SafeStopCoroutine(targeting);
         SafeStopCoroutine(acting);
     }
 
+
+    // call when wave ends / before wave begins
     protected void OnRepair()
     {
         // avoid duplicate coroutines
@@ -142,6 +144,7 @@ public abstract class Tower : Entity
 
     protected override void JustDied()
     {
+        OnDestruction();
         base.JustDied();   
     }
 }
