@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
+using NavMeshPlus.Components;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -18,8 +19,8 @@ public class BuildingManager : MonoBehaviour
     [SerializeField]
     Camera mainCamera;
 
-    // [SerializeField]
-    // public NavMeshSurface NavMeshSurface;
+    [SerializeField]
+    public NavMeshPlus.Components.NavMeshSurface NavMeshSurface;
 
     bool buildingMode = false;
 
@@ -94,7 +95,7 @@ public class BuildingManager : MonoBehaviour
     void PlaceTower(Vector3 position)
     {
         Instantiate(towerPrefab, position, Quaternion.identity);
-        //NavMeshSurface.BuildNavMesh();
+        NavMeshSurface.BuildNavMesh();
         CancelBuilding();
     }
 
