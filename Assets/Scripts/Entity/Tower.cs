@@ -88,8 +88,10 @@ public abstract class Tower : Entity
 
 
     // call when wave ends / before wave begins
-    protected void OnRepair()
+    public void OnRepair()
     {
+        HitPoints = MaxHitPoints;
+
         // avoid duplicate coroutines
         SafeStopCoroutine(targeting);
         SafeStopCoroutine(acting);
@@ -99,6 +101,8 @@ public abstract class Tower : Entity
         // start for real
         targeting = StartCoroutine(Targeting());
         acting = StartCoroutine(Acting());
+
+        idle = true;
     }
 
     private IEnumerator Targeting()
