@@ -1044,14 +1044,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.49019608, b: 0.41960785, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4599867497510169328, guid: 04c66eec0b9d0094a8de2bc572a69f6d, type: 3}
+  m_Sprite: {fileID: -6585025459329304487, guid: 2448f8527bc1e9e46a5b680979fa1eab, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2578,6 +2578,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1102556260}
+        m_TargetAssemblyTypeName: BuildingManager, Assembly-CSharp
+        m_MethodName: StartBuilding
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 6075348386924849759, guid: e5d8a51762650474883922492d39ac41, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1461440480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2862,8 +2874,8 @@ MonoBehaviour:
         m_MethodName: StartBuilding
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1479861918098904763, guid: 822744c7c4a656848a6f2f0bbbdc8ddf, type: 3}
-          m_ObjectArgumentAssemblyTypeName: Tower, Assembly-CSharp
+          m_ObjectArgument: {fileID: 6075348386924849759, guid: 822744c7c4a656848a6f2f0bbbdc8ddf, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
