@@ -34,6 +34,8 @@ public class Enemy : Entity, IPoolable
 
     public void SpawnAction(Vector3 position)
     {
+        ParticlePool.instance.Emit(position);
+
         transform.position = position;
         CurrentTarget = null;
 
