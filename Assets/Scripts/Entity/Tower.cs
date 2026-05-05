@@ -17,6 +17,9 @@ public abstract class Tower : Entity
     private Coroutine targeting = null!;
     private Coroutine acting = null!;
 
+    [SerializeField]
+    protected SpriteRenderer sprite;
+
     /// <summary>
     /// Time between (re)targeting attempts
     /// </summary>
@@ -59,12 +62,21 @@ public abstract class Tower : Entity
     }
 
     // hide as soon as done doing thing
-    protected void ToggleHide()
+    public void ToggleHide()
     {
+        if (!IsAlive)
+            return;
+
         if (!hiding)
+        {
             StartCoroutine(HideASAP());
+            sprite.color = Color.black;
+        }
         else
+        {
             hiding = false;
+            sprite.color = Color.white;
+        }
         //handle visual stuff
     }
 
