@@ -58,7 +58,6 @@ public abstract class Tower : Entity
         if (!Hiding)
         {
             StartCoroutine(HideASAP());
-            sprite.color = Color.black;
         }
         else
         {
@@ -72,6 +71,7 @@ public abstract class Tower : Entity
     {
         yield return new WaitUntil(() => idle);
         Hiding = true;
+        sprite.color = Color.black;
     }
 
     protected void SafeStopCoroutine(Coroutine cr)
