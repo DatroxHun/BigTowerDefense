@@ -10,12 +10,9 @@ public class SupportTower : Tower
     new void Start()
     {
         base.Start();
+        //stuff
     }
 
-    void Update()
-    {
-            
-    }
     protected override void Action()
     {
         Debug.Log($"[SUPPORT] : DISCHARGING");
@@ -60,12 +57,4 @@ public class SupportTower : Tower
             }
         }
     }
-
-    protected override void Target()
-    {
-        // no targeting
-    }
-
-
-    
 }

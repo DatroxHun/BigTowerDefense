@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 
 
 // rename to Tesla Coil tower or something similar
-public class ShortRangeTower : Tower
+public class ShortRangeTower : TargetingTower
 {
     [SerializeField]
     private LightningBolt boltPrefab;

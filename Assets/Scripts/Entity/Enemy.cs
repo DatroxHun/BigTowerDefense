@@ -198,7 +198,8 @@ public class Enemy : Entity, IPoolable
         }
     }
 
-    protected override void Target()
+    // protected override void Target()
+    protected void Target()
     {
         IEnumerable<Entity> targets = TowerManager.instance.Towers
             .Where(t =>

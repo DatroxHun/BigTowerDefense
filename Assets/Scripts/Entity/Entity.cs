@@ -64,7 +64,6 @@ public abstract class Entity : MonoBehaviour
     private List<Coroutine> statusEffects = new List<Coroutine>();
 
     protected abstract void Action();
-    protected abstract void Target();
 
     private void Start()
     {
