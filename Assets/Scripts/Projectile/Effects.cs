@@ -22,4 +22,10 @@ public static class Effects
             entity.ApplyDamage(dobj);
         }
     }
+    public static IEnumerator InstantHeal(Entity entity, float hitPoints)
+    {
+        entity.ApplyHeal(10);
+
+        yield return null;
+    }
 }

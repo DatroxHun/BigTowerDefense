@@ -95,7 +95,7 @@ public class BuildingManager : MonoBehaviour
     void PlaceTower(Vector3 position)
     {
         Instantiate(towerPrefab, position, Quaternion.identity);
-        NavMeshSurface.BuildNavMesh();
+        RefreshNavMesh();
         CancelBuilding();
     }
 
@@ -107,5 +107,10 @@ public class BuildingManager : MonoBehaviour
             Destroy(currentGhost);
             Debug.Log("destroyed ghost");
         }
+    }
+
+    public void RefreshNavMesh()
+    {
+        NavMeshSurface.BuildNavMesh();
     }
 }

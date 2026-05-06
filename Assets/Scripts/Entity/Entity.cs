@@ -41,7 +41,7 @@ public abstract class Entity : MonoBehaviour
         get => hitpoints; 
         protected set
         {
-            hitpoints = value;
+            hitpoints = Mathf.Min(value, MaxHitPoints);
 
             if (healthbar != null)
                 healthbar.value = HitPoints / MaxHitPoints;
@@ -96,6 +96,15 @@ public abstract class Entity : MonoBehaviour
         HitPoints -= finalDmg.poison;
 
         if (!IsAlive) JustDied();
+    }
+
+    public void ApplyHeal(float healedHP)
+    {
+        if (IsAlive)
+        {
+            // clamping handled in HitPoints setter
+            HitPoints += healedHP;
+        }
     }
 
     protected virtual void JustDied()
