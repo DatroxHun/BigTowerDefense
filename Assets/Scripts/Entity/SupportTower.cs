@@ -20,6 +20,8 @@ public class SupportTower : Tower
     {
         Debug.Log($"[SUPPORT] : DISCHARGING");
 
+        
+
         List<Tower> towers =
             TowerManager.instance.Towers
             .Where(e =>

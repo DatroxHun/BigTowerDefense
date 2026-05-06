@@ -17,7 +17,7 @@ public class Obstacle : MonoBehaviour
         
         // play sfx
 
-        // maybe play vfx
+        // play vfx (dust particles?)
 
         Destroy(gameObject);
     }

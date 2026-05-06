@@ -24,7 +24,7 @@ public static class Effects
     }
     public static IEnumerator InstantHeal(Entity entity, float hitPoints)
     {
-        entity.ApplyHeal(10);
+        entity.ApplyHeal(hitPoints);
 
         yield return null;
     }

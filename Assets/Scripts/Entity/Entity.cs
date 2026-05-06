@@ -34,6 +34,7 @@ public abstract class Entity : MonoBehaviour
 
     [field: SerializeField] private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
 
+    protected virtual bool Invulnerable() => false;
 
     private float hitpoints;
     public float HitPoints
@@ -87,6 +88,9 @@ public abstract class Entity : MonoBehaviour
 
     public void ApplyDamage(DamageObj dobj)
     {
+        if (Invulnerable())
+            return;
+
         DamageObj finalDmg = dobj * Vulnerabilities;
 
         HitPoints -= finalDmg.direct;

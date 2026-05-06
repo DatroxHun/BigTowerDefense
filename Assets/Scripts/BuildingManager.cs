@@ -63,7 +63,7 @@ public class BuildingManager : MonoBehaviour
         bool canPlace = CheckPlacement(worldPos);
 
         
-        currentGhost.GetComponent<SpriteRenderer>().color = canPlace
+        currentGhost.GetComponentInChildren<SpriteRenderer>().color = canPlace
             ? Color.green 
             : Color.red;
 

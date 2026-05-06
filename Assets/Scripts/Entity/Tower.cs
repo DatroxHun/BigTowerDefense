@@ -12,10 +12,11 @@ public class ComponentModule { }
 public abstract class Tower : Entity
 {
     protected ComponentModule module;
-    protected bool hiding = false;
     protected bool idle = true;
     private Coroutine targeting = null!;
     private Coroutine acting = null!;
+
+    protected override bool Invulnerable() => Hiding;
 
     [SerializeField]
     protected SpriteRenderer sprite;
@@ -42,6 +43,8 @@ public abstract class Tower : Entity
         set { rangeCollider.radius = value; }
     }
 
+    public bool Hiding { get; protected set; } = false;
+
     private void Awake()
     {
         HitPoints = MaxHitPoints;
@@ -67,14 +70,14 @@ public abstract class Tower : Entity
         if (!IsAlive)
             return;
 
-        if (!hiding)
+        if (!Hiding)
         {
             StartCoroutine(HideASAP());
             sprite.color = Color.black;
         }
         else
         {
-            hiding = false;
+            Hiding = false;
             sprite.color = Color.white;
         }
         //handle visual stuff
@@ -83,7 +86,7 @@ public abstract class Tower : Entity
     protected IEnumerator HideASAP()
     {
         yield return new WaitUntil(() => idle);
-        hiding = true;
+        Hiding = true;
     }
 
     private void SafeStopCoroutine(Coroutine cr)
@@ -131,7 +134,7 @@ public abstract class Tower : Entity
             } 
 
             yield return new WaitForSeconds(retargetDelaySeconds);
-            yield return new WaitUntil(() => !hiding);
+            yield return new WaitUntil(() => !Hiding);
         }
     }
 
@@ -154,7 +157,7 @@ public abstract class Tower : Entity
             }
 
             yield return new WaitForSeconds(actiondelaySeconds);
-            yield return new WaitUntil(() => !hiding);
+            yield return new WaitUntil(() => !Hiding);
         }
     }
 

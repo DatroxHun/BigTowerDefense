@@ -201,7 +201,10 @@ public class Enemy : Entity, IPoolable
     protected override void Target()
     {
         IEnumerable<Entity> targets = TowerManager.instance.Towers
-            .Where(t => t.IsAlive && rangeCollider.OverlapPoint(t.transform.position))
+            .Where(t =>
+                t.IsAlive &&
+                !t.Hiding &&
+                rangeCollider.OverlapPoint(t.transform.position))
             .Select(t => t as Entity);
 
         if (targets.Any())
