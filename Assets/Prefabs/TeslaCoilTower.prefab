@@ -591,10 +591,11 @@ MonoBehaviour:
     electric: 1
     poison: 1
   sprite: {fileID: 8737716004245306509}
+  actiondelaySeconds: 3
   retargetDelaySeconds: 1
   targetTimeSeconds: 0.5
-  actiondelaySeconds: 3
   boltPrefab: {fileID: 4960104078287712160, guid: f45044b94452916448e925117ae04e40, type: 3}
+  EmissionPointOffset: {x: 0, y: 2, z: 0}
 --- !u!114 &1991164496507857412
 MonoBehaviour:
   m_ObjectHideFlags: 0

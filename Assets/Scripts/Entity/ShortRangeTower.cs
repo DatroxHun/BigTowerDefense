@@ -14,6 +14,9 @@ public class ShortRangeTower : TargetingTower
 
     private ObjectPool<LightningBolt> boltPool;
 
+    [SerializeField]
+    private Vector3 EmissionPointOffset;
+
     private new void Start()
     {
         boltPool = new ObjectPool<LightningBolt>
@@ -93,7 +96,13 @@ public class ShortRangeTower : TargetingTower
     {
         LightningBolt bolt = boltPool.Get();
 
-        bolt.Launch(transform.position, targetPoint, impactEffect, boltPool);
+        bolt.Launch
+        (
+            transform.position + EmissionPointOffset,
+            targetPoint,
+            impactEffect,
+            boltPool
+        );
     }
 
     protected override void Target()
