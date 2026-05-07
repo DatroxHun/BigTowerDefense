@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6c582b5472f465347b13a4f0e9f3dd39
+guid: 4219a557ea5229442b0d836169ecf9fc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7157677622941534187
-    second: tesla_coil_0
+      213: -3358933203163112000
+    second: settings_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tesla_coil_0
+      name: settings_0
       rect:
         serializedVersion: 2
-        x: 54
-        y: 8
-        width: 407
-        height: 653
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+        x: 27
+        y: 24
+        width: 202
+        height: 208
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: be7413400ed255360800000000000000
-      internalID: 7157677622941534187
+      spriteID: 0cd92315c0ca261d0800000000000000
+      internalID: -3358933203163112000
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 7804ad7c32354b84caa5833a9259917a
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      tesla_coil_0: 7157677622941534187
+      settings_0: -3358933203163112000
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
