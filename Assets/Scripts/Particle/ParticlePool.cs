@@ -33,7 +33,7 @@ public class ParticlePool : MonoBehaviour
                 obj.SetActive(false);             
 
                 if (!obj.TryGetComponent<IPoolable>(out IPoolable poolable))
-                    throw new MissingComponentException("Spawner: IPoolable component is missing from prefab.");
+                    throw new MissingComponentException("ParticlePool: IPoolable component is missing from prefab.");
 
                 poolable.Pool = pool;
 
@@ -54,9 +54,14 @@ public class ParticlePool : MonoBehaviour
         );
     }
 
-    public void Emit(Vector3 position)
+    public void Emit(Vector3 position, ParticleType type)
     {
-        IPoolable particle = pool.Get();
+        IPoolable poolable = pool.Get();
+
+        if (!poolable.Object.TryGetComponent<Particle>(out Particle particle))
+            throw new MissingComponentException("ParticlePool: Particle component is missing from prefab.");
+
+        particle.SetParticleType(type);
         particle.SpawnAction(position);
     }
 }

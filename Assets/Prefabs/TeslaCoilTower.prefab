@@ -364,7 +364,7 @@ Transform:
   m_GameObject: {fileID: 4154997418327171681}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.825, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 0.43, y: 0.43, z: 0.43}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -428,7 +428,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &5173785267662779831
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,9 +591,9 @@ MonoBehaviour:
     electric: 1
     poison: 1
   sprite: {fileID: 8737716004245306509}
+  actiondelaySeconds: 3
   retargetDelaySeconds: 1
   targetTimeSeconds: 0.5
-  actiondelaySeconds: 3
   boltPrefab: {fileID: 4960104078287712160, guid: f45044b94452916448e925117ae04e40, type: 3}
 --- !u!114 &1991164496507857412
 MonoBehaviour:
