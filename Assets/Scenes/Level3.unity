@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 637844922}
     m_Modifications:
+    - target: {fileID: 2064473376203490612, guid: c754126b3504feb4fb5690a358237c33, type: 3}
+      propertyPath: buildingManager
+      value: 
+      objectReference: {fileID: 1102556260}
     - target: {fileID: 6075348386924849759, guid: c754126b3504feb4fb5690a358237c33, type: 3}
       propertyPath: m_Name
       value: Rock
@@ -423,6 +427,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 637844922}
     m_Modifications:
+    - target: {fileID: 2064473376203490612, guid: c754126b3504feb4fb5690a358237c33, type: 3}
+      propertyPath: buildingManager
+      value: 
+      objectReference: {fileID: 1102556260}
     - target: {fileID: 6075348386924849759, guid: c754126b3504feb4fb5690a358237c33, type: 3}
       propertyPath: m_Name
       value: Rock
@@ -2491,6 +2499,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1102556260}
+        m_TargetAssemblyTypeName: BuildingManager, Assembly-CSharp
+        m_MethodName: StartBuilding
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 6075348386924849759, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1364598707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3209,6 +3229,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 637844922}
     m_Modifications:
+    - target: {fileID: 2064473376203490612, guid: c754126b3504feb4fb5690a358237c33, type: 3}
+      propertyPath: buildingManager
+      value: 
+      objectReference: {fileID: 1102556260}
     - target: {fileID: 6075348386924849759, guid: c754126b3504feb4fb5690a358237c33, type: 3}
       propertyPath: m_Name
       value: Rock
@@ -3818,6 +3842,71 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1001 &1888138691
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6075348386924849759, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_Name
+      value: SupportTower
+      objectReference: {fileID: 0}
+    - target: {fileID: 6619718595024847635, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6619718595024847635, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036385594375159615, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a87b88b410fe1cb4ea5dc1aa7e645289, type: 3}
 --- !u!1 &1937458563
 GameObject:
   m_ObjectHideFlags: 0
@@ -3868,14 +3957,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.021962404, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8069619478552258361, guid: 36db410d6b88e7542b9ec376bae299c5, type: 3}
+  m_Sprite: {fileID: -6585025459329304487, guid: 2448f8527bc1e9e46a5b680979fa1eab, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4252,3 +4341,4 @@ SceneRoots:
   - {fileID: 1120785919}
   - {fileID: 1311192239}
   - {fileID: 1857827882}
+  - {fileID: 1888138691}

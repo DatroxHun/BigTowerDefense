@@ -12,23 +12,13 @@ public class ComponentModule { }
 public abstract class Tower : Entity
 {
     protected ComponentModule module;
-    protected bool hiding = false;
     protected bool idle = true;
-    private Coroutine targeting = null!;
     private Coroutine acting = null!;
 
-    /// <summary>
-    /// Time between (re)targeting attempts
-    /// </summary>
-    [SerializeField]
-    protected float retargetDelaySeconds = 10.0f;
+    protected override bool Invulnerable() => Hiding;
 
-    /// <summary>
-    /// Time it takes to choose a target
-    /// </summary>
     [SerializeField]
-    protected float targetTimeSeconds = 2.0f;
-
+    protected SpriteRenderer sprite;
 
     [SerializeField]
     protected float actiondelaySeconds = 2.0f;
@@ -38,6 +28,8 @@ public abstract class Tower : Entity
         get { return rangeCollider.radius; }
         set { rangeCollider.radius = value; }
     }
+
+    public bool Hiding { get; protected set; } = false;
 
     private void Awake()
     {
@@ -49,7 +41,6 @@ public abstract class Tower : Entity
         transform.parent = TowerManager.instance.transform;
         TowerManager.instance.AddTower(this);
 
-        targeting = StartCoroutine(Targeting());
         acting = StartCoroutine(Acting());
     }
 
@@ -59,68 +50,56 @@ public abstract class Tower : Entity
     }
 
     // hide as soon as done doing thing
-    protected void ToggleHide()
+    public void ToggleHide()
     {
-        if (!hiding)
+        if (!IsAlive)
+            return;
+
+        if (!Hiding)
+        {
             StartCoroutine(HideASAP());
+        }
         else
-            hiding = false;
+        {
+            Hiding = false;
+            sprite.color = Color.white;
+        }
         //handle visual stuff
     }
 
     protected IEnumerator HideASAP()
     {
         yield return new WaitUntil(() => idle);
-        hiding = true;
+        Hiding = true;
+        sprite.color = Color.black;
     }
 
-    private void SafeStopCoroutine(Coroutine cr)
+    protected void SafeStopCoroutine(Coroutine cr)
     {
         if (cr != null)
             StopCoroutine(cr);
     }
 
-    private void OnDestruction()
+    protected virtual void OnDestruction()
     {
-        SafeStopCoroutine(targeting);
         SafeStopCoroutine(acting);
     }
 
 
     // call when wave ends / before wave begins
-    public void OnRepair()
+    public virtual void OnRepair()
     {
         HitPoints = MaxHitPoints;
 
         // avoid duplicate coroutines
-        SafeStopCoroutine(targeting);
+        
         SafeStopCoroutine(acting);
 
-        // maybe TODO: StopCoroutines function
-
         // start for real
-        targeting = StartCoroutine(Targeting());
+        
         acting = StartCoroutine(Acting());
 
         idle = true;
-    }
-
-    private IEnumerator Targeting()
-    {
-        while(true)
-        {
-            if (idle)
-            {
-                idle = false;
-                yield return new WaitForSeconds(targetTimeSeconds);
-                //Debug.Log($"[TOWER] : TARGETIMG");
-                Target();
-                idle = true;
-            } 
-
-            yield return new WaitForSeconds(retargetDelaySeconds);
-            yield return new WaitUntil(() => !hiding);
-        }
     }
 
     private IEnumerator Acting()
@@ -142,7 +121,7 @@ public abstract class Tower : Entity
             }
 
             yield return new WaitForSeconds(actiondelaySeconds);
-            yield return new WaitUntil(() => !hiding);
+            yield return new WaitUntil(() => !Hiding);
         }
     }
 

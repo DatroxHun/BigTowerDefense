@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class BaseTower : Tower
+public class BaseTower : TargetingTower
 {
     [SerializeField]
     private LayerMask obstacleLayer;
