@@ -34,6 +34,7 @@ public abstract class Entity : MonoBehaviour
 
     [field: SerializeField] private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
 
+    protected virtual bool Invulnerable() => false;
 
     private float hitpoints;
     public float HitPoints
@@ -41,7 +42,7 @@ public abstract class Entity : MonoBehaviour
         get => hitpoints; 
         protected set
         {
-            hitpoints = value;
+            hitpoints = Mathf.Min(value, MaxHitPoints);
 
             if (healthbar != null)
                 healthbar.value = HitPoints / MaxHitPoints;
@@ -63,7 +64,6 @@ public abstract class Entity : MonoBehaviour
     private List<Coroutine> statusEffects = new List<Coroutine>();
 
     protected abstract void Action();
-    protected abstract void Target();
 
     private void Start()
     {
@@ -87,6 +87,9 @@ public abstract class Entity : MonoBehaviour
 
     public void ApplyDamage(DamageObj dobj)
     {
+        if (Invulnerable())
+            return;
+
         DamageObj finalDmg = dobj * Vulnerabilities;
 
         HitPoints -= finalDmg.direct;
@@ -96,6 +99,15 @@ public abstract class Entity : MonoBehaviour
         HitPoints -= finalDmg.poison;
 
         if (!IsAlive) JustDied();
+    }
+
+    public void ApplyHeal(float healedHP)
+    {
+        if (IsAlive)
+        {
+            // clamping handled in HitPoints setter
+            HitPoints += healedHP;
+        }
     }
 
     protected virtual void JustDied()

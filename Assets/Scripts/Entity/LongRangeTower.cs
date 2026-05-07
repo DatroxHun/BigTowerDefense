@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 // gunner tower
-public class LongRangeTower : Tower
+public class LongRangeTower : TargetingTower
 {
     [SerializeField]
     private LayerMask obstacleLayer;
