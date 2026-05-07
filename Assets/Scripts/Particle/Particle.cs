@@ -20,7 +20,7 @@ public class Particle : MonoBehaviour, IPoolable
     {
         transform.position = position;
 
-        if (particleIndex > 0 && particleIndex < pSystems.Length)
+        if (particleIndex >= 0 && particleIndex < pSystems.Length)
             pSystems[particleIndex].Play();
 
         StartCoroutine(ReturnCondition());

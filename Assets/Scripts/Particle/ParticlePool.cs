@@ -5,10 +5,9 @@ using UnityEngine.Splines.ExtrusionShapes;
 
 public class ParticlePool : MonoBehaviour
 {
-    public static ParticlePool instance;
-
     [SerializeField] private GameObject particlePrefab;
 
+    private static ParticlePool instance;
     private ObjectPool<IPoolable> pool = null!;
 
     private void Awake()
@@ -54,9 +53,9 @@ public class ParticlePool : MonoBehaviour
         );
     }
 
-    public void Emit(Vector3 position, ParticleType type)
+    public static void Emit(Vector3 position, ParticleType type)
     {
-        IPoolable poolable = pool.Get();
+        IPoolable poolable = instance.pool.Get();
 
         if (!poolable.Object.TryGetComponent<Particle>(out Particle particle))
             throw new MissingComponentException("ParticlePool: Particle component is missing from prefab.");
