@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,7 +12,7 @@ public class Interaction : MonoBehaviour
 
     [SerializeField] private Tower tower;
 
-    [SerializeField] private Image visibilityImage;
+    [SerializeField] private Image? visibilityImage;
     [SerializeField] private Sprite visibleSprite;
     [SerializeField] private Sprite invisibleSprite;
 
@@ -37,7 +39,7 @@ public class Interaction : MonoBehaviour
 
     public void PressedButton(int idx)
     {
-        if (idx == 0) // visibility
+        if (idx == 0 && visibilityImage != null) // visibility
         {
             tower.ToggleHide(() =>
             {
@@ -51,7 +53,7 @@ public class Interaction : MonoBehaviour
         }
     }
 
-    public static void CloseAll(Interaction except = null)
+    public static void CloseAll(Interaction? except = null)
     {
         foreach (Interaction interaction in interactions)
         {
