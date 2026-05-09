@@ -50,28 +50,32 @@ public abstract class Tower : Entity
     }
 
     // hide as soon as done doing thing
-    public void ToggleHide()
+    public void ToggleHide(System.Action callback = null)
     {
         if (!IsAlive)
             return;
 
         if (!Hiding)
         {
-            StartCoroutine(HideASAP());
+            StartCoroutine(HideASAP(callback));
         }
         else
         {
             Hiding = false;
             sprite.color = Color.white;
+
+            callback?.Invoke();
         }
         //handle visual stuff
     }
 
-    protected IEnumerator HideASAP()
+    protected IEnumerator HideASAP(System.Action callback = null)
     {
         yield return new WaitUntil(() => idle);
         Hiding = true;
         sprite.color = Color.black;
+
+        callback?.Invoke();
     }
 
     protected void SafeStopCoroutine(Coroutine cr)
