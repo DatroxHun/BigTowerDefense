@@ -65,7 +65,7 @@ public abstract class Entity : MonoBehaviour
 
     protected abstract void Action();
 
-    private void Start()
+    protected void Start()
     {
         HitPoints = MaxHitPoints;
     }

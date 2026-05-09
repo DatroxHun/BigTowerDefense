@@ -162,6 +162,12 @@ MonoBehaviour:
     electric: 1
     poison: 1
   walker: {fileID: 871284484800307019}
+  attackRange: 3.5
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  cannonBallPrefab: {fileID: 4624881190423285408, guid: b505674290453504db69aba290f92efb, type: 3}
+  inaccuracy: 0
 --- !u!114 &871284484800307019
 MonoBehaviour:
   m_ObjectHideFlags: 0
