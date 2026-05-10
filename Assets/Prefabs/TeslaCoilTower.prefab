@@ -358,7 +358,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1477198441
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &4756102624334664459
@@ -671,6 +671,14 @@ PrefabInstance:
       propertyPath: tower
       value: 
       objectReference: {fileID: 1479861918098904763}
+    - target: {fileID: 9167088812163422325, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      propertyPath: aboveY
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167088812163422325, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      propertyPath: belowY
+      value: -95
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

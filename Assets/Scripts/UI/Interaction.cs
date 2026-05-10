@@ -10,6 +10,9 @@ public class Interaction : MonoBehaviour
 {
     private static List<Interaction> interactions = new();
 
+    [SerializeField] private float aboveY = 95f;
+    [SerializeField] private float belowY = -95f;
+
     [SerializeField] private Tower tower;
 
     [SerializeField] private Image? visibilityImage;
@@ -22,6 +25,7 @@ public class Interaction : MonoBehaviour
     public bool Visible { get; private set; } = false;
 
     private const float animTime = 0.35f;
+    private RectTransform rectTransform;
 
     private void Awake()
     {
@@ -31,6 +35,8 @@ public class Interaction : MonoBehaviour
 
     private void Start()
     {
+        rectTransform = GetComponent<RectTransform>();
+
         foreach (Transform child in canvasGroup.transform)
         {
             buttons.Add(child);
@@ -57,13 +63,15 @@ public class Interaction : MonoBehaviour
     {
         foreach (Interaction interaction in interactions)
         {
-            if (interaction != except)
+            if (interaction != except && interaction != null)
                 interaction.SetVisibility(false);
         }
     }
 
     public void SetVisibility(bool visible)
     {
+        if (!this.Visible) FitOnScreen();
+
         if (this.Visible == visible) return;
         this.Visible = visible;
 
@@ -77,7 +85,7 @@ public class Interaction : MonoBehaviour
     {
         LeanTween.scale(gameObject, visible ? Vector3.one : Vector3.one * .25f, animTime)
             .setEase(visible ? LeanTweenType.easeOutBack : LeanTweenType.easeOutExpo);
-        
+
         foreach (Transform t in buttons)
         {
             LeanTween.scale(t.gameObject, visible ? Vector3.one : Vector3.one * .5f, animTime)
@@ -91,5 +99,22 @@ public class Interaction : MonoBehaviour
             canvasGroup.interactable = visible;
             canvasGroup.blocksRaycasts = visible;
         });
+    }
+
+    private void FitOnScreen()
+    {
+        const float bottomMargin = .15f;
+
+        Debug.Log($"tower: {tower != null}");
+        Vector3 parentViewportPos = Camera.main.WorldToViewportPoint(tower!.transform.position);
+
+        if (parentViewportPos.y < bottomMargin)
+        {
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, aboveY);
+        }
+        else
+        {
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, belowY);
+        }
     }
 }
