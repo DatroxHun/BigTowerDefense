@@ -35,8 +35,6 @@ public class Interaction : MonoBehaviour
         {
             buttons.Add(child);
         }
-
-        Debug.Log();
     }
 
     public void PressedButton(int idx)
