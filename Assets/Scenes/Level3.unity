@@ -4338,6 +4338,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1479861918098904763, guid: 822744c7c4a656848a6f2f0bbbdc8ddf, type: 3}
+      propertyPath: EmissionPointOffset.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6075348386924849759, guid: 822744c7c4a656848a6f2f0bbbdc8ddf, type: 3}
       propertyPath: m_Name
       value: TeslaCoilTower

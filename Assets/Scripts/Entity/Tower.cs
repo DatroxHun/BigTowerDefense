@@ -36,8 +36,10 @@ public abstract class Tower : Entity
         HitPoints = MaxHitPoints;
     }
 
-    protected void Start()
+    protected new void Start()
     {
+        base.Start();
+
         transform.parent = TowerManager.instance.transform;
         TowerManager.instance.AddTower(this);
 

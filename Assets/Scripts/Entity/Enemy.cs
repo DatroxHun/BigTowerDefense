@@ -20,6 +20,8 @@ public class Enemy : Entity, IPoolable
     private Road road = null!;
     public void SetRoad(Road road) => this.road = road;
 
+    [SerializeField]
+    protected float attackRange = 1f;
 
     // IPoolable
     public GameObject Object => gameObject;
@@ -107,7 +109,7 @@ public class Enemy : Entity, IPoolable
 
                 if (CurrentTarget is EntityTarget target)
                 {
-                    WalkToEntity(target.entity, 1f); // hard coded radius!!!!!!!!
+                    WalkToEntity(target.entity, attackRange);
                 }
                 else
                 {
@@ -201,7 +203,7 @@ public class Enemy : Entity, IPoolable
     }
 
     // protected override void Target()
-    protected void Target()
+    protected virtual void Target()
     {
         IEnumerable<Entity> targets = TowerManager.instance.Towers
             .Where(t =>

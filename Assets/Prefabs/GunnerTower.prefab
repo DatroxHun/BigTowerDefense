@@ -330,6 +330,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   bulletPrefab: {fileID: 4624881190423285408, guid: b505674290453504db69aba290f92efb, type: 3}
+  Inaccuracy: 0.5
 --- !u!114 &6065222854842091785
 MonoBehaviour:
   m_ObjectHideFlags: 0
