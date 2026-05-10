@@ -14,6 +14,9 @@ public class LongRangeTower : TargetingTower
     [SerializeField]
     private Bullet bulletPrefab;
 
+    [SerializeField]
+    private float Inaccuracy;
+
     private ObjectPool<Bullet> bulletPool;
 
     private new void Start()
@@ -68,10 +71,14 @@ public class LongRangeTower : TargetingTower
 
         Debug.Log($"[GUNNER] : SHOOTING");
 
-        Vector3 randomTarget = CurrentTarget
+        Vector3 preciseTarget = CurrentTarget
             .GetCoordinates()
             .OrderBy(x => UnityEngine.Random.value)
             .First();
+
+        Vector3 perturbance = UnityEngine.Random.insideUnitCircle.normalized;
+
+        Vector3 finalTarget = preciseTarget + perturbance * Inaccuracy;
 
         //ComponentModule.AugmentTargetChoice(CurrentTarget, ActuallyPrioritizedTarget(=randomTarget))
 
@@ -87,7 +94,7 @@ public class LongRangeTower : TargetingTower
             enemy => Effects.InstantDamage(enemy, dmg)
         };
 
-        Shoot(randomTarget,
+        Shoot(finalTarget,
             (entity) =>
             {
                 if (entity is Enemy enemy)
