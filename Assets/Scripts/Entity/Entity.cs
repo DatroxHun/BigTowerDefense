@@ -105,6 +105,11 @@ public abstract class Entity : MonoBehaviour
     {
         if (IsAlive)
         {
+            if (HitPoints != MaxHitPoints)
+            {
+                ParticlePool.Emit(transform.position, ParticleType.Divine);
+            }
+
             // clamping handled in HitPoints setter
             HitPoints += healedHP;
         }
