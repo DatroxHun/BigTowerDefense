@@ -36,15 +36,16 @@ public class BuildingManager : MonoBehaviour
         
         currentGhost = Instantiate(towerPrefab);
         
+        Tower script = currentGhost.GetComponent<Tower>();
+        script.enabled = false;
+        TowerManager.instance.RemoveTower(script);
+        
         BoxCollider2D ghostCollider = (currentGhost.GetComponent<BoxCollider2D>());
         ghostCollider.enabled = false;
         prefabCollider = ghostCollider;
 
-        var ghostSprite = currentGhost.GetComponent<SpriteRenderer>();
+        var ghostSprite = currentGhost.GetComponentInChildren<SpriteRenderer>();
         ghostSprite.sortingLayerName = "air";
-
-        Tower script = currentGhost.GetComponent<Tower>();
-        script.enabled = false;
     }
 
     // Update is called once per frame

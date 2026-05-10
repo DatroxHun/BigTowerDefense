@@ -187,7 +187,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4885449910184159574}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -220,7 +220,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1477198441
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &3840355914681389061
@@ -648,6 +648,14 @@ PrefabInstance:
       propertyPath: tower
       value: 
       objectReference: {fileID: 2559041847625762935}
+    - target: {fileID: 9167088812163422325, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      propertyPath: aboveY
+      value: 135
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167088812163422325, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      propertyPath: belowY
+      value: -95
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6376630522408785688, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
     m_RemovedGameObjects: []

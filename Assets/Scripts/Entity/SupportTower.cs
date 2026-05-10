@@ -22,6 +22,8 @@ public class SupportTower : Tower
         List<Tower> towers =
             TowerManager.instance.Towers
             .Where(e =>
+                e != null &&
+                e.IsAlive &&
                 rangeCollider.OverlapPoint(e.transform.position))
             .ToList();
 

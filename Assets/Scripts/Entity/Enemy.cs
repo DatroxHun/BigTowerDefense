@@ -207,6 +207,7 @@ public class Enemy : Entity, IPoolable
     {
         IEnumerable<Entity> targets = TowerManager.instance.Towers
             .Where(t =>
+                t != null &&
                 t.IsAlive &&
                 !t.Hiding &&
                 rangeCollider.OverlapPoint(t.transform.position))
