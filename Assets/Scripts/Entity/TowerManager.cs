@@ -28,7 +28,7 @@ public class TowerManager : MonoBehaviour
 
     public void AddTower(Tower e) => towers.Add(e);
 
-    public void RemoveTower(Tower e) => towers.Remove(e);
+    public bool RemoveTower(Tower e) => towers.Remove(e);
 
     public void RepairTowers()
     {

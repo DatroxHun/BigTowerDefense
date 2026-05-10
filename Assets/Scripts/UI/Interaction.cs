@@ -105,16 +105,18 @@ public class Interaction : MonoBehaviour
     {
         const float bottomMargin = .15f;
 
-        Debug.Log($"tower: {tower != null}");
         Vector3 parentViewportPos = Camera.main.WorldToViewportPoint(tower!.transform.position);
 
-        if (parentViewportPos.y < bottomMargin)
+        if (rectTransform != null)
         {
-            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, aboveY);
-        }
-        else
-        {
-            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, belowY);
+            if (parentViewportPos.y < bottomMargin)
+            {
+                rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, aboveY);
+            }
+            else
+            {
+                rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, belowY);
+            }
         }
     }
 }

@@ -98,7 +98,7 @@ public class Spawner : MonoBehaviour
                         },
                         actionOnDestroy: (obj) => Destroy(obj.Object),
                         collectionCheck: true,
-                        defaultCapacity: 20,
+                        defaultCapacity: 100,
                         maxSize: 500
                     );
 

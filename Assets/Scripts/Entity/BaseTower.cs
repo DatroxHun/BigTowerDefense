@@ -39,7 +39,7 @@ public class BaseTower : TargetingTower
                 Destroy(obj.Object);
             },
             collectionCheck: true,
-            defaultCapacity: 3,
+            defaultCapacity: 5,
             maxSize: 20
         );
 
