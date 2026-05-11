@@ -2982,7 +2982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3a240c7ee94dd140987088fd47acc33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  mainMixer: {fileID: 0}
+  mainMixer: {fileID: 24100000, guid: 0720dd4e1157f434899cf9f76818de09, type: 2}
   musicMixerGroup: {fileID: 7399483513517328140, guid: 0720dd4e1157f434899cf9f76818de09, type: 2}
   sfxMixerGroup: {fileID: -3498090358457976184, guid: 0720dd4e1157f434899cf9f76818de09, type: 2}
   bgmSources:
