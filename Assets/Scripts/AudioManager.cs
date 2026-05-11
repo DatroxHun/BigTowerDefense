@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     private static AudioManager instance;
 
     [Header("Audio Mixers")]
+    [SerializeField] private AudioMixer mainMixer;
     [SerializeField] private AudioMixerGroup musicMixerGroup;
     [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
@@ -192,6 +193,17 @@ public class AudioManager : MonoBehaviour
             instance.bgmPitch = null;
         })
         .setIgnoreTimeScale(true);
+    }
+
+    // --- VOLUME ---
+    public static void SetMasterVolume(float v) => SetVolume("MasterVol", v);
+    public static void SetMusicVolume(float v) => SetVolume("MusicVol", v);
+    public static void SetSFXVolume(float v) => SetVolume("SFXVol", v);
+
+    private static void SetVolume(string name, float v)
+    {
+        v = Mathf.Clamp(v, 0.0001f, 1f);
+        instance.mainMixer.SetFloat(name, Mathf.Log10(v) * 20f);
     }
 }
 
