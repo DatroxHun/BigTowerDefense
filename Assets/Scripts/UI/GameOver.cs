@@ -19,6 +19,8 @@ public class GameOver : MonoBehaviour
 
     public void Toggle()
     {
+        PauseMenu.SetPauseGame(true);
+
         if (!animating)
         {
             animating = true;
@@ -32,7 +34,8 @@ public class GameOver : MonoBehaviour
                     group.interactable = shown;
 
                     animating = false;
-                });
+                })
+                .setIgnoreTimeScale(true);
         }
     }
 
@@ -45,6 +48,12 @@ public class GameOver : MonoBehaviour
             transitionImageTransform.eulerAngles = new Vector3(0, 0, val * 270f);
         }, 0f, 1f, 1f)
         .setEase(LeanTweenType.easeInSine)
-        .setOnComplete(() => SceneManager.LoadSceneAsync(0));
+        .setOnComplete(() =>
+        {
+            PauseMenu.SetPauseGame(false);
+            AudioManager.PlayBGM(Clip.CalmBGM);
+            SceneManager.LoadSceneAsync(0);
+        })
+        .setIgnoreTimeScale(true);
     }
 }

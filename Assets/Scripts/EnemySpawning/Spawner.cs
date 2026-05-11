@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Rendering.Universal;
@@ -127,6 +128,7 @@ public class Spawner : MonoBehaviour
 
         // Start
         Debug.Log($"Starting Wave: {waveIdx}");
+        AudioManager.PlayBGM(Clip.BattleBGM);
         Wave wave = spawnObject.waves[waveIdx];
 
         // Initial Delay
@@ -140,7 +142,10 @@ public class Spawner : MonoBehaviour
             yield return new WaitForSeconds(batch.duration);
         }
 
+        yield return new WaitWhile(() => EnemyManager.instance.Enemies.Any(x => x.IsAlive));
+        AudioManager.PlayBGM(Clip.CalmBGM);
+
         WaveEnded?.Invoke();
-        waveCoroutine = null;     
+        waveCoroutine = null;
     }
 }

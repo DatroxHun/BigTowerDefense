@@ -34,8 +34,8 @@ public class PauseMenu : MonoBehaviour
 
     public static void SetPauseGame(bool isPaused)
     {
-        if (isPaused) Time.timeScale = 0f;
-        else          Time.timeScale = 1f;
+        Time.timeScale = isPaused ? 0f : 1f;
+        AudioManager.SetBGMPitch(isPaused ? 0.9f : 1f);
     }
 
     public void TogglePauseMenu() => SetPauseMenu(!IsPaused);
