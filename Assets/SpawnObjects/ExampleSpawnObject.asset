@@ -17,7 +17,7 @@ MonoBehaviour:
     delay: 0.5
     batches:
     - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
-      amount: 10
+      amount: 30
       burstDelay: 0.2
       duration: 15
     - enemy: {fileID: 735166972616930786, guid: 67fc3faabbda5d34aa79b830fd25e3c6, type: 3}
@@ -25,7 +25,7 @@ MonoBehaviour:
       burstDelay: 0.2
       duration: 15
     - enemy: {fileID: 735166972616930786, guid: 67fc3faabbda5d34aa79b830fd25e3c6, type: 3}
-      amount: 10
+      amount: 9
       burstDelay: 0.2
       duration: 15
   - description: 'Test Wave #2

@@ -199,6 +199,8 @@ public class Enemy : Entity, IPoolable
             };
 
             target.entity.ApplyEffect(Effects.InstantDamage(target.entity, dmg));
+
+            AudioManager.PlaySFX(Clip.BasicAttack, 1f, 1f, 1.1f);
         }
     }
 
