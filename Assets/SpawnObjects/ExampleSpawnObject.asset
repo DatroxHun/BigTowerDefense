@@ -17,17 +17,17 @@ MonoBehaviour:
     delay: 0.5
     batches:
     - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
-      amount: 30
+      amount: 10
       burstDelay: 0.2
-      duration: 15
-    - enemy: {fileID: 735166972616930786, guid: 67fc3faabbda5d34aa79b830fd25e3c6, type: 3}
+      duration: 5
+    - enemy: {fileID: 735166972616930786, guid: 5d4273c7225115e47a48daaedc2116c1, type: 3}
       amount: 3
       burstDelay: 0.2
-      duration: 15
-    - enemy: {fileID: 735166972616930786, guid: 67fc3faabbda5d34aa79b830fd25e3c6, type: 3}
+      duration: 5
+    - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
       amount: 9
       burstDelay: 0.2
-      duration: 15
+      duration: 5
   - description: 'Test Wave #2
 
 '
