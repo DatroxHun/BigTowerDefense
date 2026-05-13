@@ -168,7 +168,7 @@ public class Enemy : Entity, IPoolable
             if (CurrentTarget is EntityTarget target)
             {
                 // if target is alive -> attack
-                if (target.entity != null && target.entity.IsAlive)
+                if (target.entity != null && target.entity.IsAlive && target.entity is Tower tower && !tower.Hiding)
                 {
                     Action();
                 }
