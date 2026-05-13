@@ -28,6 +28,10 @@ MonoBehaviour:
       amount: 9
       burstDelay: 0.2
       duration: 5
+    - enemy: {fileID: 735166972616930786, guid: fa2052674fac5cb4c9731f363b6b96a7, type: 3}
+      amount: 3
+      burstDelay: 1
+      duration: 5
   - description: 'Test Wave #2
 
 '

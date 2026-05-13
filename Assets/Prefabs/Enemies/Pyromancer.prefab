@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pyromancer
   healthbar: {fileID: 4196462429248242901}
   rangeCollider: {fileID: 9067605995542005407}
-  <MaxHitPoints>k__BackingField: 10
+  <MaxHitPoints>k__BackingField: 15
   <Vulnerabilities>k__BackingField:
     direct: 1
     physical: 1
