@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,14 +14,18 @@ public class Interaction : MonoBehaviour
     [SerializeField] private float aboveY = 95f;
     [SerializeField] private float belowY = -95f;
 
-    [SerializeField] private Tower tower;
-
-    [SerializeField] private Image? visibilityImage;
-    [SerializeField] private Sprite visibleSprite;
-    [SerializeField] private Sprite invisibleSprite;
-
     [SerializeField] private CanvasGroup canvasGroup;
     List<Transform> buttons = new();
+
+    [Header("Tower")]
+    [SerializeField] private Tower? tower;
+
+    [SerializeField] private Image? visibilityImage;
+    [SerializeField] private Sprite? visibleSprite;
+    [SerializeField] private Sprite? invisibleSprite;
+
+    [Header("Obstacle")]
+    [SerializeField] private Obstacle? obstacle;
 
     public bool Visible { get; private set; } = false;
 
@@ -45,7 +50,8 @@ public class Interaction : MonoBehaviour
 
     public void PressedButton(int idx)
     {
-        if (idx == 0 && visibilityImage != null) // visibility
+        if (idx == 0 && visibilityImage != null && tower != null && 
+            invisibleSprite != null && visibleSprite != null) // tower hiding
         {
             tower.ToggleHide(() =>
             {
@@ -53,9 +59,13 @@ public class Interaction : MonoBehaviour
                 visibilityImage.sprite = tower.Hiding ? invisibleSprite : visibleSprite;
             });            
         }
-        else if (idx == 1) // settings
+        else if (idx == 1) // tower settings
         {
 
+        }
+        else if (idx == 2 && obstacle != null) // obstacle removal
+        {
+            obstacle.OnRemove();
         }
     }
 
@@ -105,11 +115,16 @@ public class Interaction : MonoBehaviour
     {
         const float bottomMargin = .15f;
 
-        Vector3 parentViewportPos = Camera.main.WorldToViewportPoint(tower!.transform.position);
+        Vector3? parentViewportPos = null;
+        
+        if (tower != null)
+            parentViewportPos = Camera.main.WorldToViewportPoint(tower.transform.position);
+        else if (obstacle != null)
+            parentViewportPos = Camera.main.WorldToViewportPoint(obstacle.transform.position);
 
-        if (rectTransform != null)
+        if (parentViewportPos != null && rectTransform != null)
         {
-            if (parentViewportPos.y < bottomMargin)
+            if (parentViewportPos.Value.y < bottomMargin)
             {
                 rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, aboveY);
             }
