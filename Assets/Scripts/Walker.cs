@@ -1,7 +1,10 @@
 #nullable enable
 
 using System;
+using System.Net;
+using JetBrains.Annotations;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -83,6 +86,13 @@ public class Walker : MonoBehaviour
         SetPathEndPoint(dest, radius);    
     }
 
+    public bool WalkOnPathRanged(Vector3 dest, float radius, LayerMask obstacleLayer, Action? globalCallback = null, 
+                                 int numberOfSections = 6, int iterPerSection = 3)
+    {
+        SetMode(WalkModes.Pathfind, globalCallback);
+        return SetPathEndPointRanged(dest, radius, obstacleLayer, numberOfSections, iterPerSection);
+    }
+
     public void Stop(Action? globalCallback = null)
     {
         SetMode(WalkModes.Stop, globalCallback);
@@ -105,6 +115,34 @@ public class Walker : MonoBehaviour
         float angle = Random.Range(0f, 2f * Mathf.PI);
         Vector3 endPoint = dest + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius;
         Agent.SetDestination(endPoint);
+    }
+
+    private bool SetPathEndPointRanged(Vector3 target, float radius, LayerMask obstacleLayer, int numberOfSections, int iterPerSection)
+    {
+        float dy = this.transform.position.y - target.y;
+        float dx = this.transform.position.x - target.x;
+        float phi = Mathf.Atan2(dy, dx);
+
+        for (int s = 1; s <= numberOfSections; s++)
+        {
+            float lowerDeltaPhi = (s - 1) * Mathf.PI / numberOfSections;
+            float upperDeltaPhi = (s + 0) * Mathf.PI / numberOfSections;
+
+            for (int i = 0; i < iterPerSection; i++)
+            {
+                float randomPhi = phi + Random.Range(lowerDeltaPhi, upperDeltaPhi) * (Random.value > 0.5 ? 1f : -1f);
+                Vector3 potentialPosition = target + radius * new Vector3(Mathf.Cos(randomPhi), Mathf.Sin(randomPhi));
+
+                RaycastHit2D result = Physics2D.Linecast(potentialPosition, target, obstacleLayer);
+                if (result.collider == null)
+                {
+                    Agent.SetDestination(potentialPosition);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void SetMode(WalkModes mode, Action? globalCallback = null)

@@ -163,6 +163,7 @@ MonoBehaviour:
     poison: 1
   walker: {fileID: 871284484800307019}
   attackRange: 3.5
+  attackInterval: 1
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -180,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90060e01b01914e478973c32f2c7c074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Walker
-  <Speed>k__BackingField: 1
+  <Speed>k__BackingField: 0.8
   <Agent>k__BackingField: {fileID: 6757155748682780842}
 --- !u!195 &6757155748682780842
 NavMeshAgent:
