@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Image TransitionPanel = null!;
     [SerializeField] private RectTransform LevelSelectorHolder = null!;
     [SerializeField] private RectTransform ButtonHolder = null!;
+    [SerializeField] private Image TransitionInImage = null!;
 
     private void Awake()
     {
@@ -29,7 +30,14 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-        
+        TransitionInImage.gameObject.SetActive(true);
+
+        LeanTween.value(TransitionInImage.gameObject, (float val) =>
+        {
+            TransitionInImage.transform.localScale = Vector3.one * (1f - val);
+            TransitionInImage.transform.eulerAngles = new Vector3(0, 0, -val * 270f);
+        }, 0f, 1f, 1f)
+        .setEase(LeanTweenType.easeOutSine).setIgnoreTimeScale(true);
     }
 
     public void LoadScene(int sceneIdx)

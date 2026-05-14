@@ -15,10 +15,17 @@ public static class Effects
 
     public static IEnumerator RecurrentDamage(Entity entity, DamageObj dobj, int count, float delay)
     {
+        var waitDelay = new WaitForSeconds(delay);
         for (int i = 0; i < count; i++)
         {
-            yield return new WaitForSeconds(delay);
+            yield return waitDelay;
             entity.ApplyDamage(dobj);
         }
+    }
+    public static IEnumerator InstantHeal(Entity entity, float hitPoints)
+    {
+        entity.ApplyHeal(hitPoints);
+
+        yield return null;
     }
 }

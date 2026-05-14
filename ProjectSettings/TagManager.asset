@@ -15,7 +15,7 @@ TagManager:
   - Enemy
   - Tower
   - Ground
-  - 
+  - Clickable
   - 
   - 
   - 
@@ -47,6 +47,9 @@ TagManager:
     locked: 0
   - name: air
     uniqueID: 3253091403
+    locked: 0
+  - name: UI
+    uniqueID: 2817768855
     locked: 0
   m_RenderingLayers:
   - Default

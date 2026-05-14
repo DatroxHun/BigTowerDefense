@@ -16,10 +16,12 @@ public class Enemy : Entity, IPoolable
     }
 
     // Walking
-    [SerializeField] private Walker walker = null!;
+    [SerializeField] protected Walker walker = null!;
     private Road road = null!;
     public void SetRoad(Road road) => this.road = road;
 
+    [SerializeField]
+    protected float attackRange = 1f;
 
     // IPoolable
     public GameObject Object => gameObject;
@@ -34,8 +36,13 @@ public class Enemy : Entity, IPoolable
 
     public void SpawnAction(Vector3 position)
     {
+        ParticlePool.Emit(position, ParticleType.Smoke);
+
         transform.position = position;
         CurrentTarget = null;
+
+        // regenerate health
+        HitPoints = MaxHitPoints;
 
         WalkOnRoad();
         //walker.WalkOnRoad(road, globalCallback: Return2Pool);
@@ -44,11 +51,12 @@ public class Enemy : Entity, IPoolable
     // Brain Cycles
     const float scanInterval = 0.5f;
     const float motivationCheckInterval = 0.5f;
-    float attackInterval = 1f;
+    [SerializeField]
+    protected float attackInterval = 1f;
 
     Coroutine? scanCycle = null;
-    Coroutine? motivationCycle = null;
-    Coroutine? attackCycle = null;
+    protected Coroutine? motivationCycle = null;
+    protected Coroutine? attackCycle = null;
 
     private void StopAllCycles()
     {
@@ -57,7 +65,7 @@ public class Enemy : Entity, IPoolable
         if (attackCycle != null) StopCoroutine(attackCycle);
     }
 
-    private void WalkOnRoad(float scanDelay = 0f)
+    protected void WalkOnRoad(float scanDelay = 0f)
     {
         walker.WalkOnRoad(road, globalCallback: () =>
         {
@@ -71,7 +79,7 @@ public class Enemy : Entity, IPoolable
         scanCycle = StartCoroutine(Scan(scanDelay));
     }
  
-    private void WalkToEntity(Entity entity, float radius)
+    protected virtual void WalkToEntity(Entity entity, float radius)
     {
         walker.WalkOnPath(entity.transform.position, radius, () => 
         {
@@ -102,7 +110,7 @@ public class Enemy : Entity, IPoolable
 
                 if (CurrentTarget is EntityTarget target)
                 {
-                    WalkToEntity(target.entity, 1f); // hard coded radius!!!!!!!!
+                    WalkToEntity(target.entity, attackRange);
                 }
                 else
                 {
@@ -112,7 +120,7 @@ public class Enemy : Entity, IPoolable
         }
     }
 
-    private IEnumerator MotivationCheck()
+    protected IEnumerator MotivationCheck()
     {
         Vector3? prevPos = null;
 
@@ -121,15 +129,27 @@ public class Enemy : Entity, IPoolable
         {
             yield return new WaitForSeconds(motivationCheckInterval);
 
+            // get target entity
+            Entity? tower = null;
+            if (CurrentTarget is EntityTarget target && target.entity != null)
+            {
+                tower = target.entity;
+            }
+            else
+            {
+                throw new System.Exception("Not intended target class!");
+            }
+
             // calculate average speed for last motivationCheckInterval
             float avgSpeed = float.PositiveInfinity;
             if (prevPos != null)
                 avgSpeed = Vector3.Distance(walker.transform.position, prevPos.Value) / motivationCheckInterval;
 
-            // if not pathfinding or avg speed is too low -> go back on road and scan
-            if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f)
+            // if not pathfinding or avg speed is too low or entity no longer exists -> go back on road and scan
+            if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f || tower == null || !tower.IsAlive)
             {
                 doCheck = false;
+                CurrentTarget = null;
                 WalkOnRoad(scanDelay: 5f); // starts scanning after delay
             }
 
@@ -137,7 +157,7 @@ public class Enemy : Entity, IPoolable
         }
     }
 
-    private IEnumerator Attack()
+    protected virtual IEnumerator Attack()
     {
         bool doAttack = true;
         while (doAttack)
@@ -149,7 +169,7 @@ public class Enemy : Entity, IPoolable
             if (CurrentTarget is EntityTarget target)
             {
                 // if target is alive -> attack
-                if (target.entity != null && target.entity.IsAlive)
+                if (target.entity != null && target.entity.IsAlive && target.entity is Tower tower && !tower.Hiding)
                 {
                     Action();
                 }
@@ -180,13 +200,20 @@ public class Enemy : Entity, IPoolable
             };
 
             target.entity.ApplyEffect(Effects.InstantDamage(target.entity, dmg));
+
+            AudioManager.PlaySFX(Clip.BasicAttack, 1f, 1f, 1.1f);
         }
     }
 
-    protected override void Target()
+    // protected override void Target()
+    protected virtual void Target()
     {
         IEnumerable<Entity> targets = TowerManager.instance.Towers
-            .Where(t => t.IsAlive && rangeCollider.OverlapPoint(t.transform.position))
+            .Where(t =>
+                t != null &&
+                t.IsAlive &&
+                !t.Hiding &&
+                rangeCollider.OverlapPoint(t.transform.position))
             .Select(t => t as Entity);
 
         if (targets.Any())

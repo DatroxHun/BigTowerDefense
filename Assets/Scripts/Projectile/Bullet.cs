@@ -31,6 +31,7 @@ public class Bullet : MonoBehaviour
         this.target = target;
         this.impactEffect = impactEffect;
         isFlying = true;
+        ParticlePool.Emit(transform.position, ParticleType.Smoke);
     }
 
     void Update()
@@ -65,19 +66,20 @@ public class Bullet : MonoBehaviour
     {
         isFlying = false;
         
-        List<Enemy> enemies = EnemyManager.instance.Enemies;
-
+        List<Entity> enemies = EnemyManager.instance.Enemies.Select(e => e as Entity).ToList();
+        List<Entity> towers = TowerManager.instance.Towers.Select(t => t as Entity).ToList();
+        List<Entity> entities = enemies.Concat(towers).ToList();
 
         // if enemies have a collider, then here we need to
         // check if the impactC and the enemyC overlap !
         // -K
         
         // if not overlap is written here and enemies stop bullets -> breaks damaging!
-        enemies
-            .Where(t =>
-                impactCollider.OverlapPoint(t.transform.position))
+        entities
+            .Where(e =>
+                impactCollider.OverlapPoint(e.transform.position))
             .ToList()
-            .ForEach(enemy => impactEffect?.Invoke(enemy));
+            .ForEach(hitEntity => impactEffect?.Invoke(hitEntity));
 
         pool.Release(this);
     }

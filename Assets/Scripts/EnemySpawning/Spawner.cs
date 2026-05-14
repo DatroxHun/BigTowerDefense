@@ -2,8 +2,10 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Rendering.Universal;
 
 public class Spawner : MonoBehaviour
 {
@@ -14,18 +16,21 @@ public class Spawner : MonoBehaviour
 
     public int CurrentWave { get; private set; } = 0;
 
-    public event System.Action ToggleNextWave = null!;
+    public event System.Action WaveStarted = null!;
+    public event System.Action WaveEnded = null!;
+
     public Dictionary<int, ObjectPool<IPoolable>> ObjectPools { get; private set; } = new();
 
 
     private Coroutine? waveCoroutine = null;
+    public bool waveOnGoing { get => waveCoroutine != null; }
 
 
     void Start()
     {
         InitializePools();
 
-        ToggleNextWave += () =>
+        WaveStarted += () =>
         {
             // if wave is ongoing, do nothing
             if (waveCoroutine != null) return;
@@ -33,7 +38,12 @@ public class Spawner : MonoBehaviour
             waveCoroutine = StartCoroutine(ExecuteWave(CurrentWave++));
         };
 
-        ToggleNextWave.Invoke();
+        WaveEnded += () => Debug.Log("Wave Ended");
+    }
+
+    public void StartWave()
+    {
+        if (!waveOnGoing && CurrentWave < spawnObject.waves.Count) WaveStarted?.Invoke();
     }
 
     private void InitializePools()
@@ -89,8 +99,8 @@ public class Spawner : MonoBehaviour
                         },
                         actionOnDestroy: (obj) => Destroy(obj.Object),
                         collectionCheck: true,
-                        defaultCapacity: 20,
-                        maxSize: 100
+                        defaultCapacity: 100,
+                        maxSize: 500
                     );
 
                     ObjectPools.Add(batch.enemy.GetInstanceID(), newPool);
@@ -107,7 +117,9 @@ public class Spawner : MonoBehaviour
             {
                 IPoolable pooled = ObjectPools[batch.enemy.GetInstanceID()].Get();
                 Vector3 offset = (Vector3)Random.insideUnitCircle * spawnRadius;
-                pooled.SpawnAction(road.SplineContainer.gameObject.transform.position + offset + (Vector3)Random.insideUnitCircle * 0.5f);
+                Vector3 spawnPos = road.SplineContainer.gameObject.transform.position + offset;
+                spawnPos.z = 0;
+                pooled.SpawnAction(spawnPos);
 
                 if (batch.burstDelay > 0f)
                     yield return new WaitForSeconds(batch.burstDelay);
@@ -116,6 +128,7 @@ public class Spawner : MonoBehaviour
 
         // Start
         Debug.Log($"Starting Wave: {waveIdx}");
+        AudioManager.PlayBGM(Clip.BattleBGM);
         Wave wave = spawnObject.waves[waveIdx];
 
         // Initial Delay
@@ -129,6 +142,10 @@ public class Spawner : MonoBehaviour
             yield return new WaitForSeconds(batch.duration);
         }
 
-        waveCoroutine = null;     
+        yield return new WaitWhile(() => EnemyManager.instance.Enemies.Any(x => x.IsAlive));
+        AudioManager.PlayBGM(Clip.CalmBGM);
+
+        WaveEnded?.Invoke();
+        waveCoroutine = null;
     }
 }

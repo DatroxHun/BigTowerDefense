@@ -56,6 +56,13 @@ public class Walker : MonoBehaviour
         //}
     }
 
+    private void LateUpdate()
+    {
+        Vector3 pos = transform.position;
+        pos.z = 0f;
+        transform.position = pos;
+    }
+
     #region Public Methods
 
     public void WalkOnRoad(Road? newRoad = null, Action? globalCallback = null)
@@ -146,7 +153,7 @@ public class Walker : MonoBehaviour
             road.GetClosestLocalPoint(localPos, out float3 closestLocalPos, out float t);         
             
             // Get global coords of closest point and set distance traveled on spline accordingly
-            destination = road.SplineContainer.transform.TransformPoint(closestLocalPos); // to global coord system            
+            destination = road.SplineContainer.transform.TransformPoint(closestLocalPos); // to global coord system
             distTraversed = road.T2Dist(t); // get distance traversed on spline
 
             // Recalculate sideways-translation on road. Constant for an uninterrrupted road-traversing process

@@ -6,13 +6,16 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 // gunner tower
-public class LongRangeTower : Tower
+public class LongRangeTower : TargetingTower
 {
     [SerializeField]
     private LayerMask obstacleLayer;
 
     [SerializeField]
     private Bullet bulletPrefab;
+
+    [SerializeField]
+    private float Inaccuracy;
 
     private ObjectPool<Bullet> bulletPool;
 
@@ -68,10 +71,14 @@ public class LongRangeTower : Tower
 
         Debug.Log($"[GUNNER] : SHOOTING");
 
-        Vector3 randomTarget = CurrentTarget
+        Vector3 preciseTarget = CurrentTarget
             .GetCoordinates()
             .OrderBy(x => UnityEngine.Random.value)
             .First();
+
+        Vector3 perturbance = UnityEngine.Random.insideUnitCircle.normalized;
+
+        Vector3 finalTarget = preciseTarget + perturbance * Inaccuracy;
 
         //ComponentModule.AugmentTargetChoice(CurrentTarget, ActuallyPrioritizedTarget(=randomTarget))
 
@@ -87,7 +94,7 @@ public class LongRangeTower : Tower
             enemy => Effects.InstantDamage(enemy, dmg)
         };
 
-        Shoot(randomTarget,
+        Shoot(finalTarget,
             (entity) =>
             {
                 if (entity is Enemy enemy)
@@ -104,7 +111,6 @@ public class LongRangeTower : Tower
 
     protected override void Target()
     {
-
         List<Enemy> enemies = EnemyManager.instance.Enemies; 
 
         List<Entity> targets = enemies

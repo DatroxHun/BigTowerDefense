@@ -1,0 +1,42 @@
+using NUnit.Framework;
+using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
+
+public class Pyromancer : Enemy
+{
+    [SerializeField]
+    private CircleCollider2D explosionRange;
+    protected override void Action()
+    {
+        Detonate();
+        HitPoints = 0;
+        JustDied();
+    }
+
+    protected void Detonate()
+    {
+        List<Tower> towersInRange = TowerManager.instance.Towers
+            .Where(t =>
+                t != null &&
+                t.IsAlive &&
+                !t.Hiding &&
+                explosionRange.OverlapPoint(t.transform.position))
+            .ToList();
+
+        DamageObj dmg = new DamageObj()
+        {
+            fire = 25f
+        };
+
+        foreach (Tower tower in towersInRange)
+        {
+            tower.ApplyEffect(
+                    Effects.InstantDamage(tower, dmg)
+            );
+        }
+
+        // replace with bigger explosion effect
+        ParticlePool.Emit(transform.position, ParticleType.Smoke);
+    }
+}

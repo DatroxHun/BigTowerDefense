@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 // OOP hell
@@ -25,17 +26,30 @@ public class Shield : IShield
 
 public abstract class Entity : MonoBehaviour
 {
-    [SerializeField]
-    protected CircleCollider2D rangeCollider = null!;
+    [SerializeField] protected Slider healthbar = null!;
 
-    [field: SerializeField]
-    public float MaxHitPoints { get; protected set; }
+    [SerializeField] protected CircleCollider2D rangeCollider = null!;
 
-    [field: SerializeField]
-    private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
+    [field: SerializeField] public float MaxHitPoints { get; protected set; }
 
-    public float HitPoints { get; protected set; }
-    public bool IsAlive => HitPoints > 0;
+    [field: SerializeField] private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
+
+    protected virtual bool Invulnerable() => false;
+
+    private float hitpoints;
+    public float HitPoints
+    { 
+        get => hitpoints; 
+        protected set
+        {
+            hitpoints = Mathf.Min(value, MaxHitPoints);
+
+            if (healthbar != null)
+                healthbar.value = HitPoints / MaxHitPoints;
+        }
+    }
+
+    public bool IsAlive => HitPoints > 1e-3f;
 
 
     // all entitites have targets, even support class ones
@@ -50,7 +64,11 @@ public abstract class Entity : MonoBehaviour
     private List<Coroutine> statusEffects = new List<Coroutine>();
 
     protected abstract void Action();
-    protected abstract void Target();
+
+    protected void Start()
+    {
+        HitPoints = MaxHitPoints;
+    }
 
     public Coroutine ApplyEffect(IEnumerator effect) 
     {
@@ -69,6 +87,9 @@ public abstract class Entity : MonoBehaviour
 
     public void ApplyDamage(DamageObj dobj)
     {
+        if (Invulnerable())
+            return;
+
         DamageObj finalDmg = dobj * Vulnerabilities;
 
         HitPoints -= finalDmg.direct;
@@ -77,9 +98,21 @@ public abstract class Entity : MonoBehaviour
         HitPoints -= finalDmg.electric;
         HitPoints -= finalDmg.poison;
 
-        Debug.Log(HitPoints);
-
         if (!IsAlive) JustDied();
+    }
+
+    public void ApplyHeal(float healedHP)
+    {
+        if (IsAlive)
+        {
+            if (HitPoints != MaxHitPoints)
+            {
+                ParticlePool.Emit(transform.position, ParticleType.Divine);
+            }
+
+            // clamping handled in HitPoints setter
+            HitPoints += healedHP;
+        }
     }
 
     protected virtual void JustDied()
