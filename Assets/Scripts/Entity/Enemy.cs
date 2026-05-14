@@ -16,7 +16,7 @@ public class Enemy : Entity, IPoolable
     }
 
     // Walking
-    [SerializeField] private Walker walker = null!;
+    [SerializeField] protected Walker walker = null!;
     private Road road = null!;
     public void SetRoad(Road road) => this.road = road;
 
@@ -51,11 +51,12 @@ public class Enemy : Entity, IPoolable
     // Brain Cycles
     const float scanInterval = 0.5f;
     const float motivationCheckInterval = 0.5f;
-    float attackInterval = 1f;
+    [SerializeField]
+    protected float attackInterval = 1f;
 
     Coroutine? scanCycle = null;
-    Coroutine? motivationCycle = null;
-    Coroutine? attackCycle = null;
+    protected Coroutine? motivationCycle = null;
+    protected Coroutine? attackCycle = null;
 
     private void StopAllCycles()
     {
@@ -64,7 +65,7 @@ public class Enemy : Entity, IPoolable
         if (attackCycle != null) StopCoroutine(attackCycle);
     }
 
-    private void WalkOnRoad(float scanDelay = 0f)
+    protected void WalkOnRoad(float scanDelay = 0f)
     {
         walker.WalkOnRoad(road, globalCallback: () =>
         {
@@ -78,7 +79,7 @@ public class Enemy : Entity, IPoolable
         scanCycle = StartCoroutine(Scan(scanDelay));
     }
  
-    private void WalkToEntity(Entity entity, float radius)
+    protected virtual void WalkToEntity(Entity entity, float radius)
     {
         walker.WalkOnPath(entity.transform.position, radius, () => 
         {
@@ -119,7 +120,7 @@ public class Enemy : Entity, IPoolable
         }
     }
 
-    private IEnumerator MotivationCheck()
+    protected IEnumerator MotivationCheck()
     {
         Vector3? prevPos = null;
 
@@ -156,7 +157,7 @@ public class Enemy : Entity, IPoolable
         }
     }
 
-    private IEnumerator Attack()
+    protected virtual IEnumerator Attack()
     {
         bool doAttack = true;
         while (doAttack)

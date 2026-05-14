@@ -90,7 +90,7 @@ public class Cannoneer : Enemy
         }
     }
 
-    private void Shoot(Vector3 targetPoint, Action<Entity> impactEffect)
+    protected void Shoot(Vector3 targetPoint, Action<Entity> impactEffect)
     {
         Bullet bullet = cannonBallPool.Get();
 
