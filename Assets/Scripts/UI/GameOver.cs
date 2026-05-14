@@ -52,6 +52,8 @@ public class GameOver : MonoBehaviour
         {
             PauseMenu.SetPauseGame(false);
             AudioManager.PlayBGM(Clip.CalmBGM);
+
+            Time.timeScale = 1f;
             SceneManager.LoadSceneAsync(0);
         })
         .setIgnoreTimeScale(true);
