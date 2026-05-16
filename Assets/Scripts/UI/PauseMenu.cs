@@ -14,6 +14,8 @@ public class PauseMenu : MonoBehaviour
 
     [SerializeField] private Slider speedSlider;
     [SerializeField] private TextMeshProUGUI speedSliderValueTXT;
+    [SerializeField] private Image speedImage;
+    [SerializeField] private Gradient speedGradient;
 
     public static bool IsPaused { get => Time.timeScale < 1e-2f; }
     private static PauseMenu instance;
@@ -88,5 +90,7 @@ public class PauseMenu : MonoBehaviour
         float speed = GetTimeScaleFromSliderValue(value);
         speedSliderValueTXT.text = $"{Mathf.Round(10f * speed) / 10f}×";
         Time.timeScale = speed;
+
+        speedImage.color = speedGradient.Evaluate((value + 1f) * .5f); // maps [-1; 1] to [0; 1]
     }
 }

@@ -33,8 +33,10 @@ public class InventoryManager : MonoBehaviour
             Destroy(this);
 
 
+        // Initialize logical grid
         grid = new InventoryItemUI[GridWidth, GridHeight];
 
+        // Initialize grid layout
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gridLayout.constraintCount = GridWidth;
         for (int i = 0; i < NumberOfCells; i++)
@@ -48,9 +50,12 @@ public class InventoryManager : MonoBehaviour
         // Get the item's Top-Left corner in the ItemContainer's local space
         Vector3 localItemPos = ItemContainer.InverseTransformPoint(item.transform.position);
 
+        // Get the dynamic starting point of the grid
+        Vector2 gridOrigin = GetGridOrigin();
+
         // Adjust for GridLayoutGroup padding
-        float adjustedX = localItemPos.x - gridLayout.padding.left;
-        float adjustedY = Mathf.Abs(localItemPos.y) - gridLayout.padding.top;
+        float adjustedX = localItemPos.x - gridOrigin.x;
+        float adjustedY = gridOrigin.y - localItemPos.y;
 
         // Convert local position to Grid X and Y
         float totalCellSize = CellSize + Spacing;
@@ -111,10 +116,11 @@ public class InventoryManager : MonoBehaviour
         // Snap visual position
         item.transform.SetParent(ItemContainer);
         float totalCellSize = CellSize + Spacing;
+        Vector2 gridOrigin = GetGridOrigin();
 
         Vector2 snappedPosition = new Vector2(
-            (x * totalCellSize) + gridLayout.padding.left,
-            -((y * totalCellSize) + gridLayout.padding.top) // negative because Y goes down in UI
+            gridOrigin.x + x * totalCellSize,
+            gridOrigin.y - y * totalCellSize // negative because Y goes down in UI
         );
 
         item.rectTransform.anchoredPosition = snappedPosition;
@@ -130,5 +136,28 @@ public class InventoryManager : MonoBehaviour
                 grid[item.currentGridPos.x + dx, item.currentGridPos.y + dy] = null;
             }
         }
+    }
+
+    private Vector2 GetGridOrigin()
+    {
+        // Calculate the total physical size of the grid (all rows and columns)
+        float totalGridWidth = (GridWidth * CellSize) + ((GridWidth - 1) * Spacing);
+        float totalGridHeight = (GridHeight * CellSize) + ((GridHeight - 1) * Spacing);
+
+        // Find out how much available space exists inside the container (minus defined padding)
+        float availableWidth = ItemContainer.rect.width - gridLayout.padding.left - gridLayout.padding.right;
+        float availableHeight = ItemContainer.rect.height - gridLayout.padding.top - gridLayout.padding.bottom;
+
+        // Calculate the leftover blank space
+        float blankSpaceX = availableWidth - totalGridWidth;
+        float blankSpaceY = availableHeight - totalGridHeight;
+
+        // Center alignment splits the blank space evenly on both sides
+        float dynamicLeftMargin = gridLayout.padding.left + (blankSpaceX / 2f);
+        float dynamicTopMargin = gridLayout.padding.top + (blankSpaceY / 2f);
+
+        // Return the exact X and Y starting coordinates for cell (0,0)
+        // (Y is negative because UI coordinates go down)
+        return new Vector2(dynamicLeftMargin, -dynamicTopMargin);
     }
 }
