@@ -154,14 +154,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   healthbar: {fileID: 4196462429248242901}
   rangeCollider: {fileID: 9067605995542005407}
-  <MaxHitPoints>k__BackingField: 20
   <Vulnerabilities>k__BackingField:
     direct: 1
     physical: 1
     fire: 1
     electric: 1
     poison: 1
+  <AttackDamage>k__BackingField:
+    direct: 0
+    physical: 5
+    fire: 0
+    electric: 0
+    poison: 0
+  maxHitPoints: 25
   walker: {fileID: 871284484800307019}
+  attackRange: 1
+  attackInterval: 1
 --- !u!114 &871284484800307019
 MonoBehaviour:
   m_ObjectHideFlags: 0

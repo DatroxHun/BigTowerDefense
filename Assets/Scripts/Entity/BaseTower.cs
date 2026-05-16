@@ -65,16 +65,12 @@ public class BaseTower : TargetingTower
             .OrderBy(x => UnityEngine.Random.value)
             .Take(1);
 
-        DamageObj dmg = new DamageObj
-        {
-            physical = 8f,
-        };
-
+        DamageObj dmg = AttackDamage;
         List<Func<Enemy, IEnumerator>> effects = new()
         {
             enemy => Effects.InstantDamage(enemy, dmg)
         };
-
+        var stats = CurrentStats;
         foreach (var target in randomTarget)
         {
             Shoot(target,
@@ -85,6 +81,9 @@ public class BaseTower : TargetingTower
                         foreach (var effect in effects)
                         {
                             enemy.ApplyEffect(effect(enemy));
+                        }
+                        foreach (var effect in module.GetAttackAlteration()) {
+                            enemy.ApplyEffect(effect(stats, enemy));
                         }
                     }
                 }
