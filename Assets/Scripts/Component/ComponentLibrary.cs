@@ -11,9 +11,8 @@ public static class ComponentLibrary
         var wait = new WaitForSeconds(0.4f);
         while (enemy.IsAlive)
         {
-            Debug.Log("open");
+            Debug.Log($"Poisoned for: {stats[TowerStats.PoisonDamage]}");
             enemy.ApplyDamage(new DamageObj() { poison = stats[TowerStats.PoisonDamage] });
-            Debug.Log("close");
             yield return wait;
         }
     }
