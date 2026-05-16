@@ -11,11 +11,13 @@ public static class ComponentLibrary
         var wait = new WaitForSeconds(0.4f);
         while (enemy.IsAlive)
         {
+            Debug.Log("open");
             enemy.ApplyDamage(new DamageObj() { poison = stats[TowerStats.PoisonDamage] }); // it would be better for me if DamageObj was a struct because of performance
+            Debug.Log("close");
             yield return wait;
         }
     }
-    public static TowerComponent PoisonComponent = new TowerComponent(null,
+    public static TowerComponent PoisonComponent = new TowerComponent(new(new() {(TowerStats.PoisonDamage , 5, 1) }),
         new AdvancedAttackAlteration(new List<TowerStats>() { TowerStats.PoisonDamage }, PoisonLogic)
         ,null);
 }

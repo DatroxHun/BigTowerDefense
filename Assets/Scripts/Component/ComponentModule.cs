@@ -8,7 +8,8 @@ public class ComponentModule
 {
     private List<TowerComponent> components = new List<TowerComponent>();
     private bool _isAmpDirty = true;
-    private Dictionary<TowerStats,(float,float)> _amplificationProvider;
+    private Dictionary<TowerStats, float> cache = new();
+    private Dictionary<TowerStats,(float,float)> _amplificationProvider = new Dictionary<TowerStats, (float, float)>();
 
     /*
     public string GenerateDescription(String towerDescription, Dictionary<TowerStats, float> stats) // style later, or maybe instead of putting the string together here we should just return a list of string and let the UI handle the putting together
@@ -22,29 +23,33 @@ public class ComponentModule
         return sb.ToString();
     } */
 
-    public Dictionary<TowerStats,(float,float)> GetAmplification()
+    public Dictionary<TowerStats, float> UpdateStats(Dictionary<TowerStats, float>  baseStats)
     {
         if( _isAmpDirty)
         {
             _amplificationProvider.Clear();
-            foreach (var stats in components.Select(x => x.AdvancedAttackAlteration.Stats))
-            {
-                foreach (var tstat in stats)
-                {
-                    _amplificationProvider[tstat] = (0, 1);
-                }
-            }
-            foreach (var component in components.Select(x => x.StatAlteration))
+            foreach (var component in components.Select(x => x.StatAlteration).Where(x => x is not null))
             {
                 foreach(var (stat , a , m) in component.Modifications)
                 {
-                    var (ca, cm) = _amplificationProvider[stat];
+                    var (ca, cm) = _amplificationProvider.GetValueOrDefault(stat,(0,1));
                     _amplificationProvider[stat] = (ca + a, cm * m);
                 }
             }
             _isAmpDirty = false;
+            float flat = 0;
+            float mult = 0;
+            cache.Clear();
+            var allKeys = baseStats.Keys.Union(_amplificationProvider.Keys);
+
+            foreach (var key in allKeys)
+            {
+                (flat, mult) = _amplificationProvider.GetValueOrDefault(key,(0,1));
+                var value = baseStats.GetValueOrDefault(key, 0);
+                cache[key] = (value + flat) * mult;
+            }
         }
-        return _amplificationProvider;
+        return cache;
     }
 
     public List<Func<Dictionary<TowerStats, float>, Enemy, IEnumerator>> GetAttackAlteration()
@@ -57,4 +62,15 @@ public class ComponentModule
         return (x, y) => { foreach (var f in components.Select(x => x.AdvancedTargettingAlteration.RePrioritize).Where(x => x is not null)) { y = f(x, y); }; return y; };
     }
 
+    public void AddComponent(TowerComponent component)
+    {
+        components.Add(component);
+        _isAmpDirty = true;
+    }
+
+    public void RemoveComponent(TowerComponent component)
+    {
+        components.Remove(component);
+        _isAmpDirty = true;
+    }
 }

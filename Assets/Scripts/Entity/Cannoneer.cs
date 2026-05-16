@@ -63,10 +63,7 @@ public class Cannoneer : Enemy
 
         if (CurrentTarget is EntityTarget target && target.entity != null)
         {
-            DamageObj dmg = new DamageObj()
-            {
-                physical = 12f
-            };
+            DamageObj dmg = AttackDamage;
 
             List<Func<Tower, IEnumerator>> effects = new()
             {

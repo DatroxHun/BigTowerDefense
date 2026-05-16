@@ -6340,7 +6340,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 400, y: 0}
+  m_AnchoredPosition: {x: 400.00003, y: 0}
   m_SizeDelta: {x: 400, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1683143223
@@ -7300,6 +7300,14 @@ PrefabInstance:
     - target: {fileID: 7036385594375159615, guid: 2d4f04f4d01410f49982b7b3ef3b3218, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8701009199588949086, guid: 2d4f04f4d01410f49982b7b3ef3b3218, type: 3}
+      propertyPath: maxHitPoints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8701009199588949086, guid: 2d4f04f4d01410f49982b7b3ef3b3218, type: 3}
+      propertyPath: TowerBaseStats.Array.data[0].value
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

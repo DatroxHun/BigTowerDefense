@@ -194,10 +194,7 @@ public class Enemy : Entity, IPoolable
 
         if (CurrentTarget is EntityTarget target && target.entity != null)
         {
-            DamageObj dmg = new DamageObj()
-            {
-                physical = 5f
-            };
+            DamageObj dmg = AttackDamage;
 
             target.entity.ApplyEffect(Effects.InstantDamage(target.entity, dmg));
 

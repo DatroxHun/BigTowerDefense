@@ -24,10 +24,7 @@ public class Pyromancer : Enemy
                 explosionRange.OverlapPoint(t.transform.position))
             .ToList();
 
-        DamageObj dmg = new DamageObj()
-        {
-            fire = 25f
-        };
+        DamageObj dmg = AttackDamage;
 
         foreach (Tower tower in towersInRange)
         {

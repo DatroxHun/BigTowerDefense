@@ -2,14 +2,18 @@ using UnityEngine;
 
 public enum TowerStats
 {
-    TowerMaxHealth,
+    TowerMaxHitPoints,
     TowerRange,
 
+    DirectDamage,
+    ElectricDamage,
+    FireDamage,
     PhysicalDamage,
     PoisonDamage,
 
-    PhysicalDamageResistance,
-
-
-
+    PhysicalDamageVulnerability,
+    DirectDamageVulnerability,
+    FireDamageVulnerability,
+    PoisonDamageVulnerability,
+    ElectricDamageVulnerability,
 }

@@ -29,10 +29,10 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected Slider healthbar = null!;
 
     [SerializeField] protected CircleCollider2D rangeCollider = null!;
+    public virtual float MaxHitPoints { get => maxHitPoints; protected set => maxHitPoints = value; }
 
-    [field: SerializeField] public float MaxHitPoints { get; protected set; }
-
-    [field: SerializeField] private DamageObj Vulnerabilities { get; set; } = DamageObj.One;
+    [field: SerializeField] protected virtual DamageObj Vulnerabilities { get; set; } = DamageObj.One;
+    [field: SerializeField] protected virtual DamageObj AttackDamage { get; set; }
 
     protected virtual bool Invulnerable() => false;
 
@@ -42,7 +42,7 @@ public abstract class Entity : MonoBehaviour
         get => hitpoints; 
         protected set
         {
-            hitpoints = Mathf.Min(value, MaxHitPoints);
+            hitpoints = Invulnerable() ? hitpoints : Mathf.Min(value, MaxHitPoints);
 
             if (healthbar != null)
                 healthbar.value = HitPoints / MaxHitPoints;
@@ -56,12 +56,16 @@ public abstract class Entity : MonoBehaviour
     public ITarget? CurrentTarget { get; protected set; }
 
     // practical shield representation
-    public float MaxShield { get; protected set; }
+    public virtual float MaxShield { get => maxShield; protected set => maxShield = value; }
     public float CurrentShield { get; protected set; }
-    public float ShieldRegenerationSpeed { get; protected set; } // what type?
+    public virtual float ShieldRegenerationSpeed { get => shieldRegenerationSpeed; protected set => shieldRegenerationSpeed = value; } // what type?
     public List<Vector3> GetCoordinates() => new List<Vector3> { transform.position };
 
     private List<Coroutine> statusEffects = new List<Coroutine>();
+    [SerializeField]
+    protected float maxHitPoints;
+    protected float shieldRegenerationSpeed;
+    protected float maxShield;
 
     protected abstract void Action();
 
@@ -87,8 +91,8 @@ public abstract class Entity : MonoBehaviour
 
     public void ApplyDamage(DamageObj dobj)
     {
-        if (Invulnerable())
-            return;
+        /*if (Invulnerable())
+            return; */
 
         DamageObj finalDmg = dobj * Vulnerabilities;
 
@@ -123,7 +127,7 @@ public abstract class Entity : MonoBehaviour
 }
 
 [System.Serializable]
-public class DamageObj
+public struct DamageObj
 {
     public float direct;
     public float physical;

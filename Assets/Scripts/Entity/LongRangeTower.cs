@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -47,7 +48,7 @@ public class LongRangeTower : TargetingTower
             maxSize: 100
         );
         Debug.Log($"[GUNNER] : SETUP DONE");
-
+        module.AddComponent(ComponentLibrary.PoisonComponent);
         base.Start();
     }
 
@@ -84,10 +85,7 @@ public class LongRangeTower : TargetingTower
 
         // crlist = defaultcr ++ CM.GetCroutines()
 
-        DamageObj dmg = new DamageObj
-        {
-            physical = 6f
-        };
+        DamageObj dmg = AttackDamage;
 
         List<Func<Enemy, IEnumerator>> effects = new()
         {
@@ -97,13 +95,18 @@ public class LongRangeTower : TargetingTower
         Shoot(finalTarget,
             (entity) =>
             {
+                var stats = CurrentStats;
                 if (entity is Enemy enemy)
                 {
                     // foreach cr in crlist : StartCoroutine(cr(enemy))
                     foreach (var effect in effects)
                     {
                         enemy.ApplyEffect(effect(enemy));
-                    }
+                    } 
+                    foreach (var effect in module.GetAttackAlteration())
+                    {
+                        enemy.ApplyEffect(effect(stats, enemy));
+                    } 
                 }
             }
             );

@@ -60,10 +60,7 @@ public class ShortRangeTower : TargetingTower
             .OrderBy(x => Vector3.Distance(transform.position, x))
             .Take(3);
 
-        DamageObj dmg = new DamageObj
-        {
-            electric = 15f
-        };
+        DamageObj dmg = AttackDamage;
 
         List<Func<Enemy, IEnumerator>> effects = new()
         {

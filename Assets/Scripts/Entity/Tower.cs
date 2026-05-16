@@ -1,12 +1,30 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
+[System.Serializable]
+public struct TowerStatsFloatTuple
+{
+    public TowerStats towerStats;
+    public float value;
+
+    public TowerStatsFloatTuple(TowerStats towerStats, float value)
+    {
+        this.towerStats = towerStats;
+        this.value = value;
+    }
+}
+
 public abstract class Tower : Entity
 {
-    protected ComponentModule module;
+    protected ComponentModule module = new();
     protected bool idle = true;
     private Coroutine acting = null!;
+    [SerializeField] private List<TowerStatsFloatTuple> baseStatsInit = new List<TowerStatsFloatTuple>();
+    private Dictionary<TowerStats, float> BaseStats;
+    public Dictionary<TowerStats, float> CurrentStats { get { return module.UpdateStats(BaseStats); } }
 
     protected override bool Invulnerable() => Hiding;
 
@@ -15,7 +33,7 @@ public abstract class Tower : Entity
 
     [SerializeField]
     protected float actiondelaySeconds = 2.0f;
-
+    public override float MaxHitPoints { get => CurrentStats[TowerStats.TowerMaxHitPoints]; }
     protected float Range
     {
         get { return rangeCollider.radius; }
@@ -26,16 +44,19 @@ public abstract class Tower : Entity
 
     private void Awake()
     {
+        BaseStats = baseStatsInit.ToDictionary(stat => stat.towerStats, stat => stat.value);
+        Debug.Log(BaseStats.Count);
         HitPoints = MaxHitPoints;
     }
 
     protected new void Start()
     {
+        
         base.Start();
 
         transform.parent = TowerManager.instance.transform;
         TowerManager.instance.AddTower(this);
-
+        
         acting = StartCoroutine(Acting());
     }
 
