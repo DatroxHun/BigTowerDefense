@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -69,6 +70,7 @@ public class ShortRangeTower : TargetingTower
 
         foreach (Vector3 target in closestTargets)
         {
+            var stats = CurrentStats;
             Shoot(target,
             (entity) =>
                {
@@ -78,9 +80,12 @@ public class ShortRangeTower : TargetingTower
                        {
                            enemy.ApplyEffect(effect(enemy));
                        }
+                       foreach (var effect in module.GetAttackAlteration())
+                       {
+                           enemy.ApplyEffect(effect(stats, enemy));
+                       }
 
-                        
-                    }
+                   }
                 }
             );
         }
