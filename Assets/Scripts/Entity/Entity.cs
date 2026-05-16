@@ -76,6 +76,7 @@ public abstract class Entity : MonoBehaviour
 
     public Coroutine ApplyEffect(IEnumerator effect) 
     {
+        if(!IsAlive) { return null; }
         Coroutine coroutine = StartCoroutine(effect);
         statusEffects.Add(coroutine);
         return coroutine;

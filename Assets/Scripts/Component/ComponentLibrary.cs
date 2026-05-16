@@ -12,7 +12,7 @@ public static class ComponentLibrary
         while (enemy.IsAlive)
         {
             Debug.Log("open");
-            enemy.ApplyDamage(new DamageObj() { poison = stats[TowerStats.PoisonDamage] }); // it would be better for me if DamageObj was a struct because of performance
+            enemy.ApplyDamage(new DamageObj() { poison = stats[TowerStats.PoisonDamage] });
             Debug.Log("close");
             yield return wait;
         }
