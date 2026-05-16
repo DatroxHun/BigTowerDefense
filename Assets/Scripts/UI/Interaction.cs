@@ -14,7 +14,7 @@ public class Interaction : MonoBehaviour
     [SerializeField] private float aboveY = 95f;
     [SerializeField] private float belowY = -95f;
 
-    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private CanvasGroup canvasGroup = null!;
     List<Transform> buttons = new();
 
     [Header("Tower")]
@@ -30,7 +30,7 @@ public class Interaction : MonoBehaviour
     public bool Visible { get; private set; } = false;
 
     private const float animTime = 0.35f;
-    private RectTransform rectTransform;
+    private RectTransform rectTransform = null!;
 
     private void Awake()
     {
