@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private Road road = null!;
     [SerializeField] private SpawnObject spawnObject = null!;
+
+    [SerializeField] private Button nextWaveButton = null!;
 
     [SerializeField] private float spawnRadius = .1f;
 
@@ -36,9 +38,18 @@ public class Spawner : MonoBehaviour
             if (waveCoroutine != null) return;
 
             waveCoroutine = StartCoroutine(ExecuteWave(CurrentWave++));
+
+            AudioManager.PlayBGM(Clip.BattleBGM);
+            nextWaveButton.interactable = false;
         };
 
-        WaveEnded += () => Debug.Log("Wave Ended");
+        WaveEnded += () =>
+        {
+            AudioManager.PlayBGM(Clip.CalmBGM);
+            nextWaveButton.interactable = true;
+
+            Debug.Log("Wave Ended");
+        };
     }
 
     public void StartWave()
@@ -128,7 +139,6 @@ public class Spawner : MonoBehaviour
 
         // Start
         Debug.Log($"Starting Wave: {waveIdx}");
-        AudioManager.PlayBGM(Clip.BattleBGM);
         Wave wave = spawnObject.waves[waveIdx];
 
         // Initial Delay
@@ -143,7 +153,6 @@ public class Spawner : MonoBehaviour
         }
 
         yield return new WaitWhile(() => EnemyManager.instance.Enemies.Any(x => x.IsAlive));
-        AudioManager.PlayBGM(Clip.CalmBGM);
 
         WaveEnded?.Invoke();
         waveCoroutine = null;
