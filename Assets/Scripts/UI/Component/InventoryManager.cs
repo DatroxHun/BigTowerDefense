@@ -1,5 +1,6 @@
 #nullable enable
 
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,14 +8,14 @@ using static UnityEngine.Splines.SplineInstantiate;
 
 public class InventoryManager : MonoBehaviour
 {
-    public static InventoryManager Instance { get; private set; }
+    private static InventoryManager instance;
 
     [Header("Grid Settings")]
     [field: SerializeField] public int GridWidth { get; private set; } = 11;
     public int GridHeight { get => NumberOfCells / GridWidth; }
     [field: SerializeField] public int NumberOfCells { get; private set; } = 55;
-    public float CellSize { get => gridLayout.cellSize.x; }
-    public float Spacing { get => gridLayout.spacing.x; }
+    public static float CellSize { get => instance.gridLayout.cellSize.x; }
+    public static float Spacing { get => instance.gridLayout.spacing.x; }
     [SerializeField] private GridLayoutGroup gridLayout = null!;
     [SerializeField] private GameObject cellPrefab = null!;
 
@@ -23,12 +24,13 @@ public class InventoryManager : MonoBehaviour
     [field: SerializeField] public Transform DragCanvas { get; private set; } = null!;
     [field: SerializeField] public Canvas MainCanvas { get; private set; } = null!;
 
-    private InventoryItemUI?[,] grid = null!;
+    // logical grid
+    private static InventoryItemUI?[,] grid = null!;
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
+        if (instance == null)
+            instance = this;
         else
             Destroy(this);
 
@@ -45,13 +47,16 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void HandleItemDrop(InventoryItemUI item, PointerEventData eventData)
+    public static Transform GetDragCanvas() => instance.DragCanvas;
+    public static Canvas GetMainCanvas() => instance.MainCanvas;
+
+    public static void HandleItemDrop(InventoryItemUI item, PointerEventData eventData)
     {
         // Get the item's Top-Left corner in the ItemContainer's local space
-        Vector3 localItemPos = ItemContainer.InverseTransformPoint(item.transform.position);
+        Vector3 localItemPos = instance.ItemContainer.InverseTransformPoint(item.transform.position);
 
         // Get the dynamic starting point of the grid
-        Vector2 gridOrigin = GetGridOrigin();
+        Vector2 gridOrigin = instance.GetGridOrigin();
 
         // Adjust for GridLayoutGroup padding
         float adjustedX = localItemPos.x - gridOrigin.x;
@@ -79,44 +84,40 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
+    private static bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
     {
-        // Bounds check
-        if (startX < 0 || startY < 0 || startX + item.itemWidth > GridWidth || startY + item.itemHeight > GridHeight)
-            return false;
-
-        // Check for overlapping items
-        for (int dx = 0; dx < item.itemWidth; dx++)
+        foreach (Vector2Int coord in item.shape)
         {
-            for (int dy = 0; dy < item.itemHeight; dy++)
-            {
-                if (grid[startX + dx, startY + dy] != null)
-                {
-                    return false;
-                }
-            }
+            int checkX = startX + coord.x;
+            int checkY = startY + coord.y;
+
+            // Bound check
+            if (checkX < 0 || checkY < 0 || checkX >= instance.GridWidth || checkY >= instance.GridHeight)
+                return false;
+
+            // Overlapping item check
+            if (grid[checkX, checkY] != null)
+                return false;
         }
+
         return true;
     }
 
-    public void PlaceItem(InventoryItemUI item, int x, int y)
+    public static void PlaceItem(InventoryItemUI item, int x, int y)
     {
         // Update array
-        for (int i = 0; i < item.itemWidth; i++)
+        foreach (Vector2Int coord in item.shape)
         {
-            for (int j = 0; j < item.itemHeight; j++)
-            {
-                grid[x + i, y + j] = item;
-            }
+            grid[x + coord.x, y + coord.y] = item;
         }
 
         // Update item's internal data
         item.currentGridPos.Set(x, y);
 
         // Snap visual position
-        item.transform.SetParent(ItemContainer);
+        item.transform.SetParent(instance.ItemContainer);
         float totalCellSize = CellSize + Spacing;
-        Vector2 gridOrigin = GetGridOrigin();
+        Vector2 gridOrigin = instance.GetGridOrigin();
 
         Vector2 snappedPosition = new Vector2(
             gridOrigin.x + x * totalCellSize,
@@ -126,19 +127,23 @@ public class InventoryManager : MonoBehaviour
         item.rectTransform.anchoredPosition = snappedPosition;
     }
 
-    public void ClearItemSpace(InventoryItemUI item)
+    public static void ClearItemSpace(InventoryItemUI item)
     {
-        // Remove item from logic array so it doesn't collide with itself while dragging
-        for (int dx = 0; dx < item.itemWidth; dx++)
+        // Remove item from logic array
+        foreach (Vector2Int coord in item.shape)
         {
-            for (int dy = 0; dy < item.itemHeight; dy++)
+            int clearX = item.currentGridPos.x + coord.x;
+            int clearY = item.currentGridPos.y + coord.y;
+
+            // Safety check to avoid index out of bounds if something went wrong
+            if (clearX >= 0 && clearX < instance.GridWidth && clearY >= 0 && clearY < instance.GridHeight)
             {
-                grid[item.currentGridPos.x + dx, item.currentGridPos.y + dy] = null;
+                grid[clearX, clearY] = null;
             }
         }
     }
 
-    public void SetInventoryGrid(InventoryItemUI[,] grid) => this.grid = grid;
+    public static void SetInventoryGrid(InventoryItemUI[,] grid) => InventoryManager.grid = grid;
 
     private Vector2 GetGridOrigin()
     {

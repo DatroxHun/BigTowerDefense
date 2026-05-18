@@ -5,7 +5,6 @@ public class TowerSettings : MonoBehaviour
     private static TowerSettings instance;
 
     [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private InventoryManager inventoryManager;
 
     private bool isOpen = false;
 
@@ -35,5 +34,5 @@ public class TowerSettings : MonoBehaviour
             });
     }
 
-    public static void SetInventory(InventoryItemUI[,] inventory) => instance.inventoryManager.SetInventoryGrid(inventory);
+    public static void SetInventory(InventoryItemUI[,] inventory) => InventoryManager.SetInventoryGrid(inventory);
 }
