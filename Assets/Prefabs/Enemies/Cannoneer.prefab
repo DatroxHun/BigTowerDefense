@@ -154,13 +154,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cannoneer
   healthbar: {fileID: 4196462429248242901}
   rangeCollider: {fileID: 9067605995542005407}
-  <MaxHitPoints>k__BackingField: 50
   <Vulnerabilities>k__BackingField:
     direct: 1
     physical: 1
     fire: 1
     electric: 1
     poison: 1
+  <AttackDamage>k__BackingField:
+    direct: 0
+    physical: 8
+    fire: 0
+    electric: 0
+    poison: 0
+  maxHitPoints: 40
   walker: {fileID: 871284484800307019}
   attackRange: 3.5
   attackInterval: 1

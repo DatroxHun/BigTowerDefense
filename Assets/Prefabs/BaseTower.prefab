@@ -315,13 +315,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BaseTower
   healthbar: {fileID: 5746858812951569243}
   rangeCollider: {fileID: 2011482182465132187}
-  <MaxHitPoints>k__BackingField: 100
   <Vulnerabilities>k__BackingField:
     direct: 1
     physical: 1
     fire: 1
     electric: 1
     poison: 1
+  <AttackDamage>k__BackingField:
+    direct: 0
+    physical: 10
+    fire: 0
+    electric: 0
+    poison: 0
+  maxHitPoints: 100
+  baseStatsInit:
+  - towerStats: 0
+    value: 100
   sprite: {fileID: 7091061242767810135}
   actiondelaySeconds: 4
   retargetDelaySeconds: 1
