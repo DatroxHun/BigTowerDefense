@@ -138,6 +138,8 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void SetInventoryGrid(InventoryItemUI[,] grid) => this.grid = grid;
+
     private Vector2 GetGridOrigin()
     {
         // Calculate the total physical size of the grid (all rows and columns)

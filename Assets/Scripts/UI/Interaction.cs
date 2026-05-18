@@ -59,9 +59,9 @@ public class Interaction : MonoBehaviour
                 visibilityImage.sprite = tower.Hiding ? invisibleSprite : visibleSprite;
             });            
         }
-        else if (idx == 1) // tower settings
+        else if (idx == 1 && tower != null) // tower settings
         {
-
+            TowerSettings.SetVisibility(true);
         }
         else if (idx == 2 && obstacle != null) // obstacle removal
         {
