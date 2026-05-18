@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,11 +9,14 @@ public class TowerManager : MonoBehaviour
 {
     public static TowerManager instance;
 
+    [SerializeField] private SpriteHolder componentSprites;
+
     public void Awake()
     {
         if (instance == null)
         {
             instance = this;
+
             towers = new List<Tower>();
         }
         else
