@@ -48,6 +48,12 @@ public class Spawner : MonoBehaviour
             AudioManager.PlayBGM(Clip.CalmBGM);
             nextWaveButton.interactable = true;
 
+            // check win condition
+            if (spawnObject.waves.Count <= CurrentWave)
+            {
+                GameOver.Instance.Toggle(won: true);
+            }
+
             Debug.Log("Wave Ended");
         };
     }

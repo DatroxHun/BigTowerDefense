@@ -124,6 +124,6 @@ public class BaseTower : TargetingTower
     {
         base.JustDied();
 
-        GameOver.Instance.Toggle();
+        GameOver.Instance.Toggle(won: false);
     }
 }

@@ -1086,6 +1086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameOver
   group: {fileID: 228147958}
   transitionImageTransform: {fileID: 1030724007}
+  gameOverText: {fileID: 596236236}
 --- !u!225 &228147958
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1143,7 +1144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   road: {fileID: 1120785920}
-  spawnObject: {fileID: 11400000, guid: 9a8b3d5908526c845bc26661a1255bd0, type: 2}
+  spawnObject: {fileID: 11400000, guid: 2dbc8ac9bc37ded4b93bbb1e49522340, type: 2}
   nextWaveButton: {fileID: 778958545}
   spawnRadius: 0.1
 --- !u!1001 &251252115
