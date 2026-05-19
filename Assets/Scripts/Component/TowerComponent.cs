@@ -8,8 +8,10 @@ public class TowerComponent
     public AdvancedTargettingAlteration? AdvancedTargettingAlteration { get; private set; }
 
     // UI
+    public Vector2Int position { get; set; }
     public Sprite? Image { get; private set; }
     public Vector2Int[]? Shape { get; private set; }
+    public Vector2Int? Size { get => Shape == null ? null : new Vector2Int(Shape.Max(c => c.x), Shape.Max(c => c.y)); } 
 
     public TowerComponent(StatAlteration? statAlteration, 
                           AdvancedAttackAlteration? advancedAttackAlteration, 
@@ -30,7 +32,5 @@ public class TowerComponent
                           Sprite? image, (int, int)[]? shape) : 
         this(statAlteration, advancedAttackAlteration, 
              advancedTargettingAlteration, image, shape.Select(x => new Vector2Int(x.Item1, x.Item2)).ToArray())
-    {
-
-    }
+    { }
 }

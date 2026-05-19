@@ -3,16 +3,20 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter
+public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter, IPoolable
 {
     [Header("Item Data")]
     [Tooltip("Define the shape relative to the top-left cell (0,0)")]
     public Vector2Int[] shape;
     public int ItemWidth { get; private set; }
     public int ItemHeight { get; private set; }
+
+    public GameObject Object => gameObject;
+    public IObjectPool<IPoolable> Pool { get; set; }
 
     [HideInInspector] public Vector2Int currentGridPos;
     [HideInInspector] public Vector2Int originalGridPos;
@@ -29,7 +33,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         ItemHeight = shape.Max(c => c.y) + 1;
     }
 
-    void Start()
+    public void SpawnAction(Vector3 position)
     {
         // Ensure the visual size of the RectTransform matches its cell dimensions
         float totalWidth = ItemWidth * InventoryManager.CellSize + (ItemWidth - 1) * InventoryManager.Spacing;
@@ -95,5 +99,10 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         
         return false;
+    }
+
+    public void Return2Pool()
+    {
+        throw new System.NotImplementedException();
     }
 }

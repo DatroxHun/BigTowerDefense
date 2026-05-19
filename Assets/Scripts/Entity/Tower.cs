@@ -19,7 +19,9 @@ public struct TowerStatsFloatTuple
 
 public abstract class Tower : Entity
 {
-    protected ComponentModule module = new();
+    [SerializeField] protected Vector2Int moduleSize = new Vector2Int(11, 5);
+
+    protected ComponentModule module = null!;
     protected bool idle = true;
     private Coroutine acting = null!;
     [SerializeField] private List<TowerStatsFloatTuple> baseStatsInit = new List<TowerStatsFloatTuple>();
@@ -44,6 +46,8 @@ public abstract class Tower : Entity
 
     private void Awake()
     {
+        module = new ComponentModule(moduleSize);
+
         BaseStats = baseStatsInit.ToDictionary(stat => stat.towerStats, stat => stat.value);
         Debug.Log(BaseStats.Count);
         HitPoints = MaxHitPoints;
@@ -149,5 +153,10 @@ public abstract class Tower : Entity
     {
         OnDestruction();
         base.JustDied();   
+    }
+
+    public void LoadInventory()
+    {
+        TowerSettings.SetInventory(null);
     }
 }

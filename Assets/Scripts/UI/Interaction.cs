@@ -61,6 +61,7 @@ public class Interaction : MonoBehaviour
         }
         else if (idx == 1 && tower != null) // tower settings
         {
+            tower.LoadInventory();
             TowerSettings.SetVisibility(true);
         }
         else if (idx == 2 && obstacle != null) // obstacle removal

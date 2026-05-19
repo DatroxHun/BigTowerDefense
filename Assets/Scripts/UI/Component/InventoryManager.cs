@@ -3,6 +3,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Pool;
+using UnityEngine.Splines.ExtrusionShapes;
 using UnityEngine.UI;
 using static UnityEngine.Splines.SplineInstantiate;
 
@@ -23,6 +25,10 @@ public class InventoryManager : MonoBehaviour
     [field: SerializeField] public RectTransform ItemContainer { get; private set; } = null!;
     [field: SerializeField] public Transform DragCanvas { get; private set; } = null!;
     [field: SerializeField] public Canvas MainCanvas { get; private set; } = null!;
+
+    // pool
+    [SerializeField] private GameObject inventoryItemPrefab;
+    private ObjectPool<IPoolable> itemPool = null!;
 
     // logical grid
     private static InventoryItemUI?[,] grid = null!;
@@ -45,6 +51,44 @@ public class InventoryManager : MonoBehaviour
         {
             Instantiate(cellPrefab, gridLayout.transform);
         }
+
+        // Initialize pool
+        ObjectPool<IPoolable> newPool = null!;
+
+        newPool = new ObjectPool<IPoolable>
+        (
+            createFunc: () =>
+            {
+                GameObject obj = Instantiate(inventoryItemPrefab);
+                obj.transform.SetParent(ItemContainer);
+                obj.SetActive(false);
+
+                if (!obj.TryGetComponent<IPoolable>(out IPoolable poolable))
+                    throw new MissingComponentException("Spawner: IPoolable component is missing from InventoryItem.");
+
+                poolable.Pool = newPool;
+
+                return poolable;
+            },
+
+            actionOnGet: (obj) =>
+            {
+                obj.Object.SetActive(true);
+            },
+
+            actionOnRelease: (obj) =>
+            {
+                obj.Object.SetActive(false);
+            },
+
+            actionOnDestroy: (obj) => Destroy(obj.Object),
+
+            collectionCheck: true,
+            defaultCapacity: 20,
+            maxSize: 100
+        );
+
+        itemPool = newPool;
     }
 
     public static Transform GetDragCanvas() => instance.DragCanvas;
@@ -143,7 +187,12 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public static void SetInventoryGrid(InventoryItemUI[,] grid) => InventoryManager.grid = grid;
+    public static void SetInventoryGrid(InventoryItemUI[,] grid)
+    {
+        InventoryManager.grid = grid;
+
+
+    }
 
     private Vector2 GetGridOrigin()
     {
