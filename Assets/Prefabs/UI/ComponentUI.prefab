@@ -51,13 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a08701bf95ac142b4a441155b36d45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItemUI
-  shape:
-  - {x: 0, y: 0}
-  - {x: 1, y: 0}
-  - {x: 2, y: 0}
-  - {x: 1, y: 1}
-  - {x: 1, y: 2}
-  currentGridPos: {x: 0, y: 0}
+  image: {fileID: 5002411007101847296}
   originalGridPos: {x: 0, y: 0}
   rectTransform: {fileID: 0}
 --- !u!222 &2724234910991539974

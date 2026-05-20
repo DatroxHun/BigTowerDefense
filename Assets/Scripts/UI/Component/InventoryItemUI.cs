@@ -1,21 +1,21 @@
-using System.Linq;
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter, IPoolable
 {
+    [SerializeField] private Image image;
+
     public TowerComponent Component { get; private set; }
-    public Vector2Int[] Shape => Component.Shape;
-    public int ItemWidth => Component.Size == null ? 0 : Component.Size.Value.x;
-    public int ItemHeight => Component.Size == null ? 0 : Component.Size.Value.y;
+    public Vector2Int[] Shape => Component?.Shape ?? System.Array.Empty<Vector2Int>();
+    public int ItemWidth => Component?.Size?.x ?? 0;
+    public int ItemHeight => Component?.Size?.y ?? 0;
 
     [HideInInspector] public GameObject Object => gameObject;
-    [HideInInspector] public IObjectPool<IPoolable> Pool { get; set; }
+    [HideInInspector] public IObjectPool<IPoolable> Pool { get; set; }  
 
     [HideInInspector] public Vector2Int CurrentGridPos => Component.position;
     [HideInInspector] public Vector2Int originalGridPos;
@@ -35,8 +35,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         // set position
         rectTransform.anchoredPosition = (Vector2)position;
-        // snap to grid
-        InventoryManager.HandleItemDrop(this);
+
         // reset originalGridPos
         originalGridPos = CurrentGridPos;
     }
@@ -44,6 +43,9 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void SetComponent(TowerComponent component)
     {
         this.Component = component;
+
+        // Set image
+        image.sprite = component.Image;
 
         // Ensure the visual size of the RectTransform matches its cell dimensions
         float totalWidth = ItemWidth * InventoryManager.CellSize + (ItemWidth - 1) * InventoryManager.Spacing;
@@ -62,7 +64,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         InventoryManager.ClearItemSpace(this);
 
         // Move to DragCanvas so it renders on top of everything
-        transform.SetParent(InventoryManager.GetDragCanvas());
+        transform.SetParent(InventoryManager.GetDragCanvas(), false);
 
         // Disable raycasts so the mouse can "see" through the item to the grid below when dropping
         canvasGroup.blocksRaycasts = false;

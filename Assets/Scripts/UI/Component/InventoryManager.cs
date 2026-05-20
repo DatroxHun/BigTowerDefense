@@ -1,6 +1,7 @@
 #nullable enable
 
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class InventoryManager : MonoBehaviour
     private static InventoryManager instance;
 
     private static ComponentModule module = null!;
+    private List<InventoryItemUI> inventoryItems = new();
 
     [Header("Grid Settings")]
     public static int GridWidth => module.Size.x;
@@ -18,7 +20,7 @@ public class InventoryManager : MonoBehaviour
     public static int NumberOfCells => module.Size.x * module.Size.y;
     public static float CellSize { get => instance.gridLayout.cellSize.x; }
     public static float Spacing { get => instance.gridLayout.spacing.x; }
-    public List<GameObject> gridCells = new List<GameObject>();
+    private List<GameObject> gridCells = new List<GameObject>();
     [SerializeField] private GridLayoutGroup gridLayout = null!;
     [SerializeField] private GameObject cellPrefab = null!;
 
@@ -56,7 +58,7 @@ public class InventoryManager : MonoBehaviour
             createFunc: () =>
             {
                 GameObject obj = Instantiate(inventoryItemPrefab);
-                obj.transform.SetParent(ItemContainer);
+                obj.transform.SetParent(ItemContainer, false);
                 obj.SetActive(false);
 
                 if (!obj.TryGetComponent<IPoolable>(out IPoolable poolable))
@@ -136,7 +138,7 @@ public class InventoryManager : MonoBehaviour
         module.AddComponent(item.Component, x, y);
 
         // Snap visual position
-        item.transform.SetParent(instance.ItemContainer);
+        item.transform.SetParent(instance.ItemContainer, false);
         item.rectTransform.anchoredPosition = instance.GetSnappedPosition(x, y);
     }
 
@@ -152,22 +154,42 @@ public class InventoryManager : MonoBehaviour
         // Refresh Background Grid
         instance.gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         instance.gridLayout.constraintCount = GridWidth;
-        if (instance.gridCells.Count < NumberOfCells)
+
+        while (instance.gridCells.Count < Mathf.Min(NumberOfCells, 250))
+        {
+            GameObject go = Instantiate(instance.cellPrefab, instance.gridLayout.transform);
+            go.SetActive(false);
+            instance.gridCells.Add(go);
+        }
+
         for (int i = 0; i < instance.gridCells.Count; i++)
         {
             instance.gridCells[i].SetActive(i < NumberOfCells);
         }
 
-        // Initialize Components
+        // Initialize UI Components
+        foreach (InventoryItemUI item in instance.inventoryItems)
+        {
+            item.Return2Pool();
+        }
+
+        instance.inventoryItems.Clear();
+
         foreach (TowerComponent component in module.Components)
         {
             IPoolable poolable = itemPool.Get();
-            poolable.SpawnAction(instance.GetSnappedPosition(component.position));
 
             if (poolable.Object.TryGetComponent<InventoryItemUI>(out InventoryItemUI item))
-                throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
+            {
+                item.SetComponent(component);
+                poolable.SpawnAction(instance.GetSnappedPosition(component.position));
 
-            item.SetComponent(component);
+                instance.inventoryItems.Add(item);
+            }
+            else
+            {
+                throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
+            }
         }
     }
 

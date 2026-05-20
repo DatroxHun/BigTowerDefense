@@ -64,12 +64,12 @@ public class ComponentModule
 
     public List<Func<Dictionary<TowerStats, float>, Enemy, IEnumerator>> GetAttackAlteration()
     {
-        return Components.Select(x => x.AdvancedAttackAlteration.AttackFactory).Where(x => x is not null).ToList(); // this may need a sort later
+        return Components.Select(x => x.AdvancedAttackAlteration?.AttackFactory).Where(x => x is not null).ToList(); // this may need a sort later
     }
 
     public Func<List<Entity>,List<Entity>,List<Entity>> GetTargettingAletration()
     {
-        return (x, y) => { foreach (var f in Components.Select(x => x.AdvancedTargettingAlteration.RePrioritize).Where(x => x is not null)) { y = f(x, y); }; return y; };
+        return (x, y) => { foreach (var f in Components.Select(x => x.AdvancedTargettingAlteration?.RePrioritize).Where(x => x is not null)) { y = f(x, y); }; return y; };
     }
 
     public bool AddComponent(TowerComponent component)
@@ -87,7 +87,7 @@ public class ComponentModule
         {
             for (int y = 0; y <= Size.y - componentSize.Value.y; y++)
             {
-                if (Placeable(x, y))
+                if (Placeable(component, x, y))
                 {
                     AddAt(component, x, y);
                     return true;
@@ -102,7 +102,7 @@ public class ComponentModule
 
     public bool AddComponent(TowerComponent component, int x, int y)
     {
-        if (!Placeable(x, y) || Components.Contains(component))
+        if (!Placeable(component, x, y) || Components.Contains(component))
             return false;
 
         AddAt(component, x, y);
