@@ -11,7 +11,7 @@ public class TowerComponent
     public Vector2Int position { get; set; }
     public Sprite? Image { get; private set; }
     public Vector2Int[]? Shape { get; private set; }
-    public Vector2Int? Size { get => Shape == null ? null : new Vector2Int(Shape.Max(c => c.x), Shape.Max(c => c.y)); } 
+    public Vector2Int? Size { get; private set; }
 
     public TowerComponent(StatAlteration? statAlteration, 
                           AdvancedAttackAlteration? advancedAttackAlteration, 
@@ -24,6 +24,9 @@ public class TowerComponent
 
         Image = image;
         Shape = shape;
+        
+        if (Shape != null && Shape.Length > 0)
+            Size = new Vector2Int(Shape.Max(c => c.x) + 1, Shape.Max(c => c.y) + 1);
     }
 
     public TowerComponent(StatAlteration? statAlteration,

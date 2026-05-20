@@ -9,16 +9,15 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter, IPoolable
 {
-    [Header("Item Data")]
-    [Tooltip("Define the shape relative to the top-left cell (0,0)")]
-    public Vector2Int[] shape;
-    public int ItemWidth { get; private set; }
-    public int ItemHeight { get; private set; }
+    public TowerComponent Component { get; private set; }
+    public Vector2Int[] Shape => Component.Shape;
+    public int ItemWidth => Component.Size == null ? 0 : Component.Size.Value.x;
+    public int ItemHeight => Component.Size == null ? 0 : Component.Size.Value.y;
 
-    public GameObject Object => gameObject;
-    public IObjectPool<IPoolable> Pool { get; set; }
+    [HideInInspector] public GameObject Object => gameObject;
+    [HideInInspector] public IObjectPool<IPoolable> Pool { get; set; }
 
-    [HideInInspector] public Vector2Int currentGridPos;
+    [HideInInspector] public Vector2Int CurrentGridPos => Component.position;
     [HideInInspector] public Vector2Int originalGridPos;
     [HideInInspector] public RectTransform rectTransform;
 
@@ -28,25 +27,36 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-
-        ItemWidth = shape.Max(c => c.x) + 1;
-        ItemHeight = shape.Max(c => c.y) + 1;
     }
+
+    // Setting Component
 
     public void SpawnAction(Vector3 position)
     {
+        // set position
+        rectTransform.anchoredPosition = (Vector2)position;
+        // snap to grid
+        InventoryManager.HandleItemDrop(this);
+        // reset originalGridPos
+        originalGridPos = CurrentGridPos;
+    }
+
+    public void SetComponent(TowerComponent component)
+    {
+        this.Component = component;
+
         // Ensure the visual size of the RectTransform matches its cell dimensions
         float totalWidth = ItemWidth * InventoryManager.CellSize + (ItemWidth - 1) * InventoryManager.Spacing;
         float totalHeight = ItemHeight * InventoryManager.CellSize + (ItemHeight - 1) * InventoryManager.Spacing;
         rectTransform.sizeDelta = new Vector2(totalWidth, totalHeight);
-
-        originalGridPos = currentGridPos;
     }
+
+    // Dragging
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         // Save original position in case need to revert an invalid drop
-        originalGridPos = currentGridPos;
+        originalGridPos = CurrentGridPos;
 
         // Clear space in the logic grid
         InventoryManager.ClearItemSpace(this);
@@ -72,7 +82,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         canvasGroup.alpha = 1f;
 
         // Ask the manager to handle the snapping and logic
-        InventoryManager.HandleItemDrop(this, eventData);
+        InventoryManager.HandleItemDrop(this);
     }
 
     public bool IsRaycastLocationValid(Vector2 screenPos, Camera eventCamera)
@@ -92,7 +102,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         int clickY = Mathf.FloorToInt(Mathf.Abs(localMousePos.y) / totalCellSize);
 
         // Check if clicked on filled cell
-        foreach (Vector2Int coord in shape)
+        foreach (Vector2Int coord in Shape)
         {
             if (coord.x == clickX && coord.y == clickY)
                 return true;
@@ -103,6 +113,6 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void Return2Pool()
     {
-        throw new System.NotImplementedException();
+        Pool.Release(this);
     }
 }

@@ -33,6 +33,4 @@ public class TowerSettings : MonoBehaviour
                 instance.canvasGroup.blocksRaycasts = isOpen;
             });
     }
-
-    public static void SetInventory(InventoryItemUI[,] inventory) => InventoryManager.SetInventoryGrid(inventory);
 }

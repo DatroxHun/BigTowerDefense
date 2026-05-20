@@ -157,6 +157,6 @@ public abstract class Tower : Entity
 
     public void LoadInventory()
     {
-        TowerSettings.SetInventory(null);
+        InventoryManager.ResetComponentModule(module);
     }
 }

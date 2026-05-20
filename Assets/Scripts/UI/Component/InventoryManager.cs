@@ -1,23 +1,24 @@
 #nullable enable
 
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Pool;
-using UnityEngine.Splines.ExtrusionShapes;
 using UnityEngine.UI;
-using static UnityEngine.Splines.SplineInstantiate;
+using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
     private static InventoryManager instance;
 
+    private static ComponentModule module = null!;
+
     [Header("Grid Settings")]
-    [field: SerializeField] public int GridWidth { get; private set; } = 11;
-    public int GridHeight { get => NumberOfCells / GridWidth; }
-    [field: SerializeField] public int NumberOfCells { get; private set; } = 55;
+    public static int GridWidth => module.Size.x;
+    public static int GridHeight => module.Size.y;
+    public static int NumberOfCells => module.Size.x * module.Size.y;
     public static float CellSize { get => instance.gridLayout.cellSize.x; }
     public static float Spacing { get => instance.gridLayout.spacing.x; }
+    public List<GameObject> gridCells = new List<GameObject>();
     [SerializeField] private GridLayoutGroup gridLayout = null!;
     [SerializeField] private GameObject cellPrefab = null!;
 
@@ -28,10 +29,7 @@ public class InventoryManager : MonoBehaviour
 
     // pool
     [SerializeField] private GameObject inventoryItemPrefab;
-    private ObjectPool<IPoolable> itemPool = null!;
-
-    // logical grid
-    private static InventoryItemUI?[,] grid = null!;
+    private static ObjectPool<IPoolable> itemPool = null!;
 
     private void Awake()
     {
@@ -40,16 +38,14 @@ public class InventoryManager : MonoBehaviour
         else
             Destroy(this);
 
-
-        // Initialize logical grid
-        grid = new InventoryItemUI[GridWidth, GridHeight];
-
-        // Initialize grid layout
+        // Initialize Background Grid
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-        gridLayout.constraintCount = GridWidth;
-        for (int i = 0; i < NumberOfCells; i++)
+        gridLayout.constraintCount = 11;
+        for (int i = 0; i < 55; i++)
         {
-            Instantiate(cellPrefab, gridLayout.transform);
+            GameObject go = Instantiate(cellPrefab, gridLayout.transform);
+            go.SetActive(false);
+            gridCells.Add(go);
         }
 
         // Initialize pool
@@ -94,7 +90,9 @@ public class InventoryManager : MonoBehaviour
     public static Transform GetDragCanvas() => instance.DragCanvas;
     public static Canvas GetMainCanvas() => instance.MainCanvas;
 
-    public static void HandleItemDrop(InventoryItemUI item, PointerEventData eventData)
+    // Moving Items
+
+    public static void HandleItemDrop(InventoryItemUI item)
     {
         // Get the item's Top-Left corner in the ItemContainer's local space
         Vector3 localItemPos = instance.ItemContainer.InverseTransformPoint(item.transform.position);
@@ -130,68 +128,47 @@ public class InventoryManager : MonoBehaviour
 
     private static bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
     {
-        foreach (Vector2Int coord in item.shape)
-        {
-            int checkX = startX + coord.x;
-            int checkY = startY + coord.y;
-
-            // Bound check
-            if (checkX < 0 || checkY < 0 || checkX >= instance.GridWidth || checkY >= instance.GridHeight)
-                return false;
-
-            // Overlapping item check
-            if (grid[checkX, checkY] != null)
-                return false;
-        }
-
-        return true;
+        return module.Placeable(item.Component, startX, startY);
     }
 
     public static void PlaceItem(InventoryItemUI item, int x, int y)
     {
-        // Update array
-        foreach (Vector2Int coord in item.shape)
-        {
-            grid[x + coord.x, y + coord.y] = item;
-        }
-
-        // Update item's internal data
-        item.currentGridPos.Set(x, y);
+        module.AddComponent(item.Component, x, y);
 
         // Snap visual position
         item.transform.SetParent(instance.ItemContainer);
-        float totalCellSize = CellSize + Spacing;
-        Vector2 gridOrigin = instance.GetGridOrigin();
-
-        Vector2 snappedPosition = new Vector2(
-            gridOrigin.x + x * totalCellSize,
-            gridOrigin.y - y * totalCellSize // negative because Y goes down in UI
-        );
-
-        item.rectTransform.anchoredPosition = snappedPosition;
+        item.rectTransform.anchoredPosition = instance.GetSnappedPosition(x, y);
     }
 
-    public static void ClearItemSpace(InventoryItemUI item)
+    public static bool ClearItemSpace(InventoryItemUI item)
     {
-        // Remove item from logic array
-        foreach (Vector2Int coord in item.shape)
+        return module.RemoveComponent(item.Component);
+    }
+
+    public static void ResetComponentModule(ComponentModule module)
+    {
+        InventoryManager.module = module;
+
+        // Refresh Background Grid
+        instance.gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        instance.gridLayout.constraintCount = GridWidth;
+        if (instance.gridCells.Count < NumberOfCells)
+        for (int i = 0; i < instance.gridCells.Count; i++)
         {
-            int clearX = item.currentGridPos.x + coord.x;
-            int clearY = item.currentGridPos.y + coord.y;
-
-            // Safety check to avoid index out of bounds if something went wrong
-            if (clearX >= 0 && clearX < instance.GridWidth && clearY >= 0 && clearY < instance.GridHeight)
-            {
-                grid[clearX, clearY] = null;
-            }
+            instance.gridCells[i].SetActive(i < NumberOfCells);
         }
-    }
 
-    public static void SetInventoryGrid(InventoryItemUI[,] grid)
-    {
-        InventoryManager.grid = grid;
+        // Initialize Components
+        foreach (TowerComponent component in module.Components)
+        {
+            IPoolable poolable = itemPool.Get();
+            poolable.SpawnAction(instance.GetSnappedPosition(component.position));
 
+            if (poolable.Object.TryGetComponent<InventoryItemUI>(out InventoryItemUI item))
+                throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
 
+            item.SetComponent(component);
+        }
     }
 
     private Vector2 GetGridOrigin()
@@ -215,5 +192,18 @@ public class InventoryManager : MonoBehaviour
         // Return the exact X and Y starting coordinates for cell (0,0)
         // (Y is negative because UI coordinates go down)
         return new Vector2(dynamicLeftMargin, -dynamicTopMargin);
+    }
+
+    private Vector2 GetSnappedPosition(Vector2Int at) => GetSnappedPosition(at.x, at.y);
+
+    private Vector2 GetSnappedPosition(int x, int y)
+    {
+        float totalCellSize = CellSize + Spacing;
+        Vector2 gridOrigin = GetGridOrigin();
+
+        return new Vector2(
+            gridOrigin.x + x * totalCellSize,
+            gridOrigin.y - y * totalCellSize // negative because Y goes down in UI
+        );
     }
 }
