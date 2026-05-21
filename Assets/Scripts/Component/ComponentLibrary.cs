@@ -2,9 +2,51 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
-public static class ComponentLibrary
+[DefaultExecutionOrder(-100)]
+public class ComponentLibrary : MonoBehaviour
 {
-    public static TowerComponent RangeUpgrade = new TowerComponent(new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.TowerRange, 0, 1.2f) }), null, null);
+    private static ComponentLibrary instance;
+
+    // Reference for Sprites
+    [SerializeField] private SpriteHolder sprites;
+    private static SpriteHolder Sprites { get => instance.sprites; }
+
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+            Destroy(this);
+    }
+
+    // Components
+
+    public static TowerComponent RangeUpgrade => new TowerComponent
+    (
+        new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.TowerRange, 0, 1.2f) }),
+        null, null,
+        Sprites["range"], new (int, int)[]
+        {
+            (0, 0), (1, 0),
+                    (1, 1)
+        }
+    );
+
+    public static TowerComponent PoisonComponent => new TowerComponent
+    (
+        new(new() { (TowerStats.PoisonDamage, 5, 1) }),
+        new AdvancedAttackAlteration(new List<TowerStats>() { TowerStats.PoisonDamage }, PoisonLogic),
+        null,
+        Sprites["poison"], new (int, int)[]
+        {
+            (0, 0), (1, 0), (2, 0),
+                    (1, 1),
+                    (1, 2)
+        }
+    );
 
     private static IEnumerator PoisonLogic(Dictionary<TowerStats,float> stats,Enemy enemy)
     {
@@ -16,7 +58,4 @@ public static class ComponentLibrary
             yield return wait;
         }
     }
-    public static TowerComponent PoisonComponent = new TowerComponent(new(new() {(TowerStats.PoisonDamage , 5, 1) }),
-        new AdvancedAttackAlteration(new List<TowerStats>() { TowerStats.PoisonDamage }, PoisonLogic)
-        ,null);
 }

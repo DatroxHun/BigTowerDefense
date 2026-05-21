@@ -129,4 +129,17 @@ public class Cannoneer : Enemy
             return false;
         }
     }
+
+    protected override void WalkToEntity(Entity entity, float radius)
+    {
+        walker.WalkOnPathRanged(entity.transform.position, radius, obstacleLayer, () =>
+        {
+            // stop motivation check and start attacking when arrived at target
+            if (motivationCycle != null) StopCoroutine(motivationCycle);
+            attackCycle = StartCoroutine(Attack());
+        });
+
+        // see if still motivated to get to entity
+        motivationCycle = StartCoroutine(MotivationCheck());
+    }
 }

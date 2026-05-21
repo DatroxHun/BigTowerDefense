@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    [SerializeField]
-    BuildingManager buildingManager;
-
     /// <summary>
     /// Remove button event handler
     /// </summary>
@@ -13,7 +10,7 @@ public class Obstacle : MonoBehaviour
 
         // subtract money
 
-        buildingManager.RefreshNavMesh();
+        BuildingManager.instance.RefreshNavMesh();
         
         // play sfx
 

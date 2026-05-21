@@ -1,8 +1,7 @@
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -12,6 +11,11 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI masterVolumeValueTXT;
     [SerializeField] private TextMeshProUGUI musicVolumeValueTXT;
     [SerializeField] private TextMeshProUGUI sfxVolumeValueTXT;
+
+    [SerializeField] private Slider speedSlider;
+    [SerializeField] private TextMeshProUGUI speedSliderValueTXT;
+    [SerializeField] private Image speedImage;
+    [SerializeField] private Gradient speedGradient;
 
     public static bool IsPaused { get => Time.timeScale < 1e-2f; }
     private static PauseMenu instance;
@@ -39,7 +43,7 @@ public class PauseMenu : MonoBehaviour
 
     public static void SetPauseGame(bool isPaused)
     {
-        Time.timeScale = isPaused ? 0f : 1f;
+        Time.timeScale = isPaused ? 0f : GetTimeScaleFromSliderValue(instance.speedSlider.value);
         AudioManager.SetBGMPitch(isPaused ? 0.9f : 1f);
     }
 
@@ -75,5 +79,18 @@ public class PauseMenu : MonoBehaviour
     {
         sfxVolumeValueTXT.text = $"{Mathf.Round(100f * value)}%";
         AudioManager.SetSFXVolume(value);
+    }
+
+    // ---
+
+    private static float GetTimeScaleFromSliderValue(float value) => Mathf.Pow(2, value);
+
+    public void SpeedSliderValueChanged(float value)
+    {
+        float speed = GetTimeScaleFromSliderValue(value);
+        speedSliderValueTXT.text = $"{Mathf.Round(10f * speed) / 10f}×";
+        Time.timeScale = speed;
+
+        speedImage.color = speedGradient.Evaluate((value + 1f) * .5f); // maps [-1; 1] to [0; 1]
     }
 }

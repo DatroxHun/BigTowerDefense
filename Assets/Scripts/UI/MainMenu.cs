@@ -37,7 +37,7 @@ public class MainMenu : MonoBehaviour
             TransitionInImage.transform.localScale = Vector3.one * (1f - val);
             TransitionInImage.transform.eulerAngles = new Vector3(0, 0, -val * 270f);
         }, 0f, 1f, 1f)
-        .setEase(LeanTweenType.easeOutSine).setIgnoreTimeScale(true);
+        .setEase(LeanTweenType.easeInOutSine).setIgnoreTimeScale(true);
     }
 
     public void LoadScene(int sceneIdx)

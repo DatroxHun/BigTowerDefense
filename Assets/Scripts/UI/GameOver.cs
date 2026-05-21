@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,8 +6,10 @@ public class GameOver : MonoBehaviour
 {
     public static GameOver Instance { get; private set; }
 
-    [SerializeField] CanvasGroup group;
-    [SerializeField] RectTransform transitionImageTransform;
+    [SerializeField] private CanvasGroup group;
+    [SerializeField] private RectTransform transitionImageTransform;
+
+    [SerializeField] private TextMeshProUGUI gameOverText;
 
     private bool shown = false;
     private bool animating = false;
@@ -17,14 +20,17 @@ public class GameOver : MonoBehaviour
         else Destroy(this);
     }
 
-    public void Toggle()
+    public void Toggle(bool won)
     {
         PauseMenu.SetPauseGame(true);
+
+        gameOverText.text = won ? "You Won!" : "Game Over!";
+        gameOverText.color = won ? Color.green : Color.red;
 
         if (!animating)
         {
             animating = true;
-            shown = !shown;
+            shown = true;
 
             LeanTween.alphaCanvas(group, shown ? 1f : 0f, 2f)
                 .setEase(LeanTweenType.easeInOutSine)
@@ -52,6 +58,8 @@ public class GameOver : MonoBehaviour
         {
             PauseMenu.SetPauseGame(false);
             AudioManager.PlayBGM(Clip.CalmBGM);
+
+            Time.timeScale = 1f;
             SceneManager.LoadSceneAsync(0);
         })
         .setIgnoreTimeScale(true);

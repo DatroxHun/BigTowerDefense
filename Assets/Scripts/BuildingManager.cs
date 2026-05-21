@@ -4,9 +4,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
 using NavMeshPlus.Components;
+using UnityEditor.Search;
 
 public class BuildingManager : MonoBehaviour
 {
+    public static BuildingManager instance;
+
     private GameObject towerPrefab;
 
     [SerializeField]
@@ -23,6 +26,14 @@ public class BuildingManager : MonoBehaviour
     public NavMeshPlus.Components.NavMeshSurface NavMeshSurface;
 
     bool buildingMode = false;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+    }
 
 
     public void StartBuilding(GameObject tower)
