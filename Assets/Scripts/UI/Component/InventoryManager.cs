@@ -130,6 +130,14 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public static bool AddComponent(TowerComponent component)
+    {
+        bool result = module.AddComponent(component);
+        ResetComponentModule(module);
+        
+        return result;
+    }
+
     private static bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
     {
         return module.Placeable(item.Component, startX, startY);
@@ -180,18 +188,24 @@ public class InventoryManager : MonoBehaviour
         foreach (TowerComponent component in module.Components)
         {
             IPoolable poolable = itemPool.Get();
+            InitializePoolable(poolable, component);
+        }
+    }
 
-            if (poolable.Object.TryGetComponent<InventoryItemUI>(out InventoryItemUI item))
-            {
-                item.SetComponent(component);
-                poolable.SpawnAction(instance.GetSnappedPosition(component.position));
+    private static void InitializePoolable(IPoolable poolable, TowerComponent component)
+    {
+        if (poolable.Object.TryGetComponent<InventoryItemUI>(out InventoryItemUI item))
+        {
+            item.transform.SetParent(instance.ItemContainer, false);
 
-                instance.inventoryItems.Add(item);
-            }
-            else
-            {
-                throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
-            }
+            item.SetComponent(component);
+            poolable.SpawnAction(instance.GetSnappedPosition(component.position));
+
+            instance.inventoryItems.Add(item);
+        }
+        else
+        {
+            throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
         }
     }
 

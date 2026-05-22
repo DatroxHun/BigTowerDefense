@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
@@ -23,6 +25,10 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private CanvasGroup canvasGroup;
     private RectTransform sellArea;
+    private TextMeshProUGUI sellText;
+
+    private float animMutliplier = 1f;
+    private Coroutine animationRoutine;
 
     void Awake()
     {
@@ -72,9 +78,13 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         // Disable raycasts so the mouse can "see" through the item to the grid below when dropping
         canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 0.8f;
+        //canvasGroup.alpha = 0.8f;
 
         sellArea = InventoryManager.GetSellArea();
+        sellText = sellArea.GetComponentInChildren<TextMeshProUGUI>();
+
+        // Start animatino
+        animationRoutine = StartCoroutine(Animation());
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -90,9 +100,17 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         // Color item based on where it is
         if (isMouseInSellArea)
-            image.color = Color.red;
+        {
+            image.color = new Color(1f, .7f, .7f, 1f);
+            animMutliplier = 3f;
+            sellText.text = $"{Component.Price}€";
+        }
         else
+        {
             image.color = Color.white;
+            animMutliplier = 1f;
+            sellText.text = "€";
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -100,6 +118,8 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // Re-enable raycasts
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
+        animMutliplier = 1f;
+        sellText.text = "€";
 
         // Check where the mouse is
         bool isMouseInSellArea = RectTransformUtility.RectangleContainsScreenPoint(
@@ -119,6 +139,8 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // Ask the manager to handle the snapping and logic
             InventoryManager.HandleItemDrop(this);
         }
+
+        StopCoroutine(animationRoutine);
     }
 
     public bool IsRaycastLocationValid(Vector2 screenPos, Camera eventCamera)
@@ -171,5 +193,26 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void Return2Pool()
     {
         Pool.Release(this);
+    }
+
+    private IEnumerator Animation()
+    {
+        float Map(float v, float imin, float imax, float omin, float omax)
+        {
+            return omin + (v - imin) / (imax - imin) * (omax - omin);
+        }
+
+        const float animTime = 1.5f;
+
+        float t = 0f;
+
+        while (true)
+        {
+            t += Time.deltaTime;
+            float alpha = Map(Mathf.Cos(2f * Mathf.PI * t / animTime * animMutliplier), -1f, 1f, .7f, .9f);
+            canvasGroup.alpha = alpha;
+
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

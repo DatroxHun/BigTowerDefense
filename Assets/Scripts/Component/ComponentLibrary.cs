@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,35 +25,28 @@ public class ComponentLibrary : MonoBehaviour
             Destroy(this);
     }
 
-    public static IEnumerable<(string name, TowerComponent)> SampleAll()
+    public static IEnumerable<Func<TowerComponent>> GetAll()
     {
         // Search for Static Properties
         var properties = typeof(ComponentLibrary).GetProperties(BindingFlags.Public | BindingFlags.Static)
             .Where(p => p.PropertyType == typeof(TowerComponent));
 
-        // Extract the value from each property
+        // Return each property
         foreach (var prop in properties)
         {
-            TowerComponent result = null;
-
-            try
+            yield return () =>
             {
-                // Pass 'null' because the property is static (doesn't belong to a specific instance)
-                result = (TowerComponent)prop.GetValue(null);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"ComponentLibrary: Failed to load {prop.Name}. Error: {e.Message}");
-            }
-
-            if (result != null)
-            {
-                yield return (prop.Name, result);
-            }
+                return (TowerComponent)prop.GetValue(null);
+            };
         }
     }
 
-    // Components
+    // COMPONENTS
+    // DirectDamage = DDMG
+    // ElectricDamage = EDMG
+    // FireDamage = FDMG
+    // PhysicalDamage = PHDMG
+    // PoisonDamage = PODMG
 
     public static TowerComponent RangeUpgrade => new TowerComponent
     (
@@ -62,7 +56,8 @@ public class ComponentLibrary : MonoBehaviour
         {
             (0, 0), (1, 0),
                     (1, 1)
-        }
+        },
+        "Radar Module", "+20% range", 100f        
     );
 
     public static TowerComponent PoisonComponent => new TowerComponent
@@ -75,7 +70,8 @@ public class ComponentLibrary : MonoBehaviour
             (0, 0), (1, 0), (2, 0),
                     (1, 1),
                     (1, 2)
-        }
+        },
+        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350f
     );
 
     private static IEnumerator PoisonLogic(Dictionary<TowerStats,float> stats,Enemy enemy)
