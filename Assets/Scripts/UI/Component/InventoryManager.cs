@@ -111,7 +111,7 @@ public class InventoryManager : MonoBehaviour
         int gridX = Mathf.RoundToInt(adjustedX / totalCellSize);
         int gridY = Mathf.RoundToInt(adjustedY / totalCellSize);
 
-        Debug.Log($"gX: {gridX}; gY: {gridY}");
+        //Debug.Log($"gX: {gridX}; gY: {gridY}");
 
         // Check if the drop is valid
         if (CanPlaceItem(item, gridX, gridY))
