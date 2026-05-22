@@ -22,6 +22,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [HideInInspector] public RectTransform rectTransform;
 
     private CanvasGroup canvasGroup;
+    private RectTransform sellArea;
 
     void Awake()
     {
@@ -35,6 +36,9 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         // set position
         rectTransform.anchoredPosition = (Vector2)position;
+
+        // reset color
+        image.color = Color.white;
 
         // reset originalGridPos
         originalGridPos = CurrentGridPos;
@@ -69,12 +73,26 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // Disable raycasts so the mouse can "see" through the item to the grid below when dropping
         canvasGroup.blocksRaycasts = false;
         canvasGroup.alpha = 0.8f;
+
+        sellArea = InventoryManager.GetSellArea();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         // Move the item with the mouse, scaling appropriately for the Canvas
         rectTransform.anchoredPosition += eventData.delta / InventoryManager.GetMainCanvas().scaleFactor;
+
+        bool isMouseInSellArea = RectTransformUtility.RectangleContainsScreenPoint(
+            sellArea,
+            eventData.position,
+            eventData.pressEventCamera
+        );
+
+        // Color item based on where it is
+        if (isMouseInSellArea)
+            image.color = Color.red;
+        else
+            image.color = Color.white;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -83,8 +101,24 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
-        // Ask the manager to handle the snapping and logic
-        InventoryManager.HandleItemDrop(this);
+        // Check where the mouse is
+        bool isMouseInSellArea = RectTransformUtility.RectangleContainsScreenPoint(
+            sellArea,
+            eventData.position,
+            eventData.pressEventCamera
+        );
+
+        if (isMouseInSellArea)
+        {
+            // Sell component, increase money (not implemented yet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+            InventoryManager.ReleaseInventoryItem(this);
+            InventoryManager.ClearItemSpace(this); // just to be extra safe
+        }
+        else
+        {
+            // Ask the manager to handle the snapping and logic
+            InventoryManager.HandleItemDrop(this);
+        }
     }
 
     public bool IsRaycastLocationValid(Vector2 screenPos, Camera eventCamera)
@@ -111,6 +145,27 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         
         return false;
+    }
+
+    public static bool DoRectsOverlap(RectTransform rect1, RectTransform rect2)
+    {
+        // Get world-space corners for both RectTransforms
+        Vector3[] corners1 = new Vector3[4];
+        Vector3[] corners2 = new Vector3[4];
+        rect1.GetWorldCorners(corners1);
+        rect2.GetWorldCorners(corners2);
+
+        // Calculate Rects in world space
+        // corners[0] is bottom-left, corners[2] is top-right
+        Rect r1 = new Rect(corners1[0].x, corners1[0].y,
+                           corners1[2].x - corners1[0].x,
+                           corners1[2].y - corners1[0].y);
+
+        Rect r2 = new Rect(corners2[0].x, corners2[0].y,
+                           corners2[2].x - corners2[0].x,
+                           corners2[2].y - corners2[0].y);
+
+        return r1.Overlaps(r2);
     }
 
     public void Return2Pool()

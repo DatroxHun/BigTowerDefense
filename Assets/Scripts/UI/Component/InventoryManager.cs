@@ -28,6 +28,7 @@ public class InventoryManager : MonoBehaviour
     [field: SerializeField] public RectTransform ItemContainer { get; private set; } = null!;
     [field: SerializeField] public Transform DragCanvas { get; private set; } = null!;
     [field: SerializeField] public Canvas MainCanvas { get; private set; } = null!;
+    [field: SerializeField] public RectTransform SellArea { get; private set; } = null!;
 
     // pool
     [SerializeField] private GameObject inventoryItemPrefab;
@@ -91,6 +92,7 @@ public class InventoryManager : MonoBehaviour
 
     public static Transform GetDragCanvas() => instance.DragCanvas;
     public static Canvas GetMainCanvas() => instance.MainCanvas;
+    public static RectTransform GetSellArea() => instance.SellArea;
 
     // Moving Items
 
@@ -191,6 +193,12 @@ public class InventoryManager : MonoBehaviour
                 throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
             }
         }
+    }
+
+    public static void ReleaseInventoryItem(InventoryItemUI item)
+    {
+        instance.inventoryItems.Remove(item);
+        item.Return2Pool();
     }
 
     private Vector2 GetGridOrigin()
