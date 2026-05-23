@@ -27,6 +27,33 @@ public class BuildingManager : MonoBehaviour
 
     bool buildingMode = false;
 
+
+    private int resources;
+
+    public int Resources
+    {
+        get { return resources; }
+        set { resources = value; }
+    }
+
+    public bool TrySubtractResources(int amount)
+    {
+        if (resources < amount)
+        {
+            return false;
+        }
+        else
+        {
+            resources -= amount;
+            return true;
+        }
+    }
+
+    public void AddResources(int amount)
+    {
+        resources += amount;
+    }
+
     private void Awake()
     {
         if (instance == null)
