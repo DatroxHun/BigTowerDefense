@@ -100,9 +100,11 @@ public class ShortRangeTower : TargetingTower
     {
         LightningBolt bolt = boltPool.Get();
 
+        Vector3 offsetPerturb = (UnityEngine.Random.insideUnitCircle * 0.2f);
+
         bolt.Launch
         (
-            transform.position + EmissionPointOffset,
+            transform.position + EmissionPointOffset + offsetPerturb,
             targetPoint,
             impactEffect,
             boltPool

@@ -59,7 +59,9 @@ public class LongRangeTower : TargetingTower
         // this could be passed and set in Bullet;
         // might be useful; don't know yet
         // -K
-        bullet.transform.position = this.transform.position;
+        bullet.transform.position = this.transform.position
+            + Vector3.right * (UnityEngine.Random.value * 2 - 1)
+            + Vector3.up * (UnityEngine.Random.value * 0.5f);
 
         bullet.Launch(targetPoint, impactEffect, bulletPool);
     }
