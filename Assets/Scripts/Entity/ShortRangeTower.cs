@@ -70,30 +70,35 @@ public class ShortRangeTower : TargetingTower
             enemy => Effects.InstantDamage(enemy, dmg)
         };
 
-        foreach (Vector3 target in closestTargets)
+        StartCoroutine(DischargeAll(closestTargets, effects));
+    }
+
+    private IEnumerator DischargeAll(IEnumerable<Vector3> targets, List<Func<Enemy, IEnumerator>> effects)
+    {
+        foreach (Vector3 target in targets)
         {
             var stats = CurrentStats;
             Shoot(target,
             (entity) =>
-               {
-                   if (entity is Enemy enemy)
+            {
+                if (entity is Enemy enemy)
+                {
+                    foreach (Func<Enemy, IEnumerator> effect in effects)
                     {
-                       foreach (Func<Enemy, IEnumerator> effect in effects)
-                       {
-                           enemy.ApplyEffect(effect(enemy));
-                       }
-                       foreach (var effect in module.GetAttackAlteration())
-                       {
-                           enemy.ApplyEffect(effect(stats, enemy));
-                       }
+                        enemy.ApplyEffect(effect(enemy));
+                    }
+                    foreach (var effect in module.GetAttackAlteration())
+                    {
+                        enemy.ApplyEffect(effect(stats, enemy));
+                    }
 
-                   }
                 }
+            }
             );
+            yield return new WaitForSeconds(0.1f);
         }
 
         CurrentTarget = null;
-
     }
 
     private void Shoot(Vector3 targetPoint, Action<Entity> impactEffect)
