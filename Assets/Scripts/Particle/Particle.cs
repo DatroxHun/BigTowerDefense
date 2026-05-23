@@ -8,6 +8,8 @@ public class Particle : MonoBehaviour, IPoolable
     public GameObject Object => gameObject;
     public IObjectPool<IPoolable> Pool { get; set; }
 
+    float sizeMultiplier = 1;
+
     private int particleIndex = 0;
     [SerializeField] private ParticleSystem[] pSystems = null!;
 
@@ -20,8 +22,16 @@ public class Particle : MonoBehaviour, IPoolable
     {
         transform.position = position;
 
+        //transform.localScale = Vector3.one; // presumed to be default; needed for scaling
+
         if (particleIndex >= 0 && particleIndex < pSystems.Length)
-            pSystems[particleIndex].Play();
+        {
+            ParticleSystem ps = pSystems[particleIndex];
+
+            ps.transform.localScale = Vector3.one * sizeMultiplier;
+            
+            ps.Play();
+        }
 
         StartCoroutine(ReturnCondition());
     }
@@ -29,6 +39,11 @@ public class Particle : MonoBehaviour, IPoolable
     public void SetParticleType(ParticleType type)
     {
         particleIndex = (int)type;
+    }
+
+    public void ModifySize(float sizeMultiplier = 1)
+    {
+        this.sizeMultiplier = sizeMultiplier;
     }
 
     IEnumerator ReturnCondition()

@@ -34,6 +34,6 @@ public class Pyromancer : Enemy
         }
 
         // replace with bigger explosion effect
-        ParticlePool.Emit(transform.position, ParticleType.Smoke);
+        ParticlePool.Emit(transform.position, ParticleType.Smoke, sizeMultiplier: 2);
     }
 }

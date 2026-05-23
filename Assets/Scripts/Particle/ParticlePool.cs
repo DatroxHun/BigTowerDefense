@@ -53,7 +53,7 @@ public class ParticlePool : MonoBehaviour
         );
     }
 
-    public static void Emit(Vector3 position, ParticleType type)
+    public static void Emit(Vector3 position, ParticleType type, float sizeMultiplier = 1)
     {
         IPoolable poolable = instance.pool.Get();
 
@@ -61,6 +61,7 @@ public class ParticlePool : MonoBehaviour
             throw new MissingComponentException("ParticlePool: Particle component is missing from prefab.");
 
         particle.SetParticleType(type);
+        particle.ModifySize(sizeMultiplier);
         particle.SpawnAction(position);
     }
 }
