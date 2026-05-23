@@ -6,8 +6,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Enemy : Entity, IPoolable
+public abstract class Enemy : Entity, IPoolable
 {
+    [SerializeField]
+    protected Animator animator;
+
     // Attack
     public float DetectionRange
     {
@@ -187,20 +190,7 @@ public class Enemy : Entity, IPoolable
         }
     }
 
-    // Actions
-    protected override void Action()
-    {
-        Debug.Log("Enemy Action");
-
-        if (CurrentTarget is EntityTarget target && target.entity != null)
-        {
-            DamageObj dmg = AttackDamage;
-
-            target.entity.ApplyEffect(Effects.InstantDamage(target.entity, dmg));
-
-            AudioManager.PlaySFX(Clip.BasicAttack, 1f, 1f, 1.1f);
-        }
-    }
+    
 
     // protected override void Target()
     protected virtual void Target()
@@ -223,5 +213,11 @@ public class Enemy : Entity, IPoolable
     {
         base.JustDied();
         Return2Pool();
+    }
+
+    public override void ApplyDamage(DamageObj dobj)
+    {
+        animator.SetTrigger("hurt");
+        base.ApplyDamage(dobj);
     }
 }
