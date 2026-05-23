@@ -44,6 +44,9 @@ public class Spawner : MonoBehaviour
                 if (waveOnGoing)
                     return;
 
+                // heal towers
+                TowerManager.instance.RepairTowers();
+
                 // start spawner waves
                 foreach (Spawner swr in spawners)
                 {
@@ -53,12 +56,14 @@ public class Spawner : MonoBehaviour
                     }
                 }
 
+                // global stuff
                 AudioManager.PlayBGM(Clip.BattleBGM);
                 nextWaveButton.interactable = false;
             };
 
             WaveEnded += () =>
             {
+                // global stuff
                 AudioManager.PlayBGM(Clip.CalmBGM);
                 nextWaveButton.interactable = true;
 
@@ -66,6 +71,11 @@ public class Spawner : MonoBehaviour
                 if (spawners.All(x => x.spawnObject.waves.Count <= x.CurrentWave))
                 {
                     GameOver.Instance.Toggle(won: true);
+                }
+                else
+                {
+                    // only heal if not end of the game
+                    TowerManager.instance.RepairTowers();
                 }
 
                 Debug.Log("Wave Ended");
