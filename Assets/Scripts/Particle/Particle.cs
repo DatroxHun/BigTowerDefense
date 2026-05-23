@@ -63,4 +63,5 @@ public enum ParticleType
 {
     Smoke,
     Divine,
+    ChiefEmission
 }

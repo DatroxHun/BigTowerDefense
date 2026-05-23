@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: ExampleSpawnObject
   m_EditorClassIdentifier: Assembly-CSharp::SpawnObject
   waves:
+  - description: 'Test Wave #2
+
+'
+    delay: 0.5
+    batches:
+    - enemy: {fileID: 735166972616930786, guid: c566d46bef205b84490038e33b9cb4ab, type: 3}
+      amount: 1
+      burstDelay: 0.5
+      duration: 5
+    - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
+      amount: 10
+      burstDelay: 0.5
+      duration: 5
   - description: Chief test
     delay: 0.5
     batches:
