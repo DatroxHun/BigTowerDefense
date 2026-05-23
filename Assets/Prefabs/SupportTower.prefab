@@ -575,6 +575,7 @@ MonoBehaviour:
     electric: 0
     poison: 0
   maxHitPoints: 100
+  <Prize>k__BackingField: 300
   moduleSize: {x: 11, y: 5}
   baseStatsInit:
   - towerStats: 0

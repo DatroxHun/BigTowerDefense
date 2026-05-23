@@ -19,6 +19,9 @@ public struct TowerStatsFloatTuple
 
 public abstract class Tower : Entity
 {
+    [field: SerializeField]
+    public int Prize { get; private set; }
+
     [SerializeField] protected Vector2Int moduleSize = new Vector2Int(11, 5);
 
     protected ComponentModule module = null!;

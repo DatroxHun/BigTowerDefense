@@ -49,20 +49,20 @@ public class BuildingManager : MonoBehaviour
 
     public bool TrySubtractResources(int amount)
     {
-        if (resources < amount)
+        if (Resources < amount)
         {
             return false;
         }
         else
         {
-            resources -= amount;
+            Resources -= amount;
             return true;
         }
     }
 
     public void AddResources(int amount)
     {
-        resources += amount;
+        Resources += amount;
     }
 
     private void Start()
@@ -102,7 +102,6 @@ public class BuildingManager : MonoBehaviour
         ghostSprite.sortingLayerName = "air";
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!buildingMode)
@@ -149,8 +148,18 @@ public class BuildingManager : MonoBehaviour
 
     void PlaceTower(Vector3 position)
     {
-        Instantiate(towerPrefab, position, Quaternion.identity);
-        RefreshNavMesh();
+        int price = towerPrefab.GetComponent<Tower>().Prize;
+
+        if (instance.TrySubtractResources(price))
+        {
+            Instantiate(towerPrefab, position, Quaternion.identity);
+            RefreshNavMesh();
+        }
+        else
+        {
+            // insufficient funds
+        }
+
         CancelBuilding();
     }
 
