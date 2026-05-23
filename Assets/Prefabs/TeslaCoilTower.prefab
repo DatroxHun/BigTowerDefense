@@ -233,7 +233,7 @@ Transform:
   m_GameObject: {fileID: 4154997418327171681}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.015, z: 0}
   m_LocalScale: {x: 0.43, y: 0.43, z: 0.43}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -288,7 +288,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7157677622941534187, guid: 6c582b5472f465347b13a4f0e9f3dd39, type: 3}
+  m_Sprite: {fileID: 5109834466660167259, guid: b4fbcb6b12d37c343b436987ee667c3d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -466,6 +466,7 @@ MonoBehaviour:
     electric: 15
     poison: 0
   maxHitPoints: 100
+  moduleSize: {x: 11, y: 5}
   baseStatsInit:
   - towerStats: 0
     value: 100
@@ -535,7 +536,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.7, y: 0.75}
+  m_Size: {x: 1.7, y: 0.9}
   m_EdgeRadius: 0
 --- !u!1001 &2683362515661494750
 PrefabInstance:
