@@ -157,7 +157,7 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
-            // insufficient funds
+            WarningSystem.DisplayWarningMessage("Insufficient funds!", 1f);
         }
 
         CancelBuilding();
@@ -169,7 +169,7 @@ public class BuildingManager : MonoBehaviour
         if (currentGhost != null)
         {
             Destroy(currentGhost);
-            Debug.Log("destroyed ghost");
+            //Debug.Log("destroyed ghost");
         }
     }
 

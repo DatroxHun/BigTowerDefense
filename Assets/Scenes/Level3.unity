@@ -4949,7 +4949,7 @@ MonoBehaviour:
   mainCamera: {fileID: 298566442}
   NavMeshSurface: {fileID: 1815286229}
   resourceText: {fileID: 79287350}
-  startingResources: 100
+  startingResources: 1000
 --- !u!1 &1104937598
 GameObject:
   m_ObjectHideFlags: 0

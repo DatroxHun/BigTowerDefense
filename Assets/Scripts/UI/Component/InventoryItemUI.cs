@@ -130,7 +130,8 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         if (isMouseInSellArea)
         {
-            // Sell component, increase money (not implemented yet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+            // Sell component, increase money
+            BuildingManager.instance.AddResources(Component.Price);
             InventoryManager.ReleaseInventoryItem(this);
             InventoryManager.ClearItemSpace(this); // just to be extra safe
         }

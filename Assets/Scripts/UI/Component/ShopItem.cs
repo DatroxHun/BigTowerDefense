@@ -16,9 +16,13 @@ public class ShopItem : MonoBehaviour
     {
         if (factory != null)
         {
-            if (InventoryManager.AddComponent(factory.Invoke()))
+            TowerComponent newComponent = factory.Invoke();
+            if (InventoryManager.AddComponent(newComponent))
             {
-                // money management needed here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if (! BuildingManager.instance.TrySubtractResources(newComponent.Price))
+                {
+                    WarningSystem.DisplayWarningMessage("Insufficient funds!", 1f);
+                }
             }
             else
             {

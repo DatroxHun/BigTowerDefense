@@ -17,13 +17,13 @@ public class TowerComponent
     // Economy
     public string Name { get; private set; }
     public string Description { get; private set; }
-    public float Price { get; private set; }
+    public int Price { get; private set; }
 
     public TowerComponent(StatAlteration? statAlteration, 
                           AdvancedAttackAlteration? advancedAttackAlteration, 
                           AdvancedTargettingAlteration? advancedTargettingAlteration, 
                           Sprite? image, Vector2Int[]? shape,
-                          string? name, string? desc, float? price)
+                          string? name, string? desc, int? price)
     {
         StatAlteration = statAlteration;
         AdvancedAttackAlteration = advancedAttackAlteration;
@@ -44,7 +44,7 @@ public class TowerComponent
                           AdvancedAttackAlteration? advancedAttackAlteration,
                           AdvancedTargettingAlteration? advancedTargettingAlteration,
                           Sprite? image, (int, int)[]? shape,
-                          string? name, string? desc, float? price) : 
+                          string? name, string? desc, int? price) : 
         this(statAlteration, advancedAttackAlteration, advancedTargettingAlteration, 
              image, shape.Select(x => new Vector2Int(x.Item1, x.Item2)).ToArray(), 
              name, desc, price)
