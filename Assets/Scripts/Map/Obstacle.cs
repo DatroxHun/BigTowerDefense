@@ -10,12 +10,13 @@ public class Obstacle : MonoBehaviour
 
         // subtract money
 
-        BuildingManager.instance.RefreshNavMesh();
+        Destroy(gameObject);
         
+
         // play sfx
 
         // play vfx (dust particles?)
 
-        Destroy(gameObject);
+        BuildingManager.instance.RefreshNavMesh();
     }
 }

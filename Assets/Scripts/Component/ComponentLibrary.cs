@@ -1,6 +1,9 @@
-using UnityEngine;
-using System.Collections.Generic;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 [DefaultExecutionOrder(-100)]
 public class ComponentLibrary : MonoBehaviour
@@ -22,7 +25,28 @@ public class ComponentLibrary : MonoBehaviour
             Destroy(this);
     }
 
-    // Components
+    public static IEnumerable<Func<TowerComponent>> GetAll()
+    {
+        // Search for Static Properties
+        var properties = typeof(ComponentLibrary).GetProperties(BindingFlags.Public | BindingFlags.Static)
+            .Where(p => p.PropertyType == typeof(TowerComponent));
+
+        // Return each property
+        foreach (var prop in properties)
+        {
+            yield return () =>
+            {
+                return (TowerComponent)prop.GetValue(null);
+            };
+        }
+    }
+
+    // COMPONENTS
+    // DirectDamage = DDMG
+    // ElectricDamage = EDMG
+    // FireDamage = FDMG
+    // PhysicalDamage = PHDMG
+    // PoisonDamage = PODMG
 
     public static TowerComponent RangeUpgrade => new TowerComponent
     (
@@ -32,7 +56,8 @@ public class ComponentLibrary : MonoBehaviour
         {
             (0, 0), (1, 0),
                     (1, 1)
-        }
+        },
+        "Radar Module", "+20% range", 100f        
     );
 
     public static TowerComponent PoisonComponent => new TowerComponent
@@ -45,7 +70,8 @@ public class ComponentLibrary : MonoBehaviour
             (0, 0), (1, 0), (2, 0),
                     (1, 1),
                     (1, 2)
-        }
+        },
+        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350f
     );
 
     private static IEnumerator PoisonLogic(Dictionary<TowerStats,float> stats,Enemy enemy)
