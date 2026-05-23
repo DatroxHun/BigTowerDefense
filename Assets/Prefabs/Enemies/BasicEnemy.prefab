@@ -111,7 +111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2980213493605823309}
-  - component: {fileID: 7324967848809872193}
+  - component: {fileID: 7618842730517547492}
   - component: {fileID: 871284484800307019}
   - component: {fileID: 6757155748682780842}
   - component: {fileID: 7490226856234903497}
@@ -135,12 +135,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3669604505391178315}
+  - {fileID: 7828710364822364864}
   - {fileID: 7643558567541536680}
   - {fileID: 7663302697451353704}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7324967848809872193
+--- !u!114 &7618842730517547492
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,9 +149,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 735166972616930786}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2df0537ab0f4c314481fd8ffc8fd431e, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d8b35f058a1e67478754bd721cb0065, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeSlime
   healthbar: {fileID: 4196462429248242901}
   rangeCollider: {fileID: 9067605995542005407}
   <Vulnerabilities>k__BackingField:
@@ -167,6 +167,7 @@ MonoBehaviour:
     electric: 0
     poison: 0
   maxHitPoints: 25
+  animator: {fileID: 8199132378536266887}
   walker: {fileID: 871284484800307019}
   attackRange: 1
   attackInterval: 1
@@ -193,19 +194,19 @@ NavMeshAgent:
   m_GameObject: {fileID: 735166972616930786}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.27
-  m_Speed: 1
+  m_Radius: 0.125
+  m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.1
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 0.15
-  m_BaseOffset: 0.05
+  m_Height: 0.25
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 1
+  m_ObstacleAvoidanceType: 4
 --- !u!61 &7490226856234903497
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -252,6 +253,61 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.83, y: 0.54}
   m_EdgeRadius: 0
+--- !u!1 &1006051558830164927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7828710364822364864}
+  - component: {fileID: 8199132378536266887}
+  m_Layer: 6
+  m_Name: Animated
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7828710364822364864
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006051558830164927}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3669604505391178315}
+  m_Father: {fileID: 2980213493605823309}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8199132378536266887
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006051558830164927}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc8132913f9f9ee49b0de1d3859417c0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1456819314795192288
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,12 +401,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4589586867735362164}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.24, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2980213493605823309}
+  m_Father: {fileID: 7828710364822364864}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5071358874923151077
 SpriteRenderer:
