@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -42,6 +43,7 @@ public abstract class Enemy : Entity, IPoolable
         ParticlePool.Emit(position, ParticleType.Smoke);
 
         transform.position = position;
+        //ResetVisuals();
         CurrentTarget = null;
 
         // regenerate health
@@ -212,6 +214,7 @@ public abstract class Enemy : Entity, IPoolable
     protected override void JustDied()
     {
         base.JustDied();
+        ResetVisuals();
         Return2Pool();
     }
 
@@ -219,5 +222,25 @@ public abstract class Enemy : Entity, IPoolable
     {
         animator.SetTrigger("hurt");
         base.ApplyDamage(dobj);
+    }
+
+    /// <summary>
+    /// Reset animated properties.
+    /// </summary>
+    void ResetVisuals()
+    {
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        sr.color = Color.white;
+
+        Animator anim = GetComponentInChildren<Animator>();
+
+        anim.gameObject.transform.position = Vector3.zero;
+        anim.gameObject.transform.localRotation = Quaternion.identity;
+        anim.gameObject.transform.localScale = Vector3.one;
+
+        anim.Rebind();
+        anim.Update(0);
+        anim.Play("slime");
+
     }
 }
