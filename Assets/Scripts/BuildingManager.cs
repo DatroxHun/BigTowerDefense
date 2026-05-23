@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using Unity.AI.Navigation;
 using NavMeshPlus.Components;
 using UnityEditor.Search;
+using TMPro;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -19,21 +20,31 @@ public class BuildingManager : MonoBehaviour
     
     private BoxCollider2D prefabCollider;
 
+    bool buildingMode = false;
+
     [SerializeField]
     Camera mainCamera;
 
     [SerializeField]
     public NavMeshPlus.Components.NavMeshSurface NavMeshSurface;
 
-    bool buildingMode = false;
+    [SerializeField]
+    TextMeshProUGUI resourceText;
 
+
+    [SerializeField]
+    public int startingResources;
 
     private int resources;
 
     public int Resources
     {
         get { return resources; }
-        set { resources = value; }
+        set 
+        { 
+            resources = value;
+            resourceText.text = resources.ToString();
+        }
     }
 
     public bool TrySubtractResources(int amount)
@@ -52,6 +63,11 @@ public class BuildingManager : MonoBehaviour
     public void AddResources(int amount)
     {
         resources += amount;
+    }
+
+    private void Start()
+    {
+        Resources = startingResources;    
     }
 
     private void Awake()
