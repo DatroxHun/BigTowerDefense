@@ -31,6 +31,8 @@ public class TowerSettings : MonoBehaviour
             {
                 instance.canvasGroup.interactable = isOpen;
                 instance.canvasGroup.blocksRaycasts = isOpen;
+
+                PauseMenu.SetPauseGame(isOpen);
             });
     }
 }
