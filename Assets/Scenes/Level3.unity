@@ -5212,6 +5212,7 @@ MonoBehaviour:
   <DragCanvas>k__BackingField: {fileID: 1725148420}
   <MainCanvas>k__BackingField: {fileID: 1311192238}
   <SellArea>k__BackingField: {fileID: 2113313863}
+  <BorderMaterial>k__BackingField: {fileID: -876546973899608171, guid: 4c6af6bf650f270419edb4f183a4c26f, type: 3}
   inventoryItemPrefab: {fileID: 9130375555242270344, guid: 61c2542f10ae39643b977c62fdaf0f26, type: 3}
 --- !u!1 &1102556258
 GameObject:

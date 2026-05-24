@@ -49,7 +49,14 @@ public class PauseMenu : MonoBehaviour
     {
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            TogglePauseMenu();
+            if (TowerSettings.IsOpen)
+            {
+                TowerSettings.SetVisibility(false);
+            }
+            else
+            {
+                TogglePauseMenu();
+            }
         }
     }
 
