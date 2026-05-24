@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -35,6 +36,7 @@ public class Road : MonoBehaviour
         }
 
         Length = SplineContainer.Spline.GetLength();
+        GenerateCollider();
     }
 
     public Vector3 EvaluatePosition(float t)
@@ -68,5 +70,26 @@ public class Road : MonoBehaviour
     public float T2Dist(float t)
     {
         return SplineContainer.Spline.ConvertIndexUnit(t, PathIndexUnit.Normalized, PathIndexUnit.Distance);
+    }
+
+    public void GenerateCollider()
+    {
+        EdgeCollider2D edgeCollider = gameObject.GetComponent<EdgeCollider2D>();
+        if (edgeCollider == null)
+        {
+            edgeCollider = gameObject.AddComponent<EdgeCollider2D>();
+        }
+
+        Vector3[] linePoints = new Vector3[LineRenderer.positionCount];
+        LineRenderer.GetPositions(linePoints);
+
+        List<Vector2> colliderPoints = new List<Vector2>();
+        for (int i = 0; i < linePoints.Length; i++)
+        {
+            colliderPoints.Add(new Vector2(linePoints[i].x, linePoints[i].y));
+        }
+        edgeCollider.SetPoints(colliderPoints);
+
+        edgeCollider.edgeRadius = LineRenderer.startWidth / 3f; // tweak this if you want a smaller or bigger collider
     }
 }

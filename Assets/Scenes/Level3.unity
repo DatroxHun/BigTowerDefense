@@ -889,7 +889,7 @@ GameObject:
   m_Component:
   - component: {fileID: 234393467}
   - component: {fileID: 234393468}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4558,7 +4558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingManager
   blockingLayers:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 1160
   mainCamera: {fileID: 298566442}
   NavMeshSurface: {fileID: 1815286229}
 --- !u!1001 &1105168733
@@ -4684,7 +4684,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1120785919}
   - component: {fileID: 1120785920}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Road
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5220,7 +5220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1284483216}
   - component: {fileID: 1284483215}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7595,7 +7595,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 392
+    m_Bits: 1416
   m_UseGeometry: 1
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -9042,7 +9042,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2122685090}
   - component: {fileID: 2122685091}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
