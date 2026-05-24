@@ -155,7 +155,7 @@ public class BuildingManager : MonoBehaviour
 
     void PlaceTower(Vector3 position)
     {
-        int price = towerPrefab.GetComponent<Tower>().Prize;
+        int price = towerPrefab.GetComponent<Tower>().Price;
 
         if (instance.TrySubtractResources(price))
         {
@@ -187,7 +187,7 @@ public class BuildingManager : MonoBehaviour
 
     public void SellTower(Tower tower)
     {
-        SellForResources(tower.Prize);
+        SellForResources(tower.Price);
         TowerManager.instance.RemoveTower(tower);
         Destroy(tower.gameObject);
         RefreshNavMesh();
