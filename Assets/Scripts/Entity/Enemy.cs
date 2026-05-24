@@ -40,7 +40,7 @@ public abstract class Enemy : Entity, IPoolable
     }
 
     // Productivity
-    private HashSet<Tower> blackList = new();
+    protected HashSet<Tower> blackList = new();
 
     public void SpawnAction(Vector3 position)
     {
