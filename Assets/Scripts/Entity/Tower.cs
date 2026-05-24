@@ -36,6 +36,8 @@ public abstract class Tower : Entity
     [SerializeField]
     protected float actiondelaySeconds = 2.0f;
     public override float MaxHitPoints { get => CurrentStats[TowerStats.TowerMaxHitPoints]; }
+    protected override DamageObj AttackDamage { get => new DamageObj{ direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamage,0), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamage, 0), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamage, 0), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamage, 0), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamage, 0) }; }
+    protected override DamageObj Vulnerabilities { get => new DamageObj { direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamageVulnerability, 1), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamageVulnerability, 1), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamageVulnerability, 1), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamageVulnerability, 1), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamageVulnerability, 1) }; }
     protected float Range
     {
         get { return rangeCollider.radius; }
