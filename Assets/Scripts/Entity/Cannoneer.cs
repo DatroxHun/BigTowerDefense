@@ -104,6 +104,7 @@ public class Cannoneer : Enemy
             .Where(t =>
                 t.IsAlive &&
                 !t.Hiding &&
+                !blackList.Contains(t) &&
                 rangeCollider.OverlapPoint(t.transform.position) &&
                 IsDetectable(t.transform.position))
             .Select(t => t as Entity);

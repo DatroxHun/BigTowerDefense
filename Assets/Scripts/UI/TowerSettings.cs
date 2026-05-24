@@ -7,6 +7,7 @@ public class TowerSettings : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
 
     private bool isOpen = false;
+    public static bool IsOpen => instance.isOpen;
 
     private const float animTime = .35f;
 
@@ -31,6 +32,8 @@ public class TowerSettings : MonoBehaviour
             {
                 instance.canvasGroup.interactable = isOpen;
                 instance.canvasGroup.blocksRaycasts = isOpen;
+
+                PauseMenu.SetPauseGame(isOpen);
             });
     }
 }

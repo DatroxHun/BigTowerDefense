@@ -1,6 +1,7 @@
 #nullable enable
 
-using System;
+using TMPro;
+using Unity.Hierarchy;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,9 +12,16 @@ public class MainMenu : MonoBehaviour
     public static MainMenu? Instance { get; private set; } = null;
 
     [SerializeField] private Image TransitionPanel = null!;
-    [SerializeField] private RectTransform LevelSelectorHolder = null!;
-    [SerializeField] private RectTransform ButtonHolder = null!;
+    [SerializeField] private RectTransform ButtonContainer = null!;
     [SerializeField] private Image TransitionInImage = null!;
+
+    [SerializeField] private TextMeshProUGUI masterVolumeValueTXT = null!;
+    [SerializeField] private TextMeshProUGUI musicVolumeValueTXT = null!;
+    [SerializeField] private TextMeshProUGUI sfxVolumeValueTXT = null!;
+
+    [SerializeField] private Slider masterSlider = null!;
+    [SerializeField] private Slider musicSlider = null!;
+    [SerializeField] private Slider sfxSlider = null!;
 
     private void Awake()
     {
@@ -30,14 +38,27 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-        TransitionInImage.gameObject.SetActive(true);
-
-        LeanTween.value(TransitionInImage.gameObject, (float val) =>
+        if (Time.time > 1f)
         {
-            TransitionInImage.transform.localScale = Vector3.one * (1f - val);
-            TransitionInImage.transform.eulerAngles = new Vector3(0, 0, -val * 270f);
-        }, 0f, 1f, 1f)
-        .setEase(LeanTweenType.easeInOutSine).setIgnoreTimeScale(true);
+            TransitionInImage.gameObject.SetActive(true);
+
+            LeanTween.value(TransitionInImage.gameObject, (float val) =>
+            {
+                TransitionInImage.transform.localScale = Vector3.one * (1f - val);
+                TransitionInImage.transform.eulerAngles = new Vector3(0, 0, -val * 270f);
+            }, 0f, 1f, 1f)
+            .setEase(LeanTweenType.easeInOutSine).setIgnoreTimeScale(true);
+        }
+
+        // Set sliders
+        if (AudioManager.GetMasterVolume(out float mv))
+            masterSlider.value = mv;
+
+        if (AudioManager.GetMusicVolume(out float muv))
+            musicSlider.value = muv;
+
+        if (AudioManager.GetSFXVolume(out float sfxv))
+            sfxSlider.value = sfxv;
     }
 
     public void LoadScene(int sceneIdx)
@@ -69,12 +90,12 @@ public class MainMenu : MonoBehaviour
 
     public void PlayButtonPressed()
     {
-        ToggleLevelSelector(true);
+        ToggleLevelSelector(0, -1);
     }
 
     public void OptionButtonPressed()
     {
-        Debug.LogWarning("Not implemented!");
+        ToggleLevelSelector(0, 1);
     }
 
     public void ExitButtonPressed()
@@ -82,21 +103,39 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void BackButtonPressed()
+    public void BackButtonPressed(int from)
     {
-        ToggleLevelSelector(false);
+        ToggleLevelSelector(from, 0);
+    }
+
+    // Sliders
+
+    public void MasterVolumeSliderValueChanged(float value)
+    {
+        masterVolumeValueTXT.text = $"{Mathf.Round(100f * value)}%";
+        AudioManager.SetMasterVolume(value);
+    }
+
+    public void MusicVolumeSliderValueChanged(float value)
+    {
+        musicVolumeValueTXT.text = $"{Mathf.Round(100f * value)}%";
+        AudioManager.SetMusicVolume(value);
+    }
+
+    public void SFXVolumeSliderValueChanged(float value)
+    {
+        sfxVolumeValueTXT.text = $"{Mathf.Round(100f * value)}%";
+        AudioManager.SetSFXVolume(value);
     }
 
     // Utils
 
-    private void ToggleLevelSelector(bool visible)
+    private void ToggleLevelSelector(int from, int to)
     {
         LeanTween.value(TransitionPanel.gameObject, (float val) =>
         {
-            LevelSelectorHolder.anchoredPosition = new Vector2(val, LevelSelectorHolder.anchoredPosition.y);
-            ButtonHolder.anchoredPosition = new Vector2(val + 3000f, ButtonHolder.anchoredPosition.y);
-
-        }, visible ? -3000f : 0f, visible ? 0f : -3000f, .5f)
+            ButtonContainer.anchoredPosition = new Vector2(val, ButtonContainer.anchoredPosition.y);
+        }, -3000f * from, -3000f * to, .5f)
         .setEase(LeanTweenType.easeOutSine);
     }
 }

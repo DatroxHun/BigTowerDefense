@@ -208,7 +208,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         while (true)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime;
             float alpha = Map(Mathf.Cos(2f * Mathf.PI * t / animTime * animMutliplier), -1f, 1f, .7f, .9f);
             canvasGroup.alpha = alpha;
 
