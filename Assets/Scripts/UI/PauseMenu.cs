@@ -12,6 +12,10 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI musicVolumeValueTXT;
     [SerializeField] private TextMeshProUGUI sfxVolumeValueTXT;
 
+    [SerializeField] private Slider masterSlider = null!;
+    [SerializeField] private Slider musicSlider = null!;
+    [SerializeField] private Slider sfxSlider = null!;
+
     [SerializeField] private Slider speedSlider;
     [SerializeField] private TextMeshProUGUI speedSliderValueTXT;
     [SerializeField] private Image speedImage;
@@ -26,6 +30,19 @@ public class PauseMenu : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(this);
+    }
+
+    private void Start()
+    {
+        // Set sliders
+        if (AudioManager.GetMasterVolume(out float mv))
+            masterSlider.value = mv;
+
+        if (AudioManager.GetMusicVolume(out float muv))
+            musicSlider.value = muv;
+
+        if (AudioManager.GetSFXVolume(out float sfxv))
+            sfxSlider.value = sfxv;
     }
 
     void Update()

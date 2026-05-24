@@ -7,6 +7,13 @@ public class Shop : MonoBehaviour
     private bool openShop = false;
     private bool animatingShop = false;
 
+    private RectTransform rectTransform;
+
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+
     // Button Press Callbacks
     public void CloseButtonPressed()
     {
@@ -19,15 +26,22 @@ public class Shop : MonoBehaviour
     }
 
     public void SetShopVisiblity(bool visible)
-    {
+    {      
         if (!animatingShop && visible != openShop)
         {
             animatingShop = true;
             openShop = visible;
 
-            LeanTween.moveLocalX(gameObject, 1920 / 2 + 400 * (openShop ? 0 : 1), .5f)
+            float targetX = openShop ? -rectTransform.rect.width : 0f;
+
+            LeanTween.value(gameObject, rectTransform.anchoredPosition.x, targetX, 0.5f)
+                .setOnUpdate((float x) =>
+                {
+                    rectTransform.anchoredPosition = new Vector2(x, rectTransform.anchoredPosition.y);
+                })
                 .setEase(LeanTweenType.easeInOutSine)
-                .setOnComplete(() => animatingShop = false);
+                .setOnComplete(() => animatingShop = false)
+                .setIgnoreTimeScale(true);
         }
     }
 
