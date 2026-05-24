@@ -24,6 +24,7 @@ public class BuildingManager : MonoBehaviour
 
     [SerializeField]
     private float saleMultiplier = 0.8f;
+    public float SaleMultiplier { get => saleMultiplier; }
 
     [SerializeField]
     Camera mainCamera;
@@ -49,6 +50,7 @@ public class BuildingManager : MonoBehaviour
             resourceText.text = resources.ToString();
         }
     }
+
 
     public bool TrySubtractResources(int amount)
     {

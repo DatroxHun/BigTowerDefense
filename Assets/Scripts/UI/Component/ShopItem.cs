@@ -18,7 +18,7 @@ public class ShopItem : MonoBehaviour
         {
             TowerComponent newComponent = factory.Invoke();
             
-            if (!BuildingManager.instance.TrySubtractResources(newComponent.Price))
+            if (BuildingManager.instance.Resources < newComponent.Price)
             {
                 WarningSystem.DisplayWarningMessage("Insufficient funds!", 1f);
             }
@@ -26,6 +26,10 @@ public class ShopItem : MonoBehaviour
             else if (!InventoryManager.AddComponent(newComponent))
             {
                 WarningSystem.DisplayWarningMessage("Not enough space to buy!", 1f);
+            }
+            else
+            {
+                BuildingManager.instance.TrySubtractResources(newComponent.Price);
             }
         }
     }

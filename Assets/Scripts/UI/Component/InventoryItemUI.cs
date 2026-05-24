@@ -103,7 +103,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             image.color = new Color(1f, .7f, .7f, 1f);
             animMutliplier = 3f;
-            sellText.text = $"{Component.Price}€";
+            sellText.text = $"{Component.Price * BuildingManager.instance.SaleMultiplier}€";
         }
         else
         {
