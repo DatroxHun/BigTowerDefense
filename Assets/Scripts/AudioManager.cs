@@ -200,10 +200,22 @@ public class AudioManager : MonoBehaviour
     public static void SetMusicVolume(float v) => SetVolume("MusicVol", v);
     public static void SetSFXVolume(float v) => SetVolume("SFXVol", v);
 
+    public static bool GetMasterVolume(out float v) => GetVolume("MasterVol", out v);
+    public static bool GetMusicVolume(out float v) => GetVolume("MusicVol", out v);
+    public static bool GetSFXVolume(out float v) => GetVolume("SFXVol", out v);
+
     private static void SetVolume(string name, float v)
     {
         v = Mathf.Clamp(v, 0.0001f, 1f);
         instance.mainMixer.SetFloat(name, Mathf.Log10(v) * 20f);
+    }
+
+    private static bool GetVolume(string name, out float v)
+    {
+        bool result = instance.mainMixer.GetFloat(name, out v);
+        v = Mathf.Pow(10f, v / 20f);
+
+        return result;
     }
 }
 

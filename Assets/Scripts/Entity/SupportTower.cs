@@ -24,6 +24,7 @@ public class SupportTower : Tower
             .Where(e =>
                 e != null &&
                 e.IsAlive &&
+                e is not BaseTower &&
                 rangeCollider.OverlapPoint(e.transform.position))
             .ToList();
 

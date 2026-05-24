@@ -29,6 +29,7 @@ public class InventoryManager : MonoBehaviour
     [field: SerializeField] public Transform DragCanvas { get; private set; } = null!;
     [field: SerializeField] public Canvas MainCanvas { get; private set; } = null!;
     [field: SerializeField] public RectTransform SellArea { get; private set; } = null!;
+    [field: SerializeField] public Material BorderMaterial { get; private set; } = null!;
 
     // pool
     [SerializeField] private GameObject inventoryItemPrefab;
@@ -88,6 +89,12 @@ public class InventoryManager : MonoBehaviour
         );
 
         itemPool = newPool;
+    }
+
+    private void Update()
+    {
+        // InventoryItemUI shader
+        BorderMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
     }
 
     public static Transform GetDragCanvas() => instance.DragCanvas;

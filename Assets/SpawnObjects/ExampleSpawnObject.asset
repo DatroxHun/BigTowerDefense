@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: ExampleSpawnObject
   m_EditorClassIdentifier: Assembly-CSharp::SpawnObject
   waves:
+  - description: empty wave
+    delay: 0.5
+    batches: []
   - description: Chief test
     delay: 0.5
     batches:

@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -34,8 +35,12 @@ public abstract class Enemy : Entity, IPoolable
         // stop cycles        
         StopAllCycles();
 
+        blackList.Clear();
         Pool.Release(this);
     }
+
+    // Productivity
+    protected HashSet<Tower> blackList = new();
 
     public void SpawnAction(Vector3 position)
     {
@@ -49,6 +54,8 @@ public abstract class Enemy : Entity, IPoolable
 
         WalkOnRoad();
         //walker.WalkOnRoad(road, globalCallback: Return2Pool);
+
+        blackList.Clear();
     }
 
     // Brain Cycles
@@ -163,25 +170,53 @@ public abstract class Enemy : Entity, IPoolable
     protected virtual IEnumerator Attack()
     {
         bool doAttack = true;
+
+        void StopAttack()
+        {
+            doAttack = false;
+            CurrentTarget = null;
+            WalkOnRoad(scanDelay: 1f); // starts scanning after delay
+        }
+
+        // Ensure a valid target before starting
+        if (CurrentTarget is not EntityTarget initialTarget || initialTarget.entity == null)
+            yield break;
+
+        // productivity
+        int attackCounter = 0;
+        float targetHealthSnapshot = initialTarget.entity.HitPoints;
+
         while (doAttack)
         {
             yield return new WaitForSeconds(attackInterval);
 
-            Debug.Log("a");
-
             if (CurrentTarget is EntityTarget target)
             {
-                // if target is alive -> attack
-                if (target.entity != null && target.entity.IsAlive && target.entity is Tower tower && !tower.Hiding)
+                // Check if the tower was destroyed or hid WHILE we were waiting
+                if (target.entity == null || !target.entity.IsAlive || (target.entity is Tower t_hide && t_hide.Hiding))
                 {
-                    Action();
+                    StopAttack();
+                    yield break; // Exit coroutine immediately
                 }
-                else // if not alive -> stop attacking and got back to road
+
+                // Productivity Check
+                if (attackCounter > 0 && attackCounter % 5 == 0)
                 {
-                    doAttack = false;
-                    CurrentTarget = null;
-                    WalkOnRoad(scanDelay: 1f); // starts scanning after delay 
+                    // if health stayed the same or increased
+                    if (target.entity.HitPoints - targetHealthSnapshot >= 0 && target.entity is Tower t && t is not BaseTower)
+                    {
+                        blackList.Add(t);
+                        StopAttack();
+                        yield break; // Exit immediately
+                    }
+
+                    // Update snapshot
+                    targetHealthSnapshot = target.entity.HitPoints;
                 }
+
+                // Target is confirmed alive and we are productive. Attack!
+                Action();
+                attackCounter++;                
             }
             else
             {
@@ -200,6 +235,7 @@ public abstract class Enemy : Entity, IPoolable
                 t != null &&
                 t.IsAlive &&
                 !t.Hiding &&
+                !blackList.Contains(t) && 
                 rangeCollider.OverlapPoint(t.transform.position))
             .Select(t => t as Entity);
 
