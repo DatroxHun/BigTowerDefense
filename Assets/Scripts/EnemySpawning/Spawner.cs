@@ -18,49 +18,78 @@ public class Spawner : MonoBehaviour
 
     public int CurrentWave { get; private set; } = 0;
 
-    public event System.Action WaveStarted = null!;
-    public event System.Action WaveEnded = null!;
+    public static Spawner mainSpawner = null!;
+    public static List<Spawner> spawners = new();
+    public static event System.Action WaveStarted = null!;
+    public static event System.Action WaveEnded = null!;
 
     public Dictionary<int, ObjectPool<IPoolable>> ObjectPools { get; private set; } = new();
 
 
     private Coroutine? waveCoroutine = null;
-    public bool waveOnGoing { get => waveCoroutine != null; }
-
+    public static bool waveOnGoing { get => EnemyManager.instance.Enemies.Any(x => x.IsAlive) || spawners.Any(y => y.waveCoroutine != null); }
 
     void Start()
     {
-        InitializePools();
+        spawners.Add(this);
 
-        WaveStarted += () =>
+        if (mainSpawner == null)
         {
-            // if wave is ongoing, do nothing
-            if (waveCoroutine != null) return;
+            // ONLY IF THIS IS MAIN SPAWNER
+            mainSpawner = this;
 
-            waveCoroutine = StartCoroutine(ExecuteWave(CurrentWave++));
-
-            AudioManager.PlayBGM(Clip.BattleBGM);
-            nextWaveButton.interactable = false;
-        };
-
-        WaveEnded += () =>
-        {
-            AudioManager.PlayBGM(Clip.CalmBGM);
-            nextWaveButton.interactable = true;
-
-            // check win condition
-            if (spawnObject.waves.Count <= CurrentWave)
+            WaveStarted += () =>
             {
-                GameOver.Instance.Toggle(won: true);
-            }
+                // check if wave ongoing -> return
+                if (waveOnGoing)
+                    return;
 
-            Debug.Log("Wave Ended");
-        };
+                // heal towers
+                TowerManager.instance.RepairTowers();
+
+                // start spawner waves
+                foreach (Spawner swr in spawners)
+                {
+                    if (swr.CurrentWave < swr.spawnObject.waves.Count)
+                    {
+                        swr.waveCoroutine = swr.StartCoroutine(swr.ExecuteWave(swr.CurrentWave++));
+                    }
+                }
+
+                // global stuff
+                AudioManager.PlayBGM(Clip.BattleBGM);
+                nextWaveButton.interactable = false;
+            };
+
+            WaveEnded += () =>
+            {
+                // global stuff
+                AudioManager.PlayBGM(Clip.CalmBGM);
+                nextWaveButton.interactable = true;
+
+                // check win condition
+                if (spawners.All(x => x.spawnObject.waves.Count <= x.CurrentWave))
+                {
+                    GameOver.Instance.Toggle(won: true);
+                }
+                else
+                {
+                    // only heal if not end of the game
+                    TowerManager.instance.RepairTowers();
+                }
+
+                Debug.Log("Wave Ended");
+            };
+        }
+
+        // NORMAL AND MAIN SPAWNER INITS
+        InitializePools();        
     }
 
     public void StartWave()
     {
-        if (!waveOnGoing && CurrentWave < spawnObject.waves.Count) WaveStarted?.Invoke();
+        if (!waveOnGoing && spawners.Any(x => x.CurrentWave < x.spawnObject.waves.Count))
+            WaveStarted?.Invoke();
     }
 
     private void InitializePools()
@@ -158,9 +187,34 @@ public class Spawner : MonoBehaviour
             yield return new WaitForSeconds(batch.duration);
         }
 
-        yield return new WaitWhile(() => EnemyManager.instance.Enemies.Any(x => x.IsAlive));
-
-        WaveEnded?.Invoke();
+        // Signal that this Spawner is finished
         waveCoroutine = null;
+
+        // I am the last spawner to finish
+        if (spawners.All(x => x.waveCoroutine == null))
+        {
+            // Wait until all enemies are dead
+            yield return new WaitWhile(() => EnemyManager.instance.Enemies.Any(x => x.IsAlive));
+
+            // Call end wave
+            WaveEnded?.Invoke();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // all spawners
+        spawners.Remove(this);
+
+        // If this was the main spawner, clean up the global state
+        if (mainSpawner == this)
+        {
+            mainSpawner = null!;
+            spawners.Clear();
+
+            // Clear all event subscribers so dead scripts don't listen
+            WaveStarted = null!;
+            WaveEnded = null!;
+        }
     }
 }
