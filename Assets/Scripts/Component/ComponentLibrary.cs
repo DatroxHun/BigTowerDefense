@@ -60,6 +60,31 @@ public class ComponentLibrary : MonoBehaviour
         "Radar Module", "+20% range", 100f        
     );
 
+    public static TowerComponent ElectricDamageUpgrade => new TowerComponent
+    (
+        new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.ElectricDamage, 2, 1.1f) }),
+        null, null,
+        Sprites["range"], new (int, int)[]
+        {
+            (0, 0), (1, 0),
+                    (1, 1)
+        },
+        "Battery overload", "+2 electric damage and +10% electric damage", 100f
+    );
+
+    public static TowerComponent MachineGunUpgrade = new TowerComponent(
+            new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.ElectricDamage, 0, 0.5f), (TowerStats.FireDamage, 0, 0.5f), (TowerStats.DirectDamage, 0, 0.5f) }),
+            null,
+            new AdvancedTargettingAlteration((xs, ys) => ys.Concat(ys).ToList()),
+            Sprites["poison"], new (int, int)[]
+            {
+                (0, 0), (1, 0), (2, 0),
+                        (1, 1),
+                        (1, 2)
+            },
+        "Machinegun", "Tower now fires twice at enemies, all but poison damage halved", 350f
+        );
+
     public static TowerComponent PoisonComponent => new TowerComponent
     (
         new(new() { (TowerStats.PoisonDamage, 5, 1) }),
