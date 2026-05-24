@@ -28,6 +28,7 @@ public class InventoryManager : MonoBehaviour
     [field: SerializeField] public RectTransform ItemContainer { get; private set; } = null!;
     [field: SerializeField] public Transform DragCanvas { get; private set; } = null!;
     [field: SerializeField] public Canvas MainCanvas { get; private set; } = null!;
+    [field: SerializeField] public RectTransform SellArea { get; private set; } = null!;
 
     // pool
     [SerializeField] private GameObject inventoryItemPrefab;
@@ -91,6 +92,7 @@ public class InventoryManager : MonoBehaviour
 
     public static Transform GetDragCanvas() => instance.DragCanvas;
     public static Canvas GetMainCanvas() => instance.MainCanvas;
+    public static RectTransform GetSellArea() => instance.SellArea;
 
     // Moving Items
 
@@ -111,7 +113,7 @@ public class InventoryManager : MonoBehaviour
         int gridX = Mathf.RoundToInt(adjustedX / totalCellSize);
         int gridY = Mathf.RoundToInt(adjustedY / totalCellSize);
 
-        Debug.Log($"gX: {gridX}; gY: {gridY}");
+        //Debug.Log($"gX: {gridX}; gY: {gridY}");
 
         // Check if the drop is valid
         if (CanPlaceItem(item, gridX, gridY))
@@ -126,6 +128,14 @@ public class InventoryManager : MonoBehaviour
             PlaceItem(item, item.originalGridPos.x, item.originalGridPos.y);
             Debug.Log("unplacable");
         }
+    }
+
+    public static bool AddComponent(TowerComponent component)
+    {
+        bool result = module.AddComponent(component);
+        ResetComponentModule(module);
+        
+        return result;
     }
 
     private static bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
@@ -178,19 +188,31 @@ public class InventoryManager : MonoBehaviour
         foreach (TowerComponent component in module.Components)
         {
             IPoolable poolable = itemPool.Get();
-
-            if (poolable.Object.TryGetComponent<InventoryItemUI>(out InventoryItemUI item))
-            {
-                item.SetComponent(component);
-                poolable.SpawnAction(instance.GetSnappedPosition(component.position));
-
-                instance.inventoryItems.Add(item);
-            }
-            else
-            {
-                throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
-            }
+            InitializePoolable(poolable, component);
         }
+    }
+
+    private static void InitializePoolable(IPoolable poolable, TowerComponent component)
+    {
+        if (poolable.Object.TryGetComponent<InventoryItemUI>(out InventoryItemUI item))
+        {
+            item.transform.SetParent(instance.ItemContainer, false);
+
+            item.SetComponent(component);
+            poolable.SpawnAction(instance.GetSnappedPosition(component.position));
+
+            instance.inventoryItems.Add(item);
+        }
+        else
+        {
+            throw new MissingComponentException("InventoryManager: InventoryItemUI component is missing from pooled object.");
+        }
+    }
+
+    public static void ReleaseInventoryItem(InventoryItemUI item)
+    {
+        instance.inventoryItems.Remove(item);
+        item.Return2Pool();
     }
 
     private Vector2 GetGridOrigin()

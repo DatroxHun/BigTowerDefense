@@ -19,7 +19,7 @@ public abstract class TargetingTower : Tower
     [SerializeField]
     protected float targetTimeSeconds = 2.0f;
 
-    new void Start()
+    protected new void Start()
     {
         base.Start();
         targeting = StartCoroutine(Targeting());

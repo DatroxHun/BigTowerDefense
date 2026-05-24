@@ -90,7 +90,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(DamageObj dobj)
+    public virtual void ApplyDamage(DamageObj dobj)
     {
         /*if (Invulnerable())
             return; */
