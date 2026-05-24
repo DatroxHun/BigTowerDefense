@@ -162,4 +162,9 @@ public abstract class Tower : Entity
     {
         InventoryManager.ResetComponentModule(module);
     }
+
+    public void Sell()
+    {
+        BuildingManager.instance.SellTower(this);
+    }
 }

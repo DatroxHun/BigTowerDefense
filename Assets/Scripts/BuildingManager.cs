@@ -23,6 +23,9 @@ public class BuildingManager : MonoBehaviour
     bool buildingMode = false;
 
     [SerializeField]
+    private float saleMultiplier = 0.8f;
+
+    [SerializeField]
     Camera mainCamera;
 
     [SerializeField]
@@ -60,9 +63,13 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    public void AddResources(int amount)
+    /// <summary>
+    /// Add resources multiplied by the sale multiplier.
+    /// </summary>
+    /// <param name="buyValue">Prchase value of the sold item.</param>
+    public void SellForResources(int buyValue)
     {
-        Resources += amount;
+        Resources += (int)Mathf.Floor(buyValue * saleMultiplier);
     }
 
     private void Start()
@@ -176,5 +183,13 @@ public class BuildingManager : MonoBehaviour
     public void RefreshNavMesh()
     {
         NavMeshSurface.BuildNavMesh();
+    }
+
+    public void SellTower(Tower tower)
+    {
+        SellForResources(tower.Prize);
+        TowerManager.instance.RemoveTower(tower);
+        Destroy(tower.gameObject);
+        RefreshNavMesh();
     }
 }
