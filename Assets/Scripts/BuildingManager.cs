@@ -153,8 +153,6 @@ public class BuildingManager : MonoBehaviour
         return hit == null;
     }
 
-    
-
     void PlaceTower(Vector3 position)
     {
         int price = towerPrefab.GetComponent<Tower>().Price;
