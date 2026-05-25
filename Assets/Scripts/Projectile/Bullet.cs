@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 public class Bullet : MonoBehaviour
 {
     [SerializeField]
-    private float speed = 4.0f;
+    private float speed = 6.0f;
 
     [SerializeField]
     private LayerMask enemyLayer;
@@ -60,10 +60,10 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("GameBounds"))
+        if (collision.CompareTag("GameBounds") && isActiveAndEnabled)
         {
             Debug.Log($"[BULLET] : ESCAPED");
-            //pool.Release(this);
+            Cleanup();
         }
     }
 
@@ -71,6 +71,7 @@ public class Bullet : MonoBehaviour
     {
         bulletBody.linearVelocity = Vector2.zero;
         bulletBody.angularVelocity = 0f;
+        if (isActiveAndEnabled)
         pool.Release(this);
     }
 
