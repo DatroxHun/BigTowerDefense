@@ -5,10 +5,15 @@ using UnityEngine.InputSystem;
 public class MainCamera : MonoBehaviour
 {
     [SerializeField]
-    private float moveSpeed = 1f;
+    private float moveSpeed = 10f;
 
     [SerializeField]
-    private float zoomSpeed = 1f;
+    private float zoomSpeed = 50f;
+
+    [SerializeField]
+    private float ortographicSizeBoundLower = 2f;
+    [SerializeField]
+    private float ortographicSizeBoundUpper = 10f;
 
     [SerializeField]
     private Camera camera;
@@ -59,8 +64,8 @@ public class MainCamera : MonoBehaviour
     {
         nextPosition = nextPosition + currentMoveDelta * moveSpeed * Time.deltaTime;
 
-        nextZoom = nextZoom + currentZoomDelta * zoomSpeed * Time.deltaTime;
-        //nextZoom = Mathf.Clamp(nextZoom, minZoom, maxZoom);
+        nextZoom = nextZoom - currentZoomDelta * zoomSpeed * Time.deltaTime;
+        nextZoom = Mathf.Clamp(nextZoom, ortographicSizeBoundLower, ortographicSizeBoundUpper);
 
         transform.position = nextPosition;
         camera.orthographicSize = nextZoom;
