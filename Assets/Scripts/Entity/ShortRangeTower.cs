@@ -45,7 +45,7 @@ public class ShortRangeTower : TargetingTower
             defaultCapacity: 20,
             maxSize: 100
         );
-        Debug.Log($"[TESLA COIL] : SETUP DONE");
+        //Debug.Log($"[TESLA COIL] : SETUP DONE");
         module.AddComponent(ComponentLibrary.RangeUpgrade);
         module.AddComponent(ComponentLibrary.RangeUpgrade);
 
@@ -56,7 +56,7 @@ public class ShortRangeTower : TargetingTower
         if (CurrentTarget == null || !CurrentTarget.GetCoordinates().Any())
             return;
 
-        Debug.Log($"[TESLA COIL] : DISCHARGING");
+        //Debug.Log($"[TESLA COIL] : DISCHARGING");
 
         IEnumerable<Vector3> closestTargets = CurrentTarget
             .GetCoordinates()
@@ -128,15 +128,6 @@ public class ShortRangeTower : TargetingTower
 
         this.CurrentTarget = new MultiTarget(targets);
 
-        // for testing; delete later
-        // - K
-        Debug.Log($"[TESLA COIL] : ELIGABLE TARGETS: {targets.Count}");
-        /*
-        foreach (var target in targets)
-        {
-            Enemy e = target as Enemy;
-            Debug.Log(e.transform.position);
-        }
-         */
+        //Debug.Log($"[TESLA COIL] : ELIGABLE TARGETS: {targets.Count}");        
     }
 }
