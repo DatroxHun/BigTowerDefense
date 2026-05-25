@@ -43,6 +43,21 @@ public abstract class Enemy : Entity, IPoolable
     // Productivity
     protected HashSet<Tower> blackList = new();
 
+
+    private void TurnSprite(float currentX)
+    {
+        SpriteRenderer sprite = GetComponentInChildren<SpriteRenderer>();
+        Vector3 spriteScale = sprite.transform.localScale;
+        float turn = spriteScale.x * currentX < 0 ? -1f : 1f; // need to turn?
+        sprite.transform.localScale = new Vector3(turn * spriteScale.x, spriteScale.y, spriteScale.z);
+    }
+
+    void OnEnable()
+    {
+        walker?.OrientationChanged.RemoveAllListeners();
+        walker?.OrientationChanged.AddListener(TurnSprite);
+    }
+
     public void SpawnAction(Vector3 position)
     {
         ParticlePool.Emit(position, ParticleType.Smoke);
@@ -187,6 +202,8 @@ public abstract class Enemy : Entity, IPoolable
         // productivity
         int attackCounter = 0;
         float targetHealthSnapshot = initialTarget.entity.HitPoints;
+
+        TurnSprite((initialTarget.GetCoordinates().First() - transform.position).x);
 
         while (doAttack)
         {
