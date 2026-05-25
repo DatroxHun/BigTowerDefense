@@ -47,7 +47,7 @@ public class LongRangeTower : TargetingTower
             defaultCapacity: 20,
             maxSize: 100
         );
-        Debug.Log($"[GUNNER] : SETUP DONE");
+        //Debug.Log($"[GUNNER] : SETUP DONE");
         module.AddComponent(ComponentLibrary.PoisonComponent);
         base.Start();
     }
@@ -68,11 +68,11 @@ public class LongRangeTower : TargetingTower
 
     protected override void Action()
     {
-        Debug.Log($"[GUNNER] : TRYING TO SHOOT");
+        //Debug.Log($"[GUNNER] : TRYING TO SHOOT");
         if (CurrentTarget == null || !CurrentTarget.GetCoordinates().Any())
             return;
 
-        Debug.Log($"[GUNNER] : SHOOTING");
+        //Debug.Log($"[GUNNER] : SHOOTING");
 
         Vector3 preciseTarget = CurrentTarget
             .GetCoordinates()
@@ -129,7 +129,7 @@ public class LongRangeTower : TargetingTower
 
         // for testing; delete later
         // - K
-        Debug.Log($"[GUNNER] : ELIGABLE TARGETS: {targets.Count}");
+        //Debug.Log($"[GUNNER] : ELIGABLE TARGETS: {targets.Count}");
     }
 
 

@@ -52,7 +52,7 @@ public abstract class Tower : Entity
         module = new ComponentModule(moduleSize);
 
         BaseStats = baseStatsInit.ToDictionary(stat => stat.towerStats, stat => stat.value);
-        Debug.Log(BaseStats.Count);
+        //Debug.Log(BaseStats.Count);
         HitPoints = MaxHitPoints;
     }
 
