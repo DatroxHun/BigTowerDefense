@@ -375,6 +375,7 @@ MonoBehaviour:
     electric: 0
     poison: 0
   maxHitPoints: 100
+  <Prize>k__BackingField: 0
   moduleSize: {x: 11, y: 5}
   baseStatsInit:
   - towerStats: 0
@@ -791,6 +792,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2400285936724667952, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+    - {fileID: 1675617445835002332, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0c03f935cc0a02408391c97e6293265, type: 3}

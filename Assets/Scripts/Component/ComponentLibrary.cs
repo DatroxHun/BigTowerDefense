@@ -57,7 +57,7 @@ public class ComponentLibrary : MonoBehaviour
             (0, 0), (1, 0),
                     (1, 1)
         },
-        "Radar Module", "+20% range", 100f        
+        "Radar Module", "+20% range", 100        
     );
 
     public static TowerComponent PoisonComponent => new TowerComponent
@@ -71,7 +71,7 @@ public class ComponentLibrary : MonoBehaviour
                     (1, 1),
                     (1, 2)
         },
-        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350f
+        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350
     );
 
     private static IEnumerator PoisonLogic(Dictionary<TowerStats,float> stats,Enemy enemy)

@@ -19,6 +19,9 @@ public struct TowerStatsFloatTuple
 
 public abstract class Tower : Entity
 {
+    [field: SerializeField]
+    public int Price { get; private set; }
+
     [SerializeField] protected Vector2Int moduleSize = new Vector2Int(11, 5);
 
     protected ComponentModule module = null!;
@@ -158,5 +161,10 @@ public abstract class Tower : Entity
     public void LoadInventory()
     {
         InventoryManager.ResetComponentModule(module);
+    }
+
+    public void Sell()
+    {
+        BuildingManager.instance.SellTower(this);
     }
 }

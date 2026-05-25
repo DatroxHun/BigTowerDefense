@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
         this.target = target;
         this.impactEffect = impactEffect;
         isFlying = true;
-        ParticlePool.Emit(transform.position, ParticleType.Smoke);
+        ParticlePool.Emit(transform.position, ParticleType.Smoke, sizeMultiplier: 0.3f);
     }
 
     void Update()

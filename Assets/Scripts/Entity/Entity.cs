@@ -112,7 +112,7 @@ public abstract class Entity : MonoBehaviour
         {
             if (HitPoints != MaxHitPoints)
             {
-                ParticlePool.Emit(transform.position, ParticleType.Divine);
+                ParticlePool.Emit(transform.position, ParticleType.Divine, sizeMultiplier: 0.5f);
             }
 
             // clamping handled in HitPoints setter

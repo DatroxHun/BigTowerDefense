@@ -93,8 +93,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.93125
+        time: 0.0026881718
+        value: 0.2023352
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -131,11 +131,11 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 5
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c075770c7cae3974b90e8f56eb71f682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightningBolt
-  flashTime: 0.2
+  flashTime: 0.1
   segments: 5
   perturbance: 0.2
   impactRadius: 0.5

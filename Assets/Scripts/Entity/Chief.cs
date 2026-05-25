@@ -1,11 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
-using System.Collections;
 
 public class Chief : Cannoneer
 {
     [SerializeField]
     private int clusterShotSize = 1;
+
+    [SerializeField]
+    Collider2D emissionRange;
+
+    [field: SerializeField] protected virtual DamageObj EmissionDamage { get; set; }
 
     protected override void WalkToEntity(Entity entity, float radius)
     {
@@ -31,6 +38,7 @@ public class Chief : Cannoneer
                 // if target is alive -> attack
                 if (target.entity != null && target.entity.IsAlive && target.entity is Tower tower && !tower.Hiding)
                 {
+                    EmissionAttack();
                     for (int i = 0; i < clusterShotSize; i++)
                     {
                         yield return new WaitForSeconds(attackInterval);
@@ -54,6 +62,21 @@ public class Chief : Cannoneer
                 throw new System.Exception("Not intended target class!");
             }
         //}
+    }
+    private void EmissionAttack()
+    {
+        List<Tower> towers =
+            TowerManager.instance.Towers
+            .Where(e =>
+                emissionRange.OverlapPoint(e.transform.position))
+            .ToList();
+
+        foreach (Tower tower in towers)
+        {
+            tower.ApplyEffect(Effects.InstantDamage(tower, EmissionDamage));
+        }
+
+        ParticlePool.Emit(transform.position, ParticleType.ChiefEmission);
     }
 
 }
