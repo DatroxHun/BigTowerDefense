@@ -1750,6 +1750,7 @@ MonoBehaviour:
   ortographicSizeBoundLower: 2
   ortographicSizeBoundUpper: 10
   camera: {fileID: 298566442}
+  mapBounds: {fileID: 1881477465}
 --- !u!1 &345555643
 GameObject:
   m_ObjectHideFlags: 0
@@ -9773,7 +9774,7 @@ GameObject:
   - component: {fileID: 1881477465}
   m_Layer: 8
   m_Name: GameFloor
-  m_TagString: Untagged
+  m_TagString: GameBounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

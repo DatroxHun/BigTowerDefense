@@ -18,6 +18,9 @@ public class MainCamera : MonoBehaviour
     [SerializeField]
     private Camera camera;
 
+    [SerializeField]
+    private BoxCollider2D mapBounds;
+
     private MainCameraInput input;
 
     private Vector3 currentMoveDelta;
@@ -31,6 +34,9 @@ public class MainCamera : MonoBehaviour
         input = new MainCameraInput();
         nextPosition = transform.position;
         nextZoom = camera.orthographicSize;
+
+        ortographicSizeBoundUpper = Mathf.Min(ortographicSizeBoundUpper, mapBounds.bounds.extents.y);
+        ortographicSizeBoundUpper = Mathf.Min(ortographicSizeBoundUpper, mapBounds.bounds.extents.x / camera.aspect);
     }
 
     private void OnEnable()
@@ -62,12 +68,17 @@ public class MainCamera : MonoBehaviour
 
     void Update()
     {
-        nextPosition = nextPosition + currentMoveDelta * moveSpeed * Time.deltaTime;
-
+        
         nextZoom = nextZoom - currentZoomDelta * zoomSpeed * Time.deltaTime;
         nextZoom = Mathf.Clamp(nextZoom, ortographicSizeBoundLower, ortographicSizeBoundUpper);
 
-        transform.position = nextPosition;
+
+        nextPosition = nextPosition + currentMoveDelta * moveSpeed * Time.deltaTime;
+        nextPosition.x = Mathf.Clamp(nextPosition.x, mapBounds.bounds.min.x + nextZoom * camera.aspect, mapBounds.bounds.max.x - nextZoom * camera.aspect);
+        nextPosition.y = Mathf.Clamp(nextPosition.y, mapBounds.bounds.min.y + nextZoom, mapBounds.bounds.max.y - nextZoom);
+
+
         camera.orthographicSize = nextZoom;
+        transform.position = nextPosition;
     }
 }
