@@ -15,7 +15,7 @@ public class SupportTower : Tower
 
     protected override void Action()
     {
-        Debug.Log($"[SUPPORT] : DISCHARGING");
+        //Debug.Log($"[SUPPORT] : DISCHARGING");
 
         
 

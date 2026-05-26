@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using Unity.AI.Navigation;
 using NavMeshPlus.Components;
 using UnityEditor.Search;
+using TMPro;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -19,13 +20,64 @@ public class BuildingManager : MonoBehaviour
     
     private BoxCollider2D prefabCollider;
 
+    bool buildingMode = false;
+
+    [SerializeField]
+    private float saleMultiplier = 0.8f;
+    public float SaleMultiplier { get => saleMultiplier; }
+
     [SerializeField]
     Camera mainCamera;
 
     [SerializeField]
     public NavMeshPlus.Components.NavMeshSurface NavMeshSurface;
 
-    bool buildingMode = false;
+    [SerializeField]
+    TextMeshProUGUI resourceText;
+
+
+    [SerializeField]
+    public int startingResources;
+
+    private int resources;
+
+    public int Resources
+    {
+        get { return resources; }
+        set 
+        { 
+            resources = value;
+            resourceText.text = resources.ToString();
+        }
+    }
+
+
+    public bool TrySubtractResources(int amount)
+    {
+        if (Resources < amount)
+        {
+            return false;
+        }
+        else
+        {
+            Resources -= amount;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Add resources multiplied by the sale multiplier.
+    /// </summary>
+    /// <param name="buyValue">Prchase value of the sold item.</param>
+    public void SellForResources(int buyValue)
+    {
+        Resources += (int)Mathf.Floor(buyValue * saleMultiplier);
+    }
+
+    private void Start()
+    {
+        Resources = startingResources;    
+    }
 
     private void Awake()
     {
@@ -59,7 +111,6 @@ public class BuildingManager : MonoBehaviour
         ghostSprite.sortingLayerName = "air";
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!buildingMode)
@@ -106,8 +157,18 @@ public class BuildingManager : MonoBehaviour
 
     void PlaceTower(Vector3 position)
     {
-        Instantiate(towerPrefab, position, Quaternion.identity);
-        RefreshNavMesh();
+        int price = towerPrefab.GetComponent<Tower>().Price;
+
+        if (instance.TrySubtractResources(price))
+        {
+            Instantiate(towerPrefab, position, Quaternion.identity);
+            RefreshNavMesh();
+        }
+        else
+        {
+            WarningSystem.DisplayWarningMessage("Insufficient funds!", 1f);
+        }
+
         CancelBuilding();
     }
 
@@ -117,12 +178,20 @@ public class BuildingManager : MonoBehaviour
         if (currentGhost != null)
         {
             Destroy(currentGhost);
-            Debug.Log("destroyed ghost");
+            //Debug.Log("destroyed ghost");
         }
     }
 
     public void RefreshNavMesh()
     {
         NavMeshSurface.BuildNavMesh();
+    }
+
+    public void SellTower(Tower tower)
+    {
+        SellForResources(tower.Price);
+        TowerManager.instance.RemoveTower(tower);
+        Destroy(tower.gameObject);
+        RefreshNavMesh();
     }
 }

@@ -176,6 +176,7 @@ MonoBehaviour:
     m_Bits: 8
   cannonBallPrefab: {fileID: 4624881190423285408, guid: 6035c0d39ae339b4fb8291b92e28906d, type: 3}
   inaccuracy: 1
+  projectileOriginOffset: {x: 0, y: 0.6, z: 0}
 --- !u!114 &871284484800307019
 MonoBehaviour:
   m_ObjectHideFlags: 0

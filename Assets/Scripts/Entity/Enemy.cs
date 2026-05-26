@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -42,11 +43,27 @@ public abstract class Enemy : Entity, IPoolable
     // Productivity
     protected HashSet<Tower> blackList = new();
 
+
+    private void TurnSprite(float currentX)
+    {
+        SpriteRenderer sprite = GetComponentInChildren<SpriteRenderer>();
+        Vector3 spriteScale = sprite.transform.localScale;
+        float turn = spriteScale.x * currentX < 0 ? -1f : 1f; // need to turn?
+        sprite.transform.localScale = new Vector3(turn * spriteScale.x, spriteScale.y, spriteScale.z);
+    }
+
+    void OnEnable()
+    {
+        walker?.OrientationChanged.RemoveAllListeners();
+        walker?.OrientationChanged.AddListener(TurnSprite);
+    }
+
     public void SpawnAction(Vector3 position)
     {
         ParticlePool.Emit(position, ParticleType.Smoke);
 
         transform.position = position;
+        //ResetVisuals();
         CurrentTarget = null;
 
         // regenerate health
@@ -186,6 +203,8 @@ public abstract class Enemy : Entity, IPoolable
         int attackCounter = 0;
         float targetHealthSnapshot = initialTarget.entity.HitPoints;
 
+        TurnSprite((initialTarget.GetCoordinates().First() - transform.position).x);
+
         while (doAttack)
         {
             yield return new WaitForSeconds(attackInterval);
@@ -248,6 +267,7 @@ public abstract class Enemy : Entity, IPoolable
     protected override void JustDied()
     {
         base.JustDied();
+        ResetVisuals();
         Return2Pool();
     }
 
@@ -255,5 +275,25 @@ public abstract class Enemy : Entity, IPoolable
     {
         animator.SetTrigger("hurt");
         base.ApplyDamage(dobj);
+    }
+
+    /// <summary>
+    /// Reset animated properties.
+    /// </summary>
+    void ResetVisuals()
+    {
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        sr.color = Color.white;
+
+        Animator anim = GetComponentInChildren<Animator>();
+
+        anim.gameObject.transform.position = Vector3.zero;
+        anim.gameObject.transform.localRotation = Quaternion.identity;
+        anim.gameObject.transform.localScale = Vector3.one;
+
+        anim.Rebind();
+        anim.Update(0);
+        anim.Play("slime");
+
     }
 }

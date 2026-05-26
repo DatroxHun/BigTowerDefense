@@ -7,7 +7,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class Walker : MonoBehaviour
@@ -41,11 +41,34 @@ public class Walker : MonoBehaviour
 
         Agent.updateRotation = false;
         Agent.updateUpAxis = false;
-    }
 
+        //OrientationChanged = new UnityEvent<float>();
+        //OrientationChanged.AddListener(SelfListener);
+    }
+    /*
+    private void SelfListener(float _)
+    {
+        Debug.Log("BBBBBBBBBBBBBBB");
+    }
+    */
+    public UnityEvent<float> OrientationChanged { get; set; } = new UnityEvent<float>();
+
+    float prevDiffX, currentDiffX;
     void Update()
     {
         walkAction.Invoke(globalCallback);
+
+        prevDiffX = currentDiffX;
+        currentDiffX = destination == null ? 0 : Agent.destination.x - transform.position.x;
+
+        //Debug.Log(prevDiffX * currentDiffX);
+        if (prevDiffX * currentDiffX < 0f)
+        {   
+            OrientationChanged?.Invoke(currentDiffX);
+        }
+
+
+
         //Debug.Log(Mode);
 
         //// DEBUG TOOL!!!
@@ -57,6 +80,8 @@ public class Walker : MonoBehaviour
 
         //    WalkOnPath(mousePos, 1f, () => Debug.Log("Arrived!"));
         //}
+
+
     }
 
     private void LateUpdate()
