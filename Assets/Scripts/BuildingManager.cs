@@ -47,7 +47,7 @@ public class BuildingManager : MonoBehaviour
         set 
         { 
             resources = value;
-            resourceText.text = resources.ToString();
+            resourceText.text = $"{resources}€";
         }
     }
 
