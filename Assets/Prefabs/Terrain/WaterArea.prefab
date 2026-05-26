@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6461474820113953154}
-  - component: {fileID: 8381819410331452560}
+  - component: {fileID: 26205659472139472}
   m_Layer: 4
   m_Name: WaterArea
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &8381819410331452560
+--- !u!212 &26205659472139472
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
