@@ -26,6 +26,7 @@ public class Walker : MonoBehaviour
 
     // Coord
     private Vector3? destination = null;
+    private float? prevPosX = null, prevDX = null;
 
 
     void Awake()
@@ -53,19 +54,24 @@ public class Walker : MonoBehaviour
     */
     public UnityEvent<float> OrientationChanged { get; set; } = new UnityEvent<float>();
 
-    float prevDiffX, currentDiffX;
+    //float prevDiffX, currentDiffX;
     void Update()
     {
+        // walk
         walkAction.Invoke(globalCallback);
 
-        prevDiffX = currentDiffX;
-        currentDiffX = destination == null ? 0 : Agent.destination.x - transform.position.x;
+        // sprite flipping
+        float dx = prevPosX.HasValue ? transform.position.x - prevPosX.Value : 0f;
+        prevPosX = transform.position.x;
 
-        //Debug.Log(prevDiffX * currentDiffX);
-        if (prevDiffX * currentDiffX < 0f)
+        if (!prevDX.HasValue || Mode == WalkModes.Pathfind ||
+            (Mathf.Abs(dx) > 1e-8f && prevDX == 0) || 
+            (Mathf.Abs(dx) > 1e-3f && dx * prevDX < 0f))
         {   
-            OrientationChanged?.Invoke(currentDiffX);
+            OrientationChanged?.Invoke(dx);
         }
+        prevDX = dx;
+
 
 
 
@@ -174,7 +180,9 @@ public class Walker : MonoBehaviour
     {
         Mode = mode;
         this.globalCallback = globalCallback;
-        Agent.enabled = false;        
+        Agent.enabled = false;
+
+        prevPosX = prevDX = null;
 
         switch (mode)
         {

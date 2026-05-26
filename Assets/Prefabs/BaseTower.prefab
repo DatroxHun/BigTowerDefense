@@ -381,6 +381,7 @@ MonoBehaviour:
   - towerStats: 0
     value: 100
   sprite: {fileID: 7091061242767810135}
+  fireParticleSystem: {fileID: 0}
   actiondelaySeconds: 4
   retargetDelaySeconds: 1
   targetTimeSeconds: 0.5
