@@ -64,7 +64,7 @@ public class Walker : MonoBehaviour
         float dx = prevPosX.HasValue ? transform.position.x - prevPosX.Value : 0f;
         prevPosX = transform.position.x;
 
-        if (!prevDX.HasValue || 
+        if (!prevDX.HasValue || Mode == WalkModes.Pathfind ||
             (Mathf.Abs(dx) > 1e-8f && prevDX == 0) || 
             (Mathf.Abs(dx) > 1e-3f && dx * prevDX < 0f))
         {   

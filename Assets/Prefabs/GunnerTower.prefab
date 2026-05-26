@@ -5212,7 +5212,7 @@ MonoBehaviour:
     electric: 0
     poison: 0
   maxHitPoints: 100
-  <Price>k__BackingField: 0
+  <Price>k__BackingField: 500
   moduleSize: {x: 11, y: 5}
   baseStatsInit:
   - towerStats: 0

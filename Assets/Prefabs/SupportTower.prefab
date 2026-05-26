@@ -5295,8 +5295,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7036385594375159615}
   - component: {fileID: 6065222854842091785}
-  - component: {fileID: 6761880317293435025}
   - component: {fileID: 1796247678309825925}
+  - component: {fileID: 6761880317293435025}
   m_Layer: 7
   m_Name: SupportTower
   m_TagString: Untagged
@@ -5340,6 +5340,41 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!114 &1796247678309825925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6075348386924849759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d304737d826d1e429d4e0df9643e46e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SupportTower
+  healthbar: {fileID: 5103408132762802393}
+  rangeCollider: {fileID: 1231895616809794273}
+  <Vulnerabilities>k__BackingField:
+    direct: 1
+    physical: 1
+    fire: 1
+    electric: 1
+    poison: 1
+  <AttackDamage>k__BackingField:
+    direct: 0
+    physical: 0
+    fire: 0
+    electric: 0
+    poison: 0
+  maxHitPoints: 100
+  <Price>k__BackingField: 300
+  moduleSize: {x: 11, y: 5}
+  baseStatsInit:
+  - towerStats: 0
+    value: 100
+  sprite: {fileID: 3449611193212260066}
+  fireParticleSystem: {fileID: 5908177939585928423}
+  actiondelaySeconds: 2
 --- !u!61 &6761880317293435025
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5386,41 +5421,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &1796247678309825925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6075348386924849759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d304737d826d1e429d4e0df9643e46e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SupportTower
-  healthbar: {fileID: 5103408132762802393}
-  rangeCollider: {fileID: 1231895616809794273}
-  <Vulnerabilities>k__BackingField:
-    direct: 1
-    physical: 1
-    fire: 1
-    electric: 1
-    poison: 1
-  <AttackDamage>k__BackingField:
-    direct: 0
-    physical: 0
-    fire: 0
-    electric: 0
-    poison: 0
-  maxHitPoints: 100
-  <Price>k__BackingField: 0
-  moduleSize: {x: 11, y: 5}
-  baseStatsInit:
-  - towerStats: 0
-    value: 100
-  sprite: {fileID: 3449611193212260066}
-  fireParticleSystem: {fileID: 5908177939585928423}
-  actiondelaySeconds: 2
 --- !u!1 &6275074821680952016
 GameObject:
   m_ObjectHideFlags: 0
