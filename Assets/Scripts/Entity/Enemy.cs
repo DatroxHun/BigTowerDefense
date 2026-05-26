@@ -94,6 +94,8 @@ public abstract class Enemy : Entity, IPoolable
 
     protected void WalkOnRoad(float scanDelay = 0f)
     {
+
+
         walker.WalkOnRoad(road, globalCallback: () =>
         {
             // at the end of the road find base tower
@@ -149,9 +151,17 @@ public abstract class Enemy : Entity, IPoolable
 
     protected IEnumerator MotivationCheck()
     {
+        bool doCheck = true;
+
+        void LoseInterest()
+        {
+            doCheck = false;
+            CurrentTarget = null;
+            WalkOnRoad(scanDelay: 5f); // starts scanning after delay
+        }
+
         Vector3? prevPos = null;
 
-        bool doCheck = true;
         while (doCheck)
         {
             yield return new WaitForSeconds(motivationCheckInterval);
@@ -164,7 +174,8 @@ public abstract class Enemy : Entity, IPoolable
             }
             else
             {
-                throw new System.Exception("Not intended target class!");
+                LoseInterest();
+                //throw new System.Exception("Not intended target class!");
             }
 
             // calculate average speed for last motivationCheckInterval
@@ -175,9 +186,7 @@ public abstract class Enemy : Entity, IPoolable
             // if not pathfinding or avg speed is too low or entity no longer exists -> go back on road and scan
             if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f || tower == null || !tower.IsAlive)
             {
-                doCheck = false;
-                CurrentTarget = null;
-                WalkOnRoad(scanDelay: 5f); // starts scanning after delay
+                LoseInterest();
             }
 
             prevPos = walker.transform.position;
@@ -284,6 +293,11 @@ public abstract class Enemy : Entity, IPoolable
     {
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
         sr.color = Color.white;
+        sr.transform.localScale.Set(
+            Mathf.Abs(sr.transform.localScale.x), 
+            sr.transform.localScale.y, 
+            sr.transform.localScale.z
+        );
 
         Animator anim = GetComponentInChildren<Animator>();
 

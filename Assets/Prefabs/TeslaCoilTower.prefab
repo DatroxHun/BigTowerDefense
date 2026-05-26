@@ -558,7 +558,7 @@ MonoBehaviour:
     electric: 15
     poison: 0
   maxHitPoints: 100
-  <Prize>k__BackingField: 400
+  <Price>k__BackingField: 0
   moduleSize: {x: 11, y: 5}
   baseStatsInit:
   - towerStats: 0
@@ -743,6 +743,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5410010892962843504, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5651375005140815811, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -773,7 +777,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5988730577730823123, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 150
+      value: 230
       objectReference: {fileID: 0}
     - target: {fileID: 5988730577730823123, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_SizeDelta.y
@@ -962,6 +966,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537840029252259588, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975695331498350486, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975695331498350486, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.3372549
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975695331498350486, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
+      propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

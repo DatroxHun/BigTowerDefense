@@ -375,7 +375,7 @@ MonoBehaviour:
     electric: 0
     poison: 0
   maxHitPoints: 100
-  <Prize>k__BackingField: 0
+  <Price>k__BackingField: 0
   moduleSize: {x: 11, y: 5}
   baseStatsInit:
   - towerStats: 0
@@ -910,6 +910,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537840029252259588, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975695331498350486, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975695331498350486, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.3355074
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975695331498350486, guid: edb5eecce9c84114db39842673d6b41e, type: 3}
+      propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
