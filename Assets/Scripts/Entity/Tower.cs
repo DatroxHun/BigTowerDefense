@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,11 +35,11 @@ public abstract class Tower : Entity
 
     protected override bool Invulnerable() => Hiding;
 
-    [SerializeField]
-    protected SpriteRenderer sprite;
+    [SerializeField] protected SpriteRenderer sprite;
+    [SerializeField] protected ParticleSystem? fireParticleSystem = null;
 
-    [SerializeField]
-    protected float actiondelaySeconds = 2.0f;
+
+    [SerializeField] protected float actiondelaySeconds = 2.0f;
     public override float MaxHitPoints { get => CurrentStats[TowerStats.TowerMaxHitPoints]; }
     protected float Range
     {
@@ -73,7 +75,7 @@ public abstract class Tower : Entity
     }
 
     // hide as soon as done doing thing
-    public void ToggleHide(System.Action callback = null)
+    public void ToggleHide(System.Action callback = null!)
     {
         if (!IsAlive)
             return;
@@ -92,7 +94,7 @@ public abstract class Tower : Entity
         //handle visual stuff
     }
 
-    protected IEnumerator HideASAP(System.Action callback = null)
+    protected IEnumerator HideASAP(System.Action callback = null!)
     {
         yield return new WaitUntil(() => idle);
         Hiding = true;
@@ -116,16 +118,18 @@ public abstract class Tower : Entity
     // call when wave ends / before wave begins
     public virtual void OnRepair()
     {
+        // stop fire
+        if (fireParticleSystem != null)
+            fireParticleSystem.Stop();
+
+        // repair
         HitPoints = MaxHitPoints;
 
-        // avoid duplicate coroutines
-        
+        // avoid duplicate coroutines        
         SafeStopCoroutine(acting);
 
-        // start for real
-        
+        // start for real        
         acting = StartCoroutine(Acting());
-
         idle = true;
     }
 
@@ -155,7 +159,11 @@ public abstract class Tower : Entity
     protected override void JustDied()
     {
         OnDestruction();
-        base.JustDied();   
+
+        if (fireParticleSystem != null)
+            fireParticleSystem.Play();
+
+        base.JustDied();
     }
 
     public void LoadInventory()
