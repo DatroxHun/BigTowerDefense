@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: DummyTile_1
+  m_Name: DummyTileSoftEdges_0
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
-  m_Sprite: {fileID: -1158557154473405279, guid: 7cf1b8d809657b445972c92ab557d156, type: 3}
+  m_Sprite: {fileID: 3084183313895068770, guid: 942fda1ca81ee7744a642e2fbe2e603a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
