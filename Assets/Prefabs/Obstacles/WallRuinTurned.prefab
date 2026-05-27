@@ -171,7 +171,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -999
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3235360762996773102, guid: 052b5bd26789cbd4d846adf90adc2af7, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
@@ -312,11 +312,11 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.88149756, y: -0.5350679}
-      - {x: -0.24523988, y: -0.71307194}
-      - {x: 0.8798207, y: -0.18561101}
-      - {x: 0.8448677, y: 0.10678862}
-      - {x: 0.3805371, y: 0.17214921}
+    - - {x: 0.266959, y: -0.7348169}
+      - {x: 0.9164251, y: -0.56235325}
+      - {x: -0.26590645, y: 0.11966491}
+      - {x: -0.8568506, y: 0.1539173}
+      - {x: -0.88288635, y: -0.16977736}
   m_UseDelaunayMesh: 1
 --- !u!114 &9118821656710012251
 MonoBehaviour:
