@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
-  m_Shader: {fileID: -6465566751694194690, guid: 6ef0b8790c9d2014f82542ce7160fec7, type: 3}
+  m_Name: River
+  m_Shader: {fileID: -6465566751694194690, guid: c8d20e40550a52b4fa6184f2a3f188d4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -61,19 +61,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CurrentSpeed: 0.5
+    - _CurrentSpeed: 0.3
     - _EnableExternalAlpha: 0
     - _LeftRightSpeed: 0.1
-    - _NoiseMult: 0.18
+    - _NoiseMult: 0.5
     - _ZWrite: 0
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Greenering: {r: 0.60194916, g: 0.764151, b: 0.617646, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &5430665172374424450
+--- !u!114 &8965011477283868854
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
