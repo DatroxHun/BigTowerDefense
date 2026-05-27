@@ -3,20 +3,20 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter, IPoolable, IPointerDownHandler
+public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter, IPoolable
 {
     [FormerlySerializedAs("image")] // hunt it down later
     public Image ImageUI;
     public TowerComponent Component { get; private set; }
     public Vector2Int[] Shape { get => Component?.Shape ?? System.Array.Empty<Vector2Int>(); set => Component.Shape = value; } // I lost some guarantees here
-    public int ItemWidth => Component?.Size?.x ?? 0;
-    public int ItemHeight => Component?.Size?.y ?? 0;
+    public int ItemWidth => Component?.Size.x ?? 0;
+    public int ItemHeight => Component?.Size.y ?? 0;
 
     [HideInInspector] public GameObject Object => gameObject;
     [HideInInspector] public IObjectPool<IPoolable> Pool { get; set; }  
@@ -24,6 +24,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [HideInInspector] public Vector2Int CurrentGridPos => Component.position;
     [HideInInspector] public Vector2Int originalGridPos;
     [HideInInspector] public RectTransform rectTransform;
+    private Vector2 originalPivot;
 
     private CanvasGroup canvasGroup;
     private RectTransform sellArea;
@@ -81,6 +82,23 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // Move to DragCanvas so it renders on top of everything
         transform.SetParent(InventoryManager.GetDragCanvas(), false);
 
+        originalPivot = rectTransform.pivot;
+
+        // Shift the pivot to exactly where the mouse clicked
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            eventData.position,
+            eventData.pressEventCamera,
+            out Vector2 localMousePos))
+        {
+            Vector2 newPivot = new Vector2(
+                (localMousePos.x / rectTransform.rect.width) + rectTransform.pivot.x,
+                (localMousePos.y / rectTransform.rect.height) + rectTransform.pivot.y
+            );
+            SetPivotWithoutSnapping(newPivot);
+        }
+        // -----------------------------
+
         //canvasGroup.alpha = 0.8f;
 
         sellArea = InventoryManager.GetSellArea();
@@ -92,7 +110,6 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Move the item with the mouse, scaling appropriately for the Canvas
         rectTransform.anchoredPosition += eventData.delta / InventoryManager.GetMainCanvas().scaleFactor;
 
         bool isMouseInSellArea = RectTransformUtility.RectangleContainsScreenPoint(
@@ -119,6 +136,9 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragged = false;
+        SetPivotWithoutSnapping(originalPivot);
+        // --------------------------------
+
         // Re-enable raycasts
         canvasGroup.alpha = 1f;
         animMutliplier = 1f;
@@ -147,16 +167,30 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         StopCoroutine(animationRoutine);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    private void Update()
     {
-        Debug.Log(isDragged);
-        if (eventData.button == PointerEventData.InputButton.Right &&
-        isDragged) // only on the DragCanvas can you rotate an item
+        if (isDragged && (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame))
         {
-            Debug.Log("AAAA");
-
             InventoryManager.HandleRotation(this);
         }
+    }
+    private void SetPivotWithoutSnapping(Vector2 newPivot)
+    {
+        Vector2 size = rectTransform.rect.size;
+        Vector2 deltaPivot = rectTransform.pivot - newPivot;
+        Vector3 deltaPosition = new Vector3(deltaPivot.x * size.x, deltaPivot.y * size.y);
+
+        // Account for UI scaling
+        deltaPosition.x *= rectTransform.localScale.x;
+        deltaPosition.y *= rectTransform.localScale.y;
+
+        // CRITICAL: Rotate the position shift by the object's current rotation.
+        // If the user rotated the item while dragging, restoring the pivot at OnEndDrag 
+        // will cause a jump unless we apply that rotation to the delta.
+        deltaPosition = rectTransform.localRotation * deltaPosition;
+
+        rectTransform.pivot = newPivot;
+        rectTransform.localPosition -= deltaPosition;
     }
 
     public bool IsRaycastLocationValid(Vector2 screenPos, Camera eventCamera)
@@ -183,27 +217,6 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         
         return false;
-    }
-
-    public static bool DoRectsOverlap(RectTransform rect1, RectTransform rect2)
-    {
-        // Get world-space corners for both RectTransforms
-        Vector3[] corners1 = new Vector3[4];
-        Vector3[] corners2 = new Vector3[4];
-        rect1.GetWorldCorners(corners1);
-        rect2.GetWorldCorners(corners2);
-
-        // Calculate Rects in world space
-        // corners[0] is bottom-left, corners[2] is top-right
-        Rect r1 = new Rect(corners1[0].x, corners1[0].y,
-                           corners1[2].x - corners1[0].x,
-                           corners1[2].y - corners1[0].y);
-
-        Rect r2 = new Rect(corners2[0].x, corners2[0].y,
-                           corners2[2].x - corners2[0].x,
-                           corners2[2].y - corners2[0].y);
-
-        return r1.Overlaps(r2);
     }
 
     public void Return2Pool()

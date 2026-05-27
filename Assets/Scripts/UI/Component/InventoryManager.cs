@@ -1,7 +1,6 @@
 #nullable enable
 
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
@@ -152,7 +151,12 @@ public class InventoryManager : MonoBehaviour
 
     public static void HandleRotation /* Clockwise */ (InventoryItemUI item)
     {
-        item.Component.Shape = item.Component.Shape.Select(coord => new Vector2Int(coord.y, -coord.x)).ToArray();
+        var maxX = item.Component.Shape.Max(s => s.x);
+        item.Component.Shape = item.Component.Shape.Select(coord => new Vector2Int(coord.y, -coord.x + maxX)).ToArray();
+        foreach (var coord in item.Component.Shape)
+        {
+            Debug.Log($"X: {coord.x} Y: {coord.y}");
+        }
         Vector3 currentRotation = item.ImageUI.rectTransform.localEulerAngles;
 
         item.ImageUI.rectTransform.localEulerAngles = new Vector3(
