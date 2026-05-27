@@ -44,6 +44,9 @@ public class SupportTower : Tower
             
         };
 
+        if (towers.Any(x => x.HitPoints < x.MaxHitPoints))
+            AudioManager.PlaySFX(Clip.Heal, .8f, 1f, 1.1f);
+
         foreach (Tower tower in towers)
         {
             foreach (var effect in towerEffects)

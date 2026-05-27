@@ -35,5 +35,6 @@ public class Pyromancer : Enemy
 
         // replace with bigger explosion effect
         ParticlePool.Emit(transform.position, ParticleType.Smoke, sizeMultiplier: 2);
+        AudioManager.PlaySFX(Clip.Boom, 1f, .95f, 1.05f);
     }
 }

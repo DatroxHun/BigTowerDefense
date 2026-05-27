@@ -20,12 +20,12 @@ public class ShopItem : MonoBehaviour
             
             if (BuildingManager.instance.Resources < newComponent.Price)
             {
-                WarningSystem.DisplayWarningMessage("Insufficient funds!", 1f);
+                WarningSystem.DisplayWarningMessage("Insufficient funds!", .5f);
             }
 
             else if (!InventoryManager.AddComponent(newComponent))
             {
-                WarningSystem.DisplayWarningMessage("Not enough space to buy!", 1f);
+                WarningSystem.DisplayWarningMessage("Not enough space to buy!", .5f);
             }
             else
             {
