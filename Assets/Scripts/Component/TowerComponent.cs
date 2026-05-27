@@ -1,5 +1,7 @@
+using NUnit.Framework;
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 #nullable enable
 public class TowerComponent
 {
@@ -19,11 +21,13 @@ public class TowerComponent
     public string Description { get; private set; }
     public int Price { get; private set; }
 
+    public List<ComponentType> Types = new();
+
     public TowerComponent(StatAlteration? statAlteration, 
                           AdvancedAttackAlteration? advancedAttackAlteration, 
                           AdvancedTargettingAlteration? advancedTargettingAlteration, 
                           Sprite? image, Vector2Int[]? shape,
-                          string? name, string? desc, int? price)
+                          string? name, string? desc, int? price, List<ComponentType> types)
     {
         StatAlteration = statAlteration;
         AdvancedAttackAlteration = advancedAttackAlteration;
@@ -38,15 +42,16 @@ public class TowerComponent
         Name = name ?? "Unknown Component";
         Description = desc ?? string.Empty;
         Price = price ?? 0;
+        Types = types;
     }
 
     public TowerComponent(StatAlteration? statAlteration,
                           AdvancedAttackAlteration? advancedAttackAlteration,
                           AdvancedTargettingAlteration? advancedTargettingAlteration,
                           Sprite? image, (int, int)[]? shape,
-                          string? name, string? desc, int? price) : 
+                          string? name, string? desc, int? price, List<ComponentType> types) : 
         this(statAlteration, advancedAttackAlteration, advancedTargettingAlteration, 
              image, shape.Select(x => new Vector2Int(x.Item1, x.Item2)).ToArray(), 
-             name, desc, price)
+             name, desc, price, types)
     { }
 }

@@ -57,7 +57,7 @@ public class ComponentLibrary : MonoBehaviour
             (0, 0), (1, 0),
                     (1, 1)
         },
-        "Radar Module", "+20% range", 100        
+        "Radar Module", "+20% range", 100, new() { ComponentType.Attack }
     );
 
     public static TowerComponent ElectricDamageUpgrade => new TowerComponent
@@ -69,7 +69,7 @@ public class ComponentLibrary : MonoBehaviour
             (0, 0), (1, 0),
                     (1, 1)
         },
-        "Battery overload", "+2 electric damage and +10% electric damage", 100
+        "Battery overload", "+2 electric damage and +10% electric damage", 100, new() { ComponentType.Attack }
     );
 
     public static TowerComponent MachineGunUpgrade => new TowerComponent(
@@ -82,7 +82,7 @@ public class ComponentLibrary : MonoBehaviour
                         (1, 1),
                         (1, 2)
             },
-        "Machinegun", "Tower now fires twice at enemies, all damage halved", 350
+        "Machinegun", "Tower now fires twice at enemies, all damage halved", 350, new() { ComponentType.Attack }
         );
 
     public static TowerComponent PoisonComponent => new TowerComponent
@@ -96,7 +96,7 @@ public class ComponentLibrary : MonoBehaviour
                     (1, 1),
                     (1, 2)
         },
-        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350
+        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350, new() { ComponentType.Attack }
     );
 
     private static IEnumerator PoisonLogic(Dictionary<TowerStats,float> stats,Enemy enemy)
@@ -106,6 +106,19 @@ public class ComponentLibrary : MonoBehaviour
         {
             Debug.Log($"Poisoned for: {stats[TowerStats.PoisonDamage]}");
             enemy.ApplyDamage(new DamageObj() { poison = stats[TowerStats.PoisonDamage] });
+            yield return wait;
+        }
+    }
+
+    private static IEnumerator BurnLogic(Dictionary<TowerStats, float> stats, Enemy enemy)
+    {
+        var wait = new WaitForSeconds(0.5f);
+        int ticks = 6; // 3 seconds total duration
+
+        while (enemy.IsAlive && ticks > 0)
+        {
+            enemy.ApplyDamage(new DamageObj() { fire = stats[TowerStats.FireDamage] / 2f });
+            ticks--;
             yield return wait;
         }
     }

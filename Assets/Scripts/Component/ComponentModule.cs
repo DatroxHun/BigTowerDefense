@@ -21,18 +21,6 @@ public class ComponentModule
         grid = new TowerComponent[size.x, size.y];
     }
 
-    /*
-    public string GenerateDescription(String towerDescription, Dictionary<TowerStats, float> stats) // style later, or maybe instead of putting the string together here we should just return a list of string and let the UI handle the putting together
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine(towerDescription);
-        foreach (var component in _advancedComponents)
-        {
-            sb.AppendLine(component.Description(stats));
-        }
-        return sb.ToString();
-    } */
-
     public Dictionary<TowerStats, float> UpdateStats(Dictionary<TowerStats, float>  baseStats)
     {
         if( _isAmpDirty)

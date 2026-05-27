@@ -5,13 +5,13 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
     private static InventoryManager instance;
 
     private static ComponentModule module = null!;
+    [SerializeField] private ScrollBuy ScrollBuy;
     private List<InventoryItemUI> inventoryItems = new();
 
     [Header("Grid Settings")]
@@ -220,6 +220,11 @@ public class InventoryManager : MonoBehaviour
     {
         instance.inventoryItems.Remove(item);
         item.Return2Pool();
+    }
+
+    public static void RefreshBar(List<ComponentType> allowedTypes)
+    {
+        instance.ScrollBuy.Refresh(allowedTypes);
     }
 
     private Vector2 GetGridOrigin()

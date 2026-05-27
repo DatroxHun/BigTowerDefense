@@ -32,6 +32,7 @@ public abstract class Tower : Entity
     [SerializeField] private List<TowerStatsFloatTuple> baseStatsInit = new List<TowerStatsFloatTuple>();
     private Dictionary<TowerStats, float> BaseStats;
     public Dictionary<TowerStats, float> CurrentStats { get { return module.UpdateStats(BaseStats); } }
+    public List<ComponentType> allowedTypes = new List<ComponentType>();
 
     protected override bool Invulnerable() => Hiding;
 
@@ -43,6 +44,7 @@ public abstract class Tower : Entity
     public override float MaxHitPoints { get => CurrentStats[TowerStats.TowerMaxHitPoints]; }
     protected override DamageObj AttackDamage { get => new DamageObj{ direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamage,0), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamage, 0), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamage, 0), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamage, 0), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamage, 0) }; }
     protected override DamageObj Vulnerabilities { get => new DamageObj { direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamageVulnerability, 1), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamageVulnerability, 1), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamageVulnerability, 1), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamageVulnerability, 1), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamageVulnerability, 1) }; }
+
     protected float Range
     {
         get { return rangeCollider.radius; }
@@ -170,6 +172,8 @@ public abstract class Tower : Entity
 
     public void LoadInventory()
     {
+        //Debug.Log($"Allowed Type: {allowedTypes[0]}");
+        InventoryManager.RefreshBar(allowedTypes);
         InventoryManager.ResetComponentModule(module);
     }
 
