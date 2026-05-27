@@ -69,7 +69,8 @@ public class TowerManager : MonoBehaviour
             {
                 if (hit.collider.TryGetComponent<ClickController>(out ClickController controller))
                 {
-                    controller.ToggleInteraction();
+                    if (controller.enabled)
+                        controller.ToggleInteraction();
                 }
             }
             else

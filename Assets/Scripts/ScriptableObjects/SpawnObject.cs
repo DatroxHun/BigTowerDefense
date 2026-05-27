@@ -23,6 +23,9 @@ public struct Wave
     [TextArea]
     public string description;
 
+    [Tooltip("Reward resouces after wave")]
+    public int reward;
+
     [Tooltip("Initial delay (in sec)")]
     public float delay;
 

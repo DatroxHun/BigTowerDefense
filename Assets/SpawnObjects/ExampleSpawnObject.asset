@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnObject
   waves:
   - description: simple
+    reward: 10
     delay: 0.5
     batches:
     - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
@@ -21,6 +22,7 @@ MonoBehaviour:
       burstDelay: 0.05
       duration: 10
   - description: Chief test
+    reward: 0
     delay: 0.5
     batches:
     - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
@@ -40,6 +42,7 @@ MonoBehaviour:
       burstDelay: 0.5
       duration: 5
   - description: Test Wave #1
+    reward: 0
     delay: 0.5
     batches:
     - enemy: {fileID: 735166972616930786, guid: 67fc3faabbda5d34aa79b830fd25e3c6, type: 3}
@@ -59,6 +62,7 @@ MonoBehaviour:
       burstDelay: 0.2
       duration: 5
   - description: Chief test
+    reward: 0
     delay: 0.5
     batches:
     - enemy: {fileID: 735166972616930786, guid: c566d46bef205b84490038e33b9cb4ab, type: 3}
@@ -68,6 +72,7 @@ MonoBehaviour:
   - description: 'Test Wave #2
 
 '
+    reward: 0
     delay: 0.5
     batches:
     - enemy: {fileID: 735166972616930786, guid: ac1daca1112c0bd4cae138852c707a32, type: 3}
