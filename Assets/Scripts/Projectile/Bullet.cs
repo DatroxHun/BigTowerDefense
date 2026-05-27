@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Pool;
+using Unity.VisualScripting;
 
 public class Bullet : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private Rigidbody2D bulletBody;
 
+    [SerializeField]
+    private TrailRenderer trail;
+
     public GameObject Object => gameObject;
 
     private ObjectPool<Bullet> pool;
@@ -32,6 +36,8 @@ public class Bullet : MonoBehaviour
         ParticlePool.Emit(transform.position, ParticleType.Smoke, sizeMultiplier: 0.3f);
         Vector3 direction = (target - transform.position).normalized;
         bulletBody.linearVelocity = direction * speed;
+
+        trail.Clear();
     }
 
 
