@@ -28,6 +28,7 @@ public class Spawner : MonoBehaviour
 
     private Coroutine? waveCoroutine = null;
     public static bool waveOnGoing { get => EnemyManager.instance.Enemies.Any(x => x.IsAlive) || spawners.Any(y => y.waveCoroutine != null); }
+    private static int waveDeposit = 0;
 
     void Start()
     {
@@ -56,6 +57,9 @@ public class Spawner : MonoBehaviour
                     }
                 }
 
+                // reset deposit
+                waveDeposit = 0;
+
                 // global stuff
                 AudioManager.PlayBGM(Clip.BattleBGM);
                 nextWaveButton.interactable = false;
@@ -77,6 +81,10 @@ public class Spawner : MonoBehaviour
                     // only heal if not end of the game
                     TowerManager.instance.RepairTowers();
                 }
+
+                // realize reward
+                BuildingManager.instance.Resources += waveDeposit;
+                waveDeposit = 0;
 
                 Debug.Log("Wave Ended");
             };
@@ -188,6 +196,7 @@ public class Spawner : MonoBehaviour
         }
 
         // Signal that this Spawner is finished
+        waveDeposit += wave.reward;
         waveCoroutine = null;
 
         // I am the last spawner to finish
