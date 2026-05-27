@@ -58,7 +58,8 @@ public class WarningSystem : MonoBehaviour
                             {
                                 isProcessing = false;
                             });
-                        });
+                        })
+                        .setIgnoreTimeScale(true);
                     });
             }
         }

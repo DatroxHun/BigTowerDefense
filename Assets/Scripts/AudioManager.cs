@@ -237,7 +237,8 @@ public enum Clip
     Buy,
     Place,
     Warning,
-    Echo
+    Echo,
+    Boom
 }
 
 [Serializable]

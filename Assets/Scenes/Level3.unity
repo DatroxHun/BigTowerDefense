@@ -4927,7 +4927,7 @@ MonoBehaviour:
   bgmSources:
   - {fileID: 888133602}
   - {fileID: 888133604}
-  sfxPoolSize: 10
+  sfxPoolSize: 15
   clips:
   - key: 0
     value: {fileID: 8300000, guid: 0d0f7a0af365e3f43aaa3b192601936b, type: 3}
@@ -4949,6 +4949,8 @@ MonoBehaviour:
     value: {fileID: 8300000, guid: 60286f74552b87b4d89e26aee39aa8e9, type: 3}
   - key: 9
     value: {fileID: 8300000, guid: a5ddc8e7d39d4c64b9c24bfbf848d680, type: 3}
+  - key: 10
+    value: {fileID: 8300000, guid: 742ce60a2ae50ce4c8b3de482dd1c6e6, type: 3}
 --- !u!82 &888133604
 AudioSource:
   m_ObjectHideFlags: 0

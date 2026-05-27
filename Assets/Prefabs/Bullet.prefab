@@ -107,7 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 659e822ba03c08347973674e77a66c6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  speed: 6
+  speed: 10
+  pitch: 1
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64

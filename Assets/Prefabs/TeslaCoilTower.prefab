@@ -5484,7 +5484,7 @@ MonoBehaviour:
     direct: 0
     physical: 0
     fire: 0
-    electric: 15
+    electric: 3
     poison: 0
   maxHitPoints: 100
   <Price>k__BackingField: 400
@@ -5495,9 +5495,9 @@ MonoBehaviour:
   sprite: {fileID: 8737716004245306509}
   rangeIndicator: {fileID: 6924109932476465719}
   fireParticleSystem: {fileID: 8274448620475730624}
-  actiondelaySeconds: 3
-  retargetDelaySeconds: 1
-  targetTimeSeconds: 0.5
+  actiondelaySeconds: 0.5
+  retargetDelaySeconds: 0.5
+  targetTimeSeconds: 0
   boltPrefab: {fileID: 4960104078287712160, guid: f45044b94452916448e925117ae04e40, type: 3}
   EmissionPointOffset: {x: 0, y: 2, z: 0}
 --- !u!114 &1991164496507857412
