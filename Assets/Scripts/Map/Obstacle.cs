@@ -1,7 +1,18 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
+    [SerializeField] private int price = 1000;
+    [SerializeField] private TooltipTrigger trigger;
+
+    private void Start()
+    {
+        if (trigger != null)
+            trigger.tooltipContent = $"{price}€";
+    }
+
     /// <summary>
     /// Remove button event handler
     /// </summary>
@@ -9,14 +20,13 @@ public class Obstacle : MonoBehaviour
     {
 
         // subtract money
-
-        Destroy(gameObject);
-        
-
-        // play sfx
-
-        // play vfx (dust particles?)
-
-        BuildingManager.instance.RefreshNavMesh();
+        if (BuildingManager.instance.TrySubtractResources(price))
+        {
+            BuildingManager.instance.RemoveObsticle(this);
+        }
+        else
+        {
+            WarningSystem.DisplayWarningMessage("Insufficient funds!", .5f);
+        }
     }
 }

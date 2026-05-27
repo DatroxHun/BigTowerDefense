@@ -77,6 +77,7 @@ public class Chief : Cannoneer
         }
 
         ParticlePool.Emit(transform.position, ParticleType.ChiefEmission);
+        AudioManager.PlaySFX(Clip.Echo, 1f, .95f, 1.05f);
     }
 
 }

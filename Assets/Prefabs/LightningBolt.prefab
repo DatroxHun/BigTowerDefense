@@ -159,7 +159,7 @@ MonoBehaviour:
   flashTime: 0.1
   segments: 5
   perturbance: 0.2
-  impactRadius: 0.5
+  impactRadius: 0.3
   lr: {fileID: 1051899491576768927}
   ps: {fileID: 783544373704269652}
 --- !u!1 &7716329079197019183

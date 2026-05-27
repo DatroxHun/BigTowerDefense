@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+using static UnityEngine.Rendering.DebugUI;
 
 
 [System.Serializable]
@@ -37,6 +39,7 @@ public abstract class Tower : Entity
     protected override bool Invulnerable() => Hiding;
 
     [SerializeField] protected SpriteRenderer sprite;
+    [SerializeField] protected Transform rangeIndicator;
     [SerializeField] protected ParticleSystem? fireParticleSystem = null;
 
 
@@ -45,10 +48,14 @@ public abstract class Tower : Entity
     protected override DamageObj AttackDamage { get => new DamageObj{ direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamage,0), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamage, 0), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamage, 0), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamage, 0), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamage, 0) }; }
     protected override DamageObj Vulnerabilities { get => new DamageObj { direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamageVulnerability, 1), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamageVulnerability, 1), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamageVulnerability, 1), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamageVulnerability, 1), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamageVulnerability, 1) }; }
 
-    protected float Range
+    public float Range
     {
         get { return rangeCollider.radius; }
-        set { rangeCollider.radius = value; }
+        protected set
+        { 
+            rangeCollider.radius = value;
+            rangeIndicator.localScale = 2f * value * Vector3.one;
+        }
     }
 
     public bool Hiding { get; protected set; } = false;
@@ -60,6 +67,8 @@ public abstract class Tower : Entity
         BaseStats = baseStatsInit.ToDictionary(stat => stat.towerStats, stat => stat.value);
         //Debug.Log(BaseStats.Count);
         HitPoints = MaxHitPoints;
+
+        rangeIndicator.localScale = 2f * Range * Vector3.one;
     }
 
     protected new void Start()
@@ -148,7 +157,7 @@ public abstract class Tower : Entity
             {
                 idle = false;
 
-                // még nincs ilyen
+                // mï¿½g nincs ilyen
                 //yield return new WaitForSeconds(actionTimeSeconds);
                 //Debug.Log($"[TOWER] : ACTING");
                 Action();
@@ -180,5 +189,10 @@ public abstract class Tower : Entity
     public void Sell()
     {
         BuildingManager.instance.SellTower(this);
+    }
+
+    public void SetRangeIndicatorVisiblity(bool visible)
+    {
+        rangeIndicator.gameObject.SetActive(visible);
     }
 }

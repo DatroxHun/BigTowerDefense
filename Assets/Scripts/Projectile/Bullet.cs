@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Pool;
+using Unity.VisualScripting;
 
 public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float speed = 6.0f;
+
+    [SerializeField]
+    private float pitch = 1.0f;
 
     [SerializeField]
     private LayerMask enemyLayer;
@@ -22,16 +26,23 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private Rigidbody2D bulletBody;
 
+    [SerializeField]
+    private TrailRenderer trail;
+
     public GameObject Object => gameObject;
 
     private ObjectPool<Bullet> pool;
     public void Launch(Vector3 target, Action<Entity> impactEffect, ObjectPool<Bullet> pool)
     {
+        AudioManager.PlaySFX(Clip.Shot, .9f, pitch - .05f, pitch + .05f);
+
         this.pool = pool;
         this.impactEffect = impactEffect;
         ParticlePool.Emit(transform.position, ParticleType.Smoke, sizeMultiplier: 0.3f);
         Vector3 direction = (target - transform.position).normalized;
         bulletBody.linearVelocity = direction * speed;
+
+        trail.Clear();
     }
 
 
