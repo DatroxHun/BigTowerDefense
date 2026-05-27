@@ -85,6 +85,7 @@ public class Interaction : MonoBehaviour
 
         if (this.Visible == visible) return;
         this.Visible = visible;
+        tower?.SetRangeIndicatorVisiblity(visible);
 
         if (visible)
             CloseAll(except: this);
