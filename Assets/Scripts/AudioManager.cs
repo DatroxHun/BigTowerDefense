@@ -236,7 +236,8 @@ public enum Clip
     Shot,
     Buy,
     Place,
-    Warning
+    Warning,
+    Echo
 }
 
 [Serializable]
