@@ -20,6 +20,8 @@ public class Cannoneer : Enemy
 
     private ObjectPool<Bullet> cannonBallPool;
 
+    [SerializeField]
+    private Vector3 projectileOriginOffset;
     
 
     private new void Start()
@@ -94,7 +96,7 @@ public class Cannoneer : Enemy
         // this could be passed and set in Bullet;
         // might be useful; don't know yet
         // -K
-        bullet.transform.position = this.transform.position;
+        bullet.transform.position = this.transform.position + projectileOriginOffset;
         bullet.Launch(targetPoint, impactEffect, cannonBallPool);
     }
 

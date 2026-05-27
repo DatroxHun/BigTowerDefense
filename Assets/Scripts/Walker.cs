@@ -7,7 +7,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class Walker : MonoBehaviour
@@ -26,6 +26,7 @@ public class Walker : MonoBehaviour
 
     // Coord
     private Vector3? destination = null;
+    private float? prevPosX = null, prevDX = null;
 
 
     void Awake()
@@ -41,11 +42,39 @@ public class Walker : MonoBehaviour
 
         Agent.updateRotation = false;
         Agent.updateUpAxis = false;
-    }
 
+        //OrientationChanged = new UnityEvent<float>();
+        //OrientationChanged.AddListener(SelfListener);
+    }
+    /*
+    private void SelfListener(float _)
+    {
+        Debug.Log("BBBBBBBBBBBBBBB");
+    }
+    */
+    public UnityEvent<float> OrientationChanged { get; set; } = new UnityEvent<float>();
+
+    //float prevDiffX, currentDiffX;
     void Update()
     {
+        // walk
         walkAction.Invoke(globalCallback);
+
+        // sprite flipping
+        float dx = prevPosX.HasValue ? transform.position.x - prevPosX.Value : 0f;
+        prevPosX = transform.position.x;
+
+        if (!prevDX.HasValue || Mode == WalkModes.Pathfind ||
+            (Mathf.Abs(dx) > 1e-8f && prevDX == 0) || 
+            (Mathf.Abs(dx) > 1e-3f && dx * prevDX < 0f))
+        {   
+            OrientationChanged?.Invoke(dx);
+        }
+        prevDX = dx;
+
+
+
+
         //Debug.Log(Mode);
 
         //// DEBUG TOOL!!!
@@ -57,6 +86,8 @@ public class Walker : MonoBehaviour
 
         //    WalkOnPath(mousePos, 1f, () => Debug.Log("Arrived!"));
         //}
+
+
     }
 
     private void LateUpdate()
@@ -149,7 +180,9 @@ public class Walker : MonoBehaviour
     {
         Mode = mode;
         this.globalCallback = globalCallback;
-        Agent.enabled = false;        
+        Agent.enabled = false;
+
+        prevPosX = prevDX = null;
 
         switch (mode)
         {

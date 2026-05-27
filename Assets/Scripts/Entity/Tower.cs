@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,9 @@ public struct TowerStatsFloatTuple
 
 public abstract class Tower : Entity
 {
+    [field: SerializeField]
+    public int Price { get; private set; }
+
     [SerializeField] protected Vector2Int moduleSize = new Vector2Int(11, 5);
 
     protected ComponentModule module = null!;
@@ -30,11 +35,11 @@ public abstract class Tower : Entity
 
     protected override bool Invulnerable() => Hiding;
 
-    [SerializeField]
-    protected SpriteRenderer sprite;
+    [SerializeField] protected SpriteRenderer sprite;
+    [SerializeField] protected ParticleSystem? fireParticleSystem = null;
 
-    [SerializeField]
-    protected float actiondelaySeconds = 2.0f;
+
+    [SerializeField] protected float actiondelaySeconds = 2.0f;
     public override float MaxHitPoints { get => CurrentStats[TowerStats.TowerMaxHitPoints]; }
     protected override DamageObj AttackDamage { get => new DamageObj{ direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamage,0), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamage, 0), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamage, 0), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamage, 0), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamage, 0) }; }
     protected override DamageObj Vulnerabilities { get => new DamageObj { direct = CurrentStats.GetValueOrDefault(TowerStats.DirectDamageVulnerability, 1), electric = CurrentStats.GetValueOrDefault(TowerStats.ElectricDamageVulnerability, 1), fire = CurrentStats.GetValueOrDefault(TowerStats.FireDamageVulnerability, 1), physical = CurrentStats.GetValueOrDefault(TowerStats.PhysicalDamageVulnerability, 1), poison = CurrentStats.GetValueOrDefault(TowerStats.PoisonDamageVulnerability, 1) }; }
@@ -51,7 +56,7 @@ public abstract class Tower : Entity
         module = new ComponentModule(moduleSize);
 
         BaseStats = baseStatsInit.ToDictionary(stat => stat.towerStats, stat => stat.value);
-        Debug.Log(BaseStats.Count);
+        //Debug.Log(BaseStats.Count);
         HitPoints = MaxHitPoints;
     }
 
@@ -72,7 +77,7 @@ public abstract class Tower : Entity
     }
 
     // hide as soon as done doing thing
-    public void ToggleHide(System.Action callback = null)
+    public void ToggleHide(System.Action callback = null!)
     {
         if (!IsAlive)
             return;
@@ -91,7 +96,7 @@ public abstract class Tower : Entity
         //handle visual stuff
     }
 
-    protected IEnumerator HideASAP(System.Action callback = null)
+    protected IEnumerator HideASAP(System.Action callback = null!)
     {
         yield return new WaitUntil(() => idle);
         Hiding = true;
@@ -115,16 +120,18 @@ public abstract class Tower : Entity
     // call when wave ends / before wave begins
     public virtual void OnRepair()
     {
+        // stop fire
+        if (fireParticleSystem != null)
+            fireParticleSystem.Stop();
+
+        // repair
         HitPoints = MaxHitPoints;
 
-        // avoid duplicate coroutines
-        
+        // avoid duplicate coroutines        
         SafeStopCoroutine(acting);
 
-        // start for real
-        
+        // start for real        
         acting = StartCoroutine(Acting());
-
         idle = true;
     }
 
@@ -154,11 +161,20 @@ public abstract class Tower : Entity
     protected override void JustDied()
     {
         OnDestruction();
-        base.JustDied();   
+
+        if (fireParticleSystem != null)
+            fireParticleSystem.Play();
+
+        base.JustDied();
     }
 
     public void LoadInventory()
     {
         InventoryManager.ResetComponentModule(module);
+    }
+
+    public void Sell()
+    {
+        BuildingManager.instance.SellTower(this);
     }
 }

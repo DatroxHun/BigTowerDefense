@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -42,11 +43,27 @@ public abstract class Enemy : Entity, IPoolable
     // Productivity
     protected HashSet<Tower> blackList = new();
 
+
+    private void TurnSprite(float currentX)
+    {
+        SpriteRenderer sprite = GetComponentInChildren<SpriteRenderer>();
+        Vector3 spriteScale = sprite.transform.localScale;
+        float turn = spriteScale.x * currentX < 0 ? -1f : 1f; // need to turn?
+        sprite.transform.localScale = new Vector3(turn * spriteScale.x, spriteScale.y, spriteScale.z);
+    }
+
+    void OnEnable()
+    {
+        walker?.OrientationChanged.RemoveAllListeners();
+        walker?.OrientationChanged.AddListener(TurnSprite);
+    }
+
     public void SpawnAction(Vector3 position)
     {
         ParticlePool.Emit(position, ParticleType.Smoke);
 
         transform.position = position;
+        //ResetVisuals();
         CurrentTarget = null;
 
         // regenerate health
@@ -77,6 +94,8 @@ public abstract class Enemy : Entity, IPoolable
 
     protected void WalkOnRoad(float scanDelay = 0f)
     {
+
+
         walker.WalkOnRoad(road, globalCallback: () =>
         {
             // at the end of the road find base tower
@@ -132,9 +151,17 @@ public abstract class Enemy : Entity, IPoolable
 
     protected IEnumerator MotivationCheck()
     {
+        bool doCheck = true;
+
+        void LoseInterest()
+        {
+            doCheck = false;
+            CurrentTarget = null;
+            WalkOnRoad(scanDelay: 5f); // starts scanning after delay
+        }
+
         Vector3? prevPos = null;
 
-        bool doCheck = true;
         while (doCheck)
         {
             yield return new WaitForSeconds(motivationCheckInterval);
@@ -147,7 +174,8 @@ public abstract class Enemy : Entity, IPoolable
             }
             else
             {
-                throw new System.Exception("Not intended target class!");
+                LoseInterest();
+                //throw new System.Exception("Not intended target class!");
             }
 
             // calculate average speed for last motivationCheckInterval
@@ -158,9 +186,7 @@ public abstract class Enemy : Entity, IPoolable
             // if not pathfinding or avg speed is too low or entity no longer exists -> go back on road and scan
             if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f || tower == null || !tower.IsAlive)
             {
-                doCheck = false;
-                CurrentTarget = null;
-                WalkOnRoad(scanDelay: 5f); // starts scanning after delay
+                LoseInterest();
             }
 
             prevPos = walker.transform.position;
@@ -185,6 +211,8 @@ public abstract class Enemy : Entity, IPoolable
         // productivity
         int attackCounter = 0;
         float targetHealthSnapshot = initialTarget.entity.HitPoints;
+
+        TurnSprite((initialTarget.GetCoordinates().First() - transform.position).x);
 
         while (doAttack)
         {
@@ -248,6 +276,7 @@ public abstract class Enemy : Entity, IPoolable
     protected override void JustDied()
     {
         base.JustDied();
+        ResetVisuals();
         Return2Pool();
     }
 
@@ -255,5 +284,30 @@ public abstract class Enemy : Entity, IPoolable
     {
         animator.SetTrigger("hurt");
         base.ApplyDamage(dobj);
+    }
+
+    /// <summary>
+    /// Reset animated properties.
+    /// </summary>
+    void ResetVisuals()
+    {
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        sr.color = Color.white;
+        sr.transform.localScale.Set(
+            Mathf.Abs(sr.transform.localScale.x), 
+            sr.transform.localScale.y, 
+            sr.transform.localScale.z
+        );
+
+        Animator anim = GetComponentInChildren<Animator>();
+
+        anim.gameObject.transform.position = Vector3.zero;
+        anim.gameObject.transform.localRotation = Quaternion.identity;
+        anim.gameObject.transform.localScale = Vector3.one;
+
+        anim.Rebind();
+        anim.Update(0);
+        anim.Play("slime");
+
     }
 }
