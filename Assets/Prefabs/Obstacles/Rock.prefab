@@ -703,8 +703,29 @@ PrefabInstance:
     - {fileID: 2400285936724667952, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
     - {fileID: 1675617445835002332, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 573981641306100168, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 2262692024993078554}
   m_SourcePrefab: {fileID: 100100000, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+--- !u!1 &648257974954203345 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 573981641306100168, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+  m_PrefabInstance: {fileID: 1083153589617084697}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2262692024993078554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648257974954203345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a39e055998cf474dae8ea90b865d7b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TooltipTrigger
+  tooltipContent: '?'
 --- !u!224 &6634959798078712522 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5988730577730823123, guid: f0c03f935cc0a02408391c97e6293265, type: 3}

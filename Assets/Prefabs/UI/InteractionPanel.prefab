@@ -218,6 +218,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4147052451155723156}
   - component: {fileID: 3196568830294467135}
+  - component: {fileID: 2956669621059732525}
   - component: {fileID: 3075832779207830668}
   - component: {fileID: 5379148844653121501}
   m_Layer: 5
@@ -255,6 +256,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1675617445835002332}
   m_CullTransparentMesh: 1
+--- !u!114 &2956669621059732525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675617445835002332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a39e055998cf474dae8ea90b865d7b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TooltipTrigger
+  tooltipContent: '?'
 --- !u!114 &3075832779207830668
 MonoBehaviour:
   m_ObjectHideFlags: 0
