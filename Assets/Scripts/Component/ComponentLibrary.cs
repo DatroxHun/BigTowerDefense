@@ -71,19 +71,19 @@ public class ComponentLibrary : MonoBehaviour
         },
         "Battery overload", "+2 electric damage and +10% electric damage", 100
     );
-    /* This doesn't work currently
+
     public static TowerComponent MachineGunUpgrade => new TowerComponent(
-            new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.ElectricDamage, 0, 0.5f), (TowerStats.FireDamage, 0, 0.5f), (TowerStats.DirectDamage, 0, 0.5f) }),
+            new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.ElectricDamage, 0, 0.5f), (TowerStats.FireDamage, 0, 0.5f), (TowerStats.DirectDamage, 0, 0.5f), (TowerStats.PoisonDamage, 0 ,0.5f) }),
             null,
-            new AdvancedTargettingAlteration((xs, ys) => ys.Concat(ys).ToList()),
+            new AdvancedTargettingAlteration((y) => (y.Item1 , y.Item2 + 1)),
             Sprites["poison"], new (int, int)[]
             {
                 (0, 0), (1, 0), (2, 0),
                         (1, 1),
                         (1, 2)
             },
-        "Machinegun", "Tower now fires twice at enemies, all but poison damage halved", 350f
-        ); */
+        "Machinegun", "Tower now fires twice at enemies, all damage halved", 350
+        );
 
     public static TowerComponent PoisonComponent => new TowerComponent
     (
