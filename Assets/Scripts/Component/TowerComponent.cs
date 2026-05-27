@@ -13,8 +13,8 @@ public class TowerComponent
     // UI
     public Vector2Int position { get; set; }
     public Sprite? Image { get; private set; }
-    public Vector2Int[]? Shape { get; private set; }
-    public Vector2Int? Size { get; private set; }
+    public Vector2Int[]? Shape { get; set; }
+    public Vector2Int? Size { get => Shape != null && Shape.Length > 0 ? new Vector2Int(Shape.Max(c => c.x) + 1, Shape.Max(c => c.y) + 1) : null; }
 
     // Economy
     public string Name { get; private set; }
@@ -35,9 +35,6 @@ public class TowerComponent
 
         Image = image;
         Shape = shape;
-        
-        if (Shape != null && Shape.Length > 0)
-            Size = new Vector2Int(Shape.Max(c => c.x) + 1, Shape.Max(c => c.y) + 1);
 
         Name = name ?? "Unknown Component";
         Description = desc ?? string.Empty;

@@ -39,7 +39,6 @@ public class ScrollBuy : MonoBehaviour
         {
             shopItem.gameObject.SetActive(false);
         }
-        Debug.Log(currentShop.Count);
         foreach (Func<TowerComponent> factory in ComponentLibrary.GetAll())
         {
             TowerComponent exampleInstance = factory.Invoke();

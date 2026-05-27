@@ -2112,7 +2112,7 @@ public class LeanTween : MonoBehaviour {
     }
 
     /**
-    * <summary>Alpha an Image Component attached to a RectTransform (used in Unity GUI in 4.6+, for Buttons, Panel, Scrollbar, etc...)</summary>
+    * <summary>Alpha an ImageUI Component attached to a RectTransform (used in Unity GUI in 4.6+, for Buttons, Panel, Scrollbar, etc...)</summary>
     * 
     * @method LeanTween.alpha (RectTransform)
     * @param {RectTransform} rectTrans:RectTransform RectTransform that you wish to attach the tween to
@@ -2126,7 +2126,7 @@ public class LeanTween : MonoBehaviour {
     }
 
     /**
-    * <summary>Change the Color of an Image Component attached to a RectTransform (used in Unity GUI in 4.6+, for Buttons, Panel, Scrollbar, etc...)</summary>
+    * <summary>Change the Color of an ImageUI Component attached to a RectTransform (used in Unity GUI in 4.6+, for Buttons, Panel, Scrollbar, etc...)</summary>
     * 
     * @method LeanTween.alpha (RectTransform)
     * @param {RectTransform} rectTrans:RectTransform RectTransform that you wish to attach the tween to

@@ -55,7 +55,7 @@ public class Interaction : MonoBehaviour
         {
             tower.ToggleHide(() =>
             {
-                // swap image
+                // swap ImageUI
                 visibilityImage.sprite = tower.Hiding ? invisibleSprite : visibleSprite;
             });            
         }

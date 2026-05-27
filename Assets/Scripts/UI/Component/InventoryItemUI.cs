@@ -4,15 +4,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter, IPoolable
+public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter, IPoolable, IPointerDownHandler
 {
-    [SerializeField] private Image image;
-
+    [FormerlySerializedAs("image")] // hunt it down later
+    public Image ImageUI;
     public TowerComponent Component { get; private set; }
-    public Vector2Int[] Shape => Component?.Shape ?? System.Array.Empty<Vector2Int>();
+    public Vector2Int[] Shape { get => Component?.Shape ?? System.Array.Empty<Vector2Int>(); set => Component.Shape = value; } // I lost some guarantees here
     public int ItemWidth => Component?.Size?.x ?? 0;
     public int ItemHeight => Component?.Size?.y ?? 0;
 
@@ -26,6 +28,8 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private CanvasGroup canvasGroup;
     private RectTransform sellArea;
     private TextMeshProUGUI sellText;
+
+    private bool isDragged = false;
 
     private float animMutliplier = 1f;
     private Coroutine animationRoutine;
@@ -44,7 +48,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         rectTransform.anchoredPosition = (Vector2)position;
 
         // reset color
-        image.color = Color.white;
+        ImageUI.color = Color.white;
 
         // reset originalGridPos
         originalGridPos = CurrentGridPos;
@@ -54,8 +58,8 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         this.Component = component;
 
-        // Set image
-        image.sprite = component.Image;
+        // Set ImageUI
+        ImageUI.sprite = component.Image;
 
         // Ensure the visual size of the RectTransform matches its cell dimensions
         float totalWidth = ItemWidth * InventoryManager.CellSize + (ItemWidth - 1) * InventoryManager.Spacing;
@@ -67,6 +71,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        isDragged = true;
         // Save original position in case need to revert an invalid drop
         originalGridPos = CurrentGridPos;
 
@@ -76,8 +81,6 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // Move to DragCanvas so it renders on top of everything
         transform.SetParent(InventoryManager.GetDragCanvas(), false);
 
-        // Disable raycasts so the mouse can "see" through the item to the grid below when dropping
-        canvasGroup.blocksRaycasts = false;
         //canvasGroup.alpha = 0.8f;
 
         sellArea = InventoryManager.GetSellArea();
@@ -101,13 +104,13 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // Color item based on where it is
         if (isMouseInSellArea)
         {
-            image.color = new Color(1f, .7f, .7f, 1f);
+            ImageUI.color = new Color(1f, .7f, .7f, 1f);
             animMutliplier = 3f;
             sellText.text = $"{Component.Price * BuildingManager.instance.SaleMultiplier}€";
         }
         else
         {
-            image.color = Color.white;
+            ImageUI.color = Color.white;
             animMutliplier = 1f;
             sellText.text = "€";
         }
@@ -115,8 +118,8 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        isDragged = false;
         // Re-enable raycasts
-        canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
         animMutliplier = 1f;
         sellText.text = "€";
@@ -142,6 +145,18 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         StopCoroutine(animationRoutine);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log(isDragged);
+        if (eventData.button == PointerEventData.InputButton.Right &&
+        isDragged) // only on the DragCanvas can you rotate an item
+        {
+            Debug.Log("AAAA");
+
+            InventoryManager.HandleRotation(this);
+        }
     }
 
     public bool IsRaycastLocationValid(Vector2 screenPos, Camera eventCamera)
@@ -216,4 +231,6 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             yield return new WaitForEndOfFrame();
         }
     }
+
+
 }

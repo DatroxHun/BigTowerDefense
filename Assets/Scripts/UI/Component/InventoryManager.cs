@@ -5,6 +5,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
+using System.Linq;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -107,9 +108,11 @@ public class InventoryManager : MonoBehaviour
     {
         // Get the item's Top-Left corner in the ItemContainer's local space
         Vector3 localItemPos = instance.ItemContainer.InverseTransformPoint(item.transform.position);
+        Vector2Int[] localShape = item.Shape;
+        var localImage = item.ImageUI;
 
-        // Get the dynamic starting point of the grid
-        Vector2 gridOrigin = instance.GetGridOrigin();
+       // Get the dynamic starting point of the grid
+       Vector2 gridOrigin = instance.GetGridOrigin();
 
         // Adjust for GridLayoutGroup padding
         float adjustedX = localItemPos.x - gridOrigin.x;
@@ -132,6 +135,8 @@ public class InventoryManager : MonoBehaviour
         else
         {
             // Invalid drop: Put it back where it came from
+            item.ImageUI = localImage;
+            item.Shape = localShape;
             PlaceItem(item, item.originalGridPos.x, item.originalGridPos.y);
             Debug.Log("unplacable");
         }
@@ -143,6 +148,18 @@ public class InventoryManager : MonoBehaviour
         ResetComponentModule(module);
         
         return result;
+    }
+
+    public static void HandleRotation /* Clockwise */ (InventoryItemUI item)
+    {
+        item.Component.Shape = item.Component.Shape.Select(coord => new Vector2Int(coord.y, -coord.x)).ToArray();
+        Vector3 currentRotation = item.ImageUI.rectTransform.localEulerAngles;
+
+        item.ImageUI.rectTransform.localEulerAngles = new Vector3(
+            currentRotation.x,
+            currentRotation.y,
+            currentRotation.z - 90f
+        );
     }
 
     private static bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
