@@ -68,7 +68,6 @@ public class MainCamera : MonoBehaviour
 
     void Update()
     {
-        
         nextZoom = nextZoom - currentZoomDelta * zoomSpeed * Time.deltaTime;
         nextZoom = Mathf.Clamp(nextZoom, ortographicSizeBoundLower, ortographicSizeBoundUpper);
 
@@ -76,9 +75,14 @@ public class MainCamera : MonoBehaviour
         nextPosition = nextPosition + currentMoveDelta * moveSpeed * Time.deltaTime;
         nextPosition.x = Mathf.Clamp(nextPosition.x, mapBounds.bounds.min.x + nextZoom * camera.aspect, mapBounds.bounds.max.x - nextZoom * camera.aspect);
         nextPosition.y = Mathf.Clamp(nextPosition.y, mapBounds.bounds.min.y + nextZoom, mapBounds.bounds.max.y - nextZoom);
+    }
 
+    private void LateUpdate()
+    {
+        float zoomLerpT = 1f - Mathf.Exp(-15f * Time.deltaTime);
+        camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, nextZoom, zoomLerpT);
 
-        camera.orthographicSize = nextZoom;
-        transform.position = nextPosition;
+        float moveLerpT = 1f - Mathf.Exp(-15f * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, nextPosition, moveLerpT);
     }
 }
