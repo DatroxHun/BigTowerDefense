@@ -67,9 +67,9 @@ public class ComponentModule
         return Components.Select(x => x.AdvancedAttackAlteration?.AttackFactory).Where(x => x is not null).ToList(); // this may need a sort later
     }
 
-    public Func<List<Entity>,List<Entity>,List<Entity>> GetTargettingAletration()
+    public Func<(ITarget, int), (ITarget, int)> GetTargettingAletration()
     {
-        return (x, y) => { foreach (var f in Components.Select(x => x.AdvancedTargettingAlteration?.RePrioritize).Where(x => x is not null)) { y = f(x, y); }; return y; };
+        return (y) => { foreach (var f in Components.Select(x => x.AdvancedTargettingAlteration?.RePrioritize).Where(x => x is not null)) { y = f(y); }; return y; };
     }
 
     public bool AddComponent(TowerComponent component)

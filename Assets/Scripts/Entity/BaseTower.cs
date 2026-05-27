@@ -60,10 +60,11 @@ public class BaseTower : TargetingTower
         if (CurrentTarget == null || !CurrentTarget.GetCoordinates().Any())
             return;
 
-        IEnumerable<Vector3> randomTarget = CurrentTarget
+        var (alteredTarget, alteredNum) = module.GetTargettingAletration()((CurrentTarget, 1));
+        IEnumerable<Vector3> closestTargets = alteredTarget
             .GetCoordinates()
             .OrderBy(x => UnityEngine.Random.value)
-            .Take(1);
+            .Take(alteredNum);
 
         DamageObj dmg = AttackDamage;
         List<Func<Enemy, IEnumerator>> effects = new()
@@ -71,7 +72,7 @@ public class BaseTower : TargetingTower
             enemy => Effects.InstantDamage(enemy, dmg)
         };
         var stats = CurrentStats;
-        foreach (var target in randomTarget)
+        foreach (var target in closestTargets)
         {
             Shoot(target,
                 (entity) =>

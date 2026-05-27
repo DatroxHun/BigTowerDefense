@@ -73,45 +73,50 @@ public class LongRangeTower : TargetingTower
             return;
 
         //Debug.Log($"[GUNNER] : SHOOTING");
+        var (alteredTarget, alteredNum) = module.GetTargettingAletration()((CurrentTarget, 1));
+        IEnumerable<Vector3> closestTargets = alteredTarget
+            .GetCoordinates()
+            .Take(alteredNum);
 
         Vector3 preciseTarget = CurrentTarget
             .GetCoordinates()
             .OrderBy(x => UnityEngine.Random.value)
             .First();
 
-        Vector3 perturbance = UnityEngine.Random.insideUnitCircle.normalized;
+        foreach (var target in closestTargets)
+        {
+            Vector3 perturbance = UnityEngine.Random.insideUnitCircle.normalized;
+            Vector3 finalTarget = target + perturbance * Inaccuracy;
+            DamageObj dmg = AttackDamage;
 
-        Vector3 finalTarget = preciseTarget + perturbance * Inaccuracy;
-
-        //ComponentModule.AugmentTargetChoice(CurrentTarget, ActuallyPrioritizedTarget(=randomTarget))
-
-        // crlist = defaultcr ++ CM.GetCroutines()
-
-        DamageObj dmg = AttackDamage;
-
-        List<Func<Enemy, IEnumerator>> effects = new()
+            List<Func<Enemy, IEnumerator>> effects = new()
         {
             enemy => Effects.InstantDamage(enemy, dmg)
         };
 
-        Shoot(finalTarget,
-            (entity) =>
-            {
-                var stats = CurrentStats;
-                if (entity is Enemy enemy)
+            Shoot(finalTarget,
+                (entity) =>
                 {
-                    // foreach cr in crlist : StartCoroutine(cr(enemy))
-                    foreach (var effect in effects)
+                    var stats = CurrentStats;
+                    if (entity is Enemy enemy)
                     {
-                        enemy.ApplyEffect(effect(enemy));
-                    } 
-                    foreach (var effect in module.GetAttackAlteration())
-                    {
-                        enemy.ApplyEffect(effect(stats, enemy));
-                    } 
+                        // foreach cr in crlist : StartCoroutine(cr(enemy))
+                        foreach (var effect in effects)
+                        {
+                            enemy.ApplyEffect(effect(enemy));
+                        }
+                        foreach (var effect in module.GetAttackAlteration())
+                        {
+                            enemy.ApplyEffect(effect(stats, enemy));
+                        }
+                    }
                 }
-            }
-            );
+                );
+        }
+
+        //ComponentModule.AugmentTargetChoice(CurrentTarget, ActuallyPrioritizedTarget(=randomTarget))
+
+        // crlist = defaultcr ++ CM.GetCroutines()
     }
 
     protected override void Target()
