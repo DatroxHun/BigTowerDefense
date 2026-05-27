@@ -21,6 +21,7 @@ public class BuildingManager : MonoBehaviour
     private BoxCollider2D prefabCollider;
 
     bool buildingMode = false;
+    bool initialized = false;
 
     [SerializeField]
     private float saleMultiplier = 0.8f;
@@ -45,7 +46,13 @@ public class BuildingManager : MonoBehaviour
     {
         get { return resources; }
         set 
-        { 
+        {
+            if (value != resources && initialized)
+            {
+                float pitch = value < resources ? .95f : 1.05f;
+                AudioManager.PlaySFX(Clip.Buy, 1f, pitch, pitch);
+            }
+
             resources = value;
             resourceText.text = $"{resources}€";
         }
@@ -76,7 +83,8 @@ public class BuildingManager : MonoBehaviour
 
     private void Start()
     {
-        Resources = startingResources;    
+        Resources = startingResources;
+        initialized = true;
     }
 
     private void Awake()
@@ -109,6 +117,9 @@ public class BuildingManager : MonoBehaviour
 
         var ghostSprite = currentGhost.GetComponentInChildren<SpriteRenderer>();
         ghostSprite.sortingLayerName = "air";
+
+        ClickController clicker = currentGhost.GetComponentInChildren<ClickController>();
+        clicker.enabled = false;
     }
 
     void Update()

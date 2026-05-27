@@ -36,6 +36,8 @@ public class WarningSystem : MonoBehaviour
         {
             yield return new WaitWhile(() => isProcessing || messages.Count == 0);
 
+            AudioManager.PlaySFX(Clip.Warning);
+
             (string msg, float duration, float time) = messages.Dequeue();
             if (Time.time - time < 5f)
             {

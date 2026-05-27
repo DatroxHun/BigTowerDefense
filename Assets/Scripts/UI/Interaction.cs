@@ -96,21 +96,24 @@ public class Interaction : MonoBehaviour
     private void Animate(bool visible)
     {
         LeanTween.scale(gameObject, visible ? Vector3.one : Vector3.one * .25f, animTime)
-            .setEase(visible ? LeanTweenType.easeOutBack : LeanTweenType.easeOutExpo);
+            .setEase(visible ? LeanTweenType.easeOutBack : LeanTweenType.easeOutExpo)
+            .setIgnoreTimeScale(true);
 
         foreach (Transform t in buttons)
         {
             LeanTween.scale(t.gameObject, visible ? Vector3.one : Vector3.one * .5f, animTime)
-                .setEase(visible ? LeanTweenType.easeOutBack : LeanTweenType.easeOutExpo);
+                .setEase(visible ? LeanTweenType.easeOutBack : LeanTweenType.easeOutExpo)
+                .setIgnoreTimeScale(true);
         }
 
         LeanTween.alphaCanvas(canvasGroup, visible ? 1f : 0f, animTime)
             .setEase(visible ? LeanTweenType.easeInSine : LeanTweenType.easeOutExpo)
             .setOnComplete(() =>
-        {
-            canvasGroup.interactable = visible;
-            canvasGroup.blocksRaycasts = visible;
-        });
+            {
+                canvasGroup.interactable = visible;
+                canvasGroup.blocksRaycasts = visible;
+            })
+            .setIgnoreTimeScale(true);
     }
 
     private void FitOnScreen()

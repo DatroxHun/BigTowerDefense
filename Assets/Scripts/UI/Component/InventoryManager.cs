@@ -128,12 +128,16 @@ public class InventoryManager : MonoBehaviour
             // Valid drop: Place it in the logical grid and snap visually
             PlaceItem(item, gridX, gridY);
             Debug.Log("placable");
+
+            AudioManager.PlaySFX(Clip.Place);
         }
         else
         {
             // Invalid drop: Put it back where it came from
             PlaceItem(item, item.originalGridPos.x, item.originalGridPos.y);
             Debug.Log("unplacable");
+
+            AudioManager.PlaySFX(Clip.Warning);
         }
     }
 

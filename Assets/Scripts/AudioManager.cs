@@ -234,7 +234,9 @@ public enum Clip
     Electro,
     Heal,
     Shot,
-
+    Buy,
+    Place,
+    Warning
 }
 
 [Serializable]
