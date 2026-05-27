@@ -27,8 +27,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.18, y: 0.18, z: 0.18}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.27, y: 0.27, z: 0.27}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1640149621857163128}
   m_Father: {fileID: 3155145801344399413}
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7331315201791160908, guid: 213065f88d11bcc49aef1c9c497c0dae, type: 3}
+  m_Sprite: {fileID: 3235360762996773102, guid: 052b5bd26789cbd4d846adf90adc2af7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -117,13 +117,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5708773947746569979}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25000006, y: -0.24999997, z: 0.066987306, w: 0.9330127}
-  m_LocalPosition: {x: 0.34, y: -2.9, z: -1.73}
-  m_LocalScale: {x: 1.15, y: -1, z: 1}
+  m_LocalRotation: {x: 0.25000006, y: -0.06698733, z: 0.25000006, w: 0.9330127}
+  m_LocalPosition: {x: 0.61, y: -2.2, z: -0.67}
+  m_LocalScale: {x: 1, y: -1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1270598833873480820}
-  m_LocalEulerAnglesHint: {x: 30, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 30}
 --- !u!212 &2841582910821155098
 SpriteRenderer:
   serializedVersion: 2
@@ -173,7 +173,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7331315201791160908, guid: 213065f88d11bcc49aef1c9c497c0dae, type: 3}
+  m_Sprite: {fileID: 3235360762996773102, guid: 052b5bd26789cbd4d846adf90adc2af7, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_FlipX: 0
   m_FlipY: 0
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 7036385594375159615}
   - component: {fileID: 2064473376203490612}
   m_Layer: 3
-  m_Name: Rock
+  m_Name: WallRuinTurned
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Obstacle
   price: 1000
-  trigger: {fileID: 2262692024993078554}
+  trigger: {fileID: 0}
 --- !u!1 &8664521043730317922
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,8 +240,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3155145801344399413}
-  - component: {fileID: 2974579398550271157}
-  - component: {fileID: 2436019000421549252}
+  - component: {fileID: 1867213843447532369}
+  - component: {fileID: 9118821656710012251}
   m_Layer: 3
   m_Name: ScalableObject
   m_TagString: Untagged
@@ -266,8 +266,8 @@ Transform:
   - {fileID: 2723894843872225843}
   m_Father: {fileID: 7036385594375159615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2974579398550271157
-BoxCollider2D:
+--- !u!60 &1867213843447532369
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -300,19 +300,25 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.05, y: -0.1}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 6.25, y: 5.32}
-    newSize: {x: 6.25, y: 5.32}
-    adaptiveTilingThreshold: 0.5
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8, y: 0.4}
-  m_EdgeRadius: 0
---- !u!114 &2436019000421549252
+  m_Points:
+    m_Paths:
+    - - {x: -0.88149756, y: -0.5350679}
+      - {x: -0.24523988, y: -0.71307194}
+      - {x: 0.8798207, y: -0.18561101}
+      - {x: 0.8448677, y: 0.10678862}
+      - {x: 0.3805371, y: 0.17214921}
+  m_UseDelaunayMesh: 1
+--- !u!114 &9118821656710012251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -737,29 +743,8 @@ PrefabInstance:
     - {fileID: 2400285936724667952, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
     - {fileID: 1675617445835002332, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 573981641306100168, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
-      insertIndex: 2
-      addedObject: {fileID: 2262692024993078554}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
---- !u!1 &648257974954203345 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 573981641306100168, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
-  m_PrefabInstance: {fileID: 1083153589617084697}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2262692024993078554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 648257974954203345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a39e055998cf474dae8ea90b865d7b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TooltipTrigger
-  tooltipContent: '?'
 --- !u!224 &6634959798078712522 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5988730577730823123, guid: f0c03f935cc0a02408391c97e6293265, type: 3}

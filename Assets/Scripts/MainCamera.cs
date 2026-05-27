@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class MainCamera : MonoBehaviour
 {
     [SerializeField]
-    private float moveSpeed = 10f;
+    private float moveSpeed = 5f;
 
     [SerializeField]
     private float zoomSpeed = 50f;
@@ -28,6 +28,7 @@ public class MainCamera : MonoBehaviour
 
     private Vector3 nextPosition;
     private float nextZoom;
+    private float zoomBasedSpeedModifier;
 
     private void Awake()
     {
@@ -72,8 +73,10 @@ public class MainCamera : MonoBehaviour
         nextZoom = nextZoom - currentZoomDelta * zoomSpeed * Time.deltaTime;
         nextZoom = Mathf.Clamp(nextZoom, ortographicSizeBoundLower, ortographicSizeBoundUpper);
 
+        
+        zoomBasedSpeedModifier = nextZoom / ortographicSizeBoundLower;
 
-        nextPosition = nextPosition + currentMoveDelta * moveSpeed * Time.deltaTime;
+        nextPosition = nextPosition + currentMoveDelta * moveSpeed * zoomBasedSpeedModifier * Time.deltaTime;
         nextPosition.x = Mathf.Clamp(nextPosition.x, mapBounds.bounds.min.x + nextZoom * camera.aspect, mapBounds.bounds.max.x - nextZoom * camera.aspect);
         nextPosition.y = Mathf.Clamp(nextPosition.y, mapBounds.bounds.min.y + nextZoom, mapBounds.bounds.max.y - nextZoom);
 
