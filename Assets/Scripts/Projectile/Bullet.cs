@@ -11,6 +11,9 @@ public class Bullet : MonoBehaviour
     private float speed = 6.0f;
 
     [SerializeField]
+    private float pitch = 1.0f;
+
+    [SerializeField]
     private LayerMask enemyLayer;
     [SerializeField]
     private LayerMask obstacleLayer;
@@ -31,6 +34,8 @@ public class Bullet : MonoBehaviour
     private ObjectPool<Bullet> pool;
     public void Launch(Vector3 target, Action<Entity> impactEffect, ObjectPool<Bullet> pool)
     {
+        AudioManager.PlaySFX(Clip.Shot, .9f, pitch - .05f, pitch + .05f);
+
         this.pool = pool;
         this.impactEffect = impactEffect;
         ParticlePool.Emit(transform.position, ParticleType.Smoke, sizeMultiplier: 0.3f);

@@ -29,7 +29,7 @@ public class LightningBolt : MonoBehaviour
     
     public void Launch(Vector3 start, Vector3 end, Action<Entity> impactEffect, ObjectPool<LightningBolt> pool)
     {
-        
+        AudioManager.PlaySFX(Clip.Electro, 1f, .95f, 1.05f);
 
         RenderLine(start, end);
 

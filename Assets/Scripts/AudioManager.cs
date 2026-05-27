@@ -135,31 +135,38 @@ public class AudioManager : MonoBehaviour
 
         AudioSource fadeOutSource = instance.bgmSources[activeSource];
         AudioSource fadeInSource = instance.bgmSources[nextSource];
+        instance.activeBgmIndex = nextSource;
 
         if (instance.bgmFade != null)
             LeanTween.cancel(instance.gameObject, instance.bgmFade.uniqueId);
 
-        fadeInSource.clip = newClip;
-        fadeInSource.volume = 0f;
-        fadeInSource.Play();
+        if (fadeInSource.clip != newClip)
+        {
+            fadeInSource.clip = newClip;
+            fadeInSource.volume = 0f;
+            fadeInSource.Play();
+        }
+        else if (!fadeInSource.isPlaying)
+        {
+            fadeInSource.Play();
+        }
 
-        float startVolumeOut = fadeOutSource.volume;
+        float startVolIn = fadeInSource.volume;
+        float startVolOut = fadeOutSource.volume;
 
         instance.bgmFade = 
         LeanTween.value(instance.gameObject, (float val) =>
         {
-            fadeInSource.volume = val;
-            fadeOutSource.volume = startVolumeOut * (1f - val);
+            fadeInSource.volume = Mathf.Lerp(startVolIn, 1f, val);
+            fadeOutSource.volume = Mathf.Lerp(startVolOut, 0f, val);
         }, 0f, 1f, fadeDuration)
         .setEase(LeanTweenType.easeInOutSine)
         .setOnComplete(() =>
         {
             fadeInSource.volume = 1f;
             fadeOutSource.volume = 0f;
+
             fadeOutSource.Stop();
-
-            instance.activeBgmIndex = nextSource;
-
             instance.bgmFade = null;
         })
         .setIgnoreTimeScale(true);
@@ -224,6 +231,10 @@ public enum Clip
     CalmBGM,
     BattleBGM,
     BasicAttack,
+    Electro,
+    Heal,
+    Shot,
+
 }
 
 [Serializable]

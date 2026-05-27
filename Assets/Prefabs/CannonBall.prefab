@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   speed: 4
+  pitch: 0.75
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
