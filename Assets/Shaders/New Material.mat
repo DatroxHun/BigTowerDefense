@@ -63,13 +63,13 @@ Material:
     m_Floats:
     - _CurrentSpeed: 0.5
     - _EnableExternalAlpha: 0
-    - _LeftRightSpeed: 0.1
+    - _LeftRightSpeed: 0.05
     - _NoiseMult: 0.18
     - _ZWrite: 0
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Greenering: {r: 0.60194916, g: 0.764151, b: 0.617646, a: 1}
+    - _Greenering: {r: 0.22281298, g: 0.4245283, b: 0.1982467, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

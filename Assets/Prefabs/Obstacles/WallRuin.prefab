@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.18, y: 0.18, z: 0.18}
+  m_LocalScale: {x: 0.27, y: 0.27, z: 0.27}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1640149621857163128}
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7331315201791160908, guid: 213065f88d11bcc49aef1c9c497c0dae, type: 3}
+  m_Sprite: {fileID: -4599867497510169328, guid: 04c66eec0b9d0094a8de2bc572a69f6d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 6620928459822136179}
   - component: {fileID: 2064473376203490612}
   m_Layer: 3
-  m_Name: Rock
+  m_Name: WallRuin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -255,7 +255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3155145801344399413}
-  - component: {fileID: 2974579398550271157}
+  - component: {fileID: 1867213843447532369}
   m_Layer: 3
   m_Name: ScalableObject
   m_TagString: Untagged
@@ -280,8 +280,8 @@ Transform:
   - {fileID: 2723894843872225843}
   m_Father: {fileID: 7036385594375159615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2974579398550271157
-BoxCollider2D:
+--- !u!60 &1867213843447532369
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -314,18 +314,24 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.05, y: -0.1}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 6.25, y: 5.32}
-    newSize: {x: 6.25, y: 5.32}
-    adaptiveTilingThreshold: 0.5
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8, y: 0.4}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.967457, y: -0.44520032}
+      - {x: -0.2647759, y: -0.65837014}
+      - {x: 0.8212117, y: -0.11918759}
+      - {x: 0.79798126, y: 0.14586161}
+      - {x: 0.35709196, y: 0.25029472}
+  m_UseDelaunayMesh: 1
 --- !u!1 &8712305748893301559
 GameObject:
   m_ObjectHideFlags: 0
