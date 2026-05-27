@@ -69,7 +69,7 @@ public class ComponentLibrary : MonoBehaviour
             (0, 0), (1, 0),
                     (1, 1)
         },
-        "Battery overload", "+2 electric damage and +10% electric damage", 100f
+        "Battery overload", "+2 electric damage and +10% electric damage", 100
     );
     /* This doesn't work currently
     public static TowerComponent MachineGunUpgrade => new TowerComponent(
