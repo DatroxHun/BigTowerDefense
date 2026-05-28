@@ -183,7 +183,8 @@ public class Spawner : MonoBehaviour
 
                 // call spawn action with desired position
                 Vector3 offset = (Vector3)Random.insideUnitCircle * spawnRadius;
-                Vector3 spawnPos = road.SplineContainer.gameObject.transform.position + offset;
+                //Vector3 spawnPos = road.SplineContainer.gameObject.transform.position + offset;
+                Vector3 spawnPos = transform.position + offset;
                 spawnPos.z = 0;
                 pooled.SpawnAction(spawnPos);
 

@@ -6,6 +6,8 @@ using Unity.AI.Navigation;
 using NavMeshPlus.Components;
 using UnityEditor.Search;
 using TMPro;
+using System;
+using System.Threading.Tasks;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -165,8 +167,6 @@ public class BuildingManager : MonoBehaviour
         return hit == null;
     }
 
-    
-
     void PlaceTower(Vector3 position)
     {
         int price = towerPrefab.GetComponent<Tower>().Price;
@@ -197,7 +197,7 @@ public class BuildingManager : MonoBehaviour
 
     public void RefreshNavMesh()
     {
-        NavMeshSurface.BuildNavMesh();
+        NavMeshSurface.BuildNavMeshAsync();
     }
 
     public void SellTower(Tower tower)
