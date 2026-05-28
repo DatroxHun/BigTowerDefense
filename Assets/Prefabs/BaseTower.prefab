@@ -475,7 +475,7 @@ MonoBehaviour:
   sprite: {fileID: 7091061242767810135}
   rangeIndicator: {fileID: 6995574421595655094}
   fireParticleSystem: {fileID: 0}
-  actiondelaySeconds: 1
+  actiondelaySeconds: 0.9
   retargetDelaySeconds: 0.5
   targetTimeSeconds: 0.5
   obstacleLayer:
