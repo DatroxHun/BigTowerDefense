@@ -2631,7 +2631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   road: {fileID: 1120785920}
-  spawnObject: {fileID: 11400000, guid: 2dbc8ac9bc37ded4b93bbb1e49522340, type: 2}
+  spawnObject: {fileID: 11400000, guid: 8fb222b4ac7414342a761deb546e9392, type: 2}
   nextWaveButton: {fileID: 778958545}
   spawnRadius: 0.1
 --- !u!4 &254169659 stripped
@@ -19352,7 +19352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingManager
   blockingLayers:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 152
   saleMultiplier: 0.8
   mainCamera: {fileID: 298566442}
   NavMeshSurface: {fileID: 1815286229}
@@ -25769,7 +25769,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   road: {fileID: 2018509481}
-  spawnObject: {fileID: 11400000, guid: 2dbc8ac9bc37ded4b93bbb1e49522340, type: 2}
+  spawnObject: {fileID: 11400000, guid: 3226e64ac38aabe42a175817dfe9b537, type: 2}
   nextWaveButton: {fileID: 778958545}
   spawnRadius: 0.1
 --- !u!1 &1815286227
