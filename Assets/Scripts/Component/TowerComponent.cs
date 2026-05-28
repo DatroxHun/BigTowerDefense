@@ -15,6 +15,7 @@ public class TowerComponent
     public Sprite? Image { get; private set; }
     public Vector2Int[]? Shape { get; set; }
     public Vector2Int Size { get => Shape != null && Shape.Length > 0 ? new Vector2Int(Shape.Max(c => c.x) + 1, Shape.Max(c => c.y) + 1) : new Vector2Int(0,0); }
+    public int TimesRotated = 0;
 
     // Economy
     public string Name { get; private set; }

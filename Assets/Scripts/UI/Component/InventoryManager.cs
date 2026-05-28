@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 using System.Linq;
+using Unity.VectorGraphics;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -107,11 +108,9 @@ public class InventoryManager : MonoBehaviour
     {
         // Get the item's Top-Left corner in the ItemContainer's local space
         Vector3 localItemPos = instance.ItemContainer.InverseTransformPoint(item.transform.position);
-        Vector2Int[] localShape = item.Shape;
-        var localImage = item.ImageUI;
 
-       // Get the dynamic starting point of the grid
-       Vector2 gridOrigin = instance.GetGridOrigin();
+        // Get the dynamic starting point of the grid
+        Vector2 gridOrigin = instance.GetGridOrigin();
 
         // Adjust for GridLayoutGroup padding
         float adjustedX = localItemPos.x - gridOrigin.x;
@@ -136,8 +135,6 @@ public class InventoryManager : MonoBehaviour
         else
         {
             // Invalid drop: Put it back where it came from
-            item.ImageUI = localImage;
-            item.Shape = localShape;
             PlaceItem(item, item.originalGridPos.x, item.originalGridPos.y);
             Debug.Log("unplacable");
 
@@ -155,19 +152,21 @@ public class InventoryManager : MonoBehaviour
 
     public static void HandleRotation /* Clockwise */ (InventoryItemUI item)
     {
-        var maxX = item.Component.Shape.Max(s => s.x);
-        item.Component.Shape = item.Component.Shape.Select(coord => new Vector2Int(coord.y, -coord.x + maxX)).ToArray();
-        foreach (var coord in item.Component.Shape)
-        {
-            Debug.Log($"X: {coord.x} Y: {coord.y}");
-        }
-        Vector3 currentRotation = item.ImageUI.rectTransform.localEulerAngles;
+        ClearItemSpace(item);
+        var maxY = item.Component.Shape.Max(s => s.y);
+        var oldShape = item.Shape;
+        item.Component.Shape = item.Component.Shape.Select(coord => new Vector2Int(-coord.y + maxY, coord.x)).ToArray();
 
-        item.ImageUI.rectTransform.localEulerAngles = new Vector3(
-            currentRotation.x,
-            currentRotation.y,
-            currentRotation.z - 90f
-        );
+        if (!CanPlaceItem(item, item.CurrentGridPos.x, item.CurrentGridPos.y))
+        {
+            item.Shape = oldShape;
+            PlaceItem(item, item.CurrentGridPos.x, item.CurrentGridPos.y);
+            return;
+        }
+
+        PlaceItem(item, item.CurrentGridPos.x, item.CurrentGridPos.y);
+
+        item.ApplyVisualRotation(-90f);
     }
 
     private static bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
@@ -182,6 +181,15 @@ public class InventoryManager : MonoBehaviour
         // Snap visual position
         item.transform.SetParent(instance.ItemContainer, false);
         item.rectTransform.anchoredPosition = instance.GetSnappedPosition(x, y);
+        for (int i = 0; i < module.grid.GetLength(0); i++)
+        {
+            string str = "";
+            for (int j = 0; j < module.grid.GetLength(1); j++)
+            {
+                str += module.grid[i, j] is null ? "" : $"({i} , {j}) ";
+            }
+            Debug.Log(str);
+        }
     }
 
     public static bool ClearItemSpace(InventoryItemUI item)
@@ -210,7 +218,7 @@ public class InventoryManager : MonoBehaviour
         }
 
         // Initialize UI Components
-        foreach (InventoryItemUI item in instance.inventoryItems)
+        foreach (InventoryItemUI item in instance.inventoryItems.ToList())
         {
             item.Return2Pool();
         }
@@ -230,7 +238,14 @@ public class InventoryManager : MonoBehaviour
         {
             item.transform.SetParent(instance.ItemContainer, false);
 
+            var rot = component.TimesRotated % 4;
+            Debug.Log("Rot: " + rot);
+
             item.SetComponent(component);
+            item.ApplyVisualRotation(rot * -90f);
+
+            component.TimesRotated = rot;
+
             poolable.SpawnAction(instance.GetSnappedPosition(component.position));
 
             instance.inventoryItems.Add(item);

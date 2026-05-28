@@ -13,7 +13,7 @@ public class ComponentModule
     private Dictionary<TowerStats,(float,float)> _amplificationProvider = new Dictionary<TowerStats, (float, float)>();
 
     public Vector2Int Size { get; private set; }
-    private TowerComponent[,] grid;
+    public TowerComponent[,] grid; // change back to private
 
     public ComponentModule(Vector2Int size)
     {
