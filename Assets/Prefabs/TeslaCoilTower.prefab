@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 6, y: 6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6686785661812285558}
@@ -298,7 +298,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 2
+  m_Radius: 3
 --- !u!1 &3170216305289410713
 GameObject:
   m_ObjectHideFlags: 0
@@ -5454,8 +5454,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6668172351403972985}
-  - {fileID: 6686785661812285558}
   - {fileID: 1905729347708045218}
+  - {fileID: 6686785661812285558}
   - {fileID: 9094048851398120819}
   - {fileID: 1000215972325328747}
   m_Father: {fileID: 0}
@@ -5484,9 +5484,9 @@ MonoBehaviour:
     direct: 0
     physical: 0
     fire: 0
-    electric: 3
+    electric: 5
     poison: 0
-  maxHitPoints: 100
+  maxHitPoints: 500
   <Price>k__BackingField: 400
   moduleSize: {x: 11, y: 5}
   baseStatsInit:
@@ -5593,6 +5593,10 @@ PrefabInstance:
     - target: {fileID: 415118027956999507, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2956669621059732525, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      propertyPath: tooltipContent
+      value: "320\u20AC"
       objectReference: {fileID: 0}
     - target: {fileID: 3497329622584342799, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_Enabled

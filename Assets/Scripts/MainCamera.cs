@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class MainCamera : MonoBehaviour
 {
     [SerializeField]
-    private float moveSpeed = 10f;
+    private float moveSpeed = 5f;
 
     [SerializeField]
     private float zoomSpeed = 50f;
@@ -28,6 +28,7 @@ public class MainCamera : MonoBehaviour
 
     private Vector3 nextPosition;
     private float nextZoom;
+    private float zoomBasedSpeedModifier;
 
     private void Awake()
     {
@@ -68,17 +69,23 @@ public class MainCamera : MonoBehaviour
 
     void Update()
     {
-        
-        nextZoom = nextZoom - currentZoomDelta * zoomSpeed * Time.deltaTime;
+        nextZoom = nextZoom - currentZoomDelta * zoomSpeed * Time.unscaledDeltaTime;
         nextZoom = Mathf.Clamp(nextZoom, ortographicSizeBoundLower, ortographicSizeBoundUpper);
 
+        
+        zoomBasedSpeedModifier = nextZoom / ortographicSizeBoundLower;
 
-        nextPosition = nextPosition + currentMoveDelta * moveSpeed * Time.deltaTime;
+        nextPosition = nextPosition + currentMoveDelta * moveSpeed * zoomBasedSpeedModifier * Time.unscaledDeltaTime;
         nextPosition.x = Mathf.Clamp(nextPosition.x, mapBounds.bounds.min.x + nextZoom * camera.aspect, mapBounds.bounds.max.x - nextZoom * camera.aspect);
         nextPosition.y = Mathf.Clamp(nextPosition.y, mapBounds.bounds.min.y + nextZoom, mapBounds.bounds.max.y - nextZoom);
+    }
 
+    private void LateUpdate()
+    {
+        float zoomLerpT = 1f - Mathf.Exp(-15f * Time.unscaledDeltaTime);
+        camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, nextZoom, zoomLerpT);
 
-        camera.orthographicSize = nextZoom;
-        transform.position = nextPosition;
+        float moveLerpT = 1f - Mathf.Exp(-15f * Time.unscaledDeltaTime);
+        transform.position = Vector3.Lerp(transform.position, nextPosition, moveLerpT);
     }
 }

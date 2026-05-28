@@ -38,6 +38,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Awake()
     {
+        // Singleton
         if (instance == null)
             instance = this;
         else
@@ -98,6 +99,7 @@ public class InventoryManager : MonoBehaviour
         BorderMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
     }
 
+    // Getters
     public static Transform GetDragCanvas() => instance.DragCanvas;
     public static Canvas GetMainCanvas() => instance.MainCanvas;
     public static RectTransform GetSellArea() => instance.SellArea;

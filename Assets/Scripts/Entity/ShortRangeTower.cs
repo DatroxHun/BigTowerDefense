@@ -46,8 +46,8 @@ public class ShortRangeTower : TargetingTower
             maxSize: 100
         );
         //Debug.Log($"[TESLA COIL] : SETUP DONE");
-        module.AddComponent(ComponentLibrary.RangeUpgrade);
-        module.AddComponent(ComponentLibrary.RangeUpgrade);
+        //module.AddComponent(ComponentLibrary.RangeUpgrade);
+        //module.AddComponent(ComponentLibrary.RangeUpgrade);
 
         base.Start();
     }

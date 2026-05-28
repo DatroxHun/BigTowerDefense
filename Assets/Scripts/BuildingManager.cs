@@ -6,6 +6,8 @@ using Unity.AI.Navigation;
 using NavMeshPlus.Components;
 using UnityEditor.Search;
 using TMPro;
+using System;
+using System.Threading.Tasks;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -108,6 +110,7 @@ public class BuildingManager : MonoBehaviour
         currentGhost = Instantiate(towerPrefab);
         
         Tower script = currentGhost.GetComponent<Tower>();
+        script.SetRangeIndicatorVisiblity(true);
         script.enabled = false;
         TowerManager.instance.RemoveTower(script);
         
@@ -165,8 +168,6 @@ public class BuildingManager : MonoBehaviour
         return hit == null;
     }
 
-    
-
     void PlaceTower(Vector3 position)
     {
         int price = towerPrefab.GetComponent<Tower>().Price;
@@ -197,13 +198,16 @@ public class BuildingManager : MonoBehaviour
 
     public void RefreshNavMesh()
     {
-        NavMeshSurface.BuildNavMesh();
+        NavMeshSurface.BuildNavMeshAsync();
     }
 
     public void SellTower(Tower tower)
     {
         SellForResources(tower.Price);
         TowerManager.instance.RemoveTower(tower);
+
+        TooltipManager.HideTooltip();
+
         Destroy(tower.gameObject);
         RefreshNavMesh();
     }
@@ -215,6 +219,8 @@ public class BuildingManager : MonoBehaviour
 
         // play vfx (dust particles?)
         ParticlePool.Emit(obstacle.transform.position, ParticleType.Smoke);
+
+        TooltipManager.HideTooltip();
 
         Destroy(obstacle.gameObject);
         RefreshNavMesh();
