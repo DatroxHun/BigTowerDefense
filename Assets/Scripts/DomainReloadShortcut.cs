@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityEditor;
 
 public static class DomainReloadShortcut
@@ -11,3 +13,5 @@ public static class DomainReloadShortcut
         EditorUtility.RequestScriptReload();
     }
 }
+
+#endif

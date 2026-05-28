@@ -1,13 +1,8 @@
-using System.Collections.Generic;
+using NavMeshPlus.Components;
+using TMPro;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.AI;
-using Unity.AI.Navigation;
-using NavMeshPlus.Components;
-using UnityEditor.Search;
-using TMPro;
-using System;
-using System.Threading.Tasks;
 
 public class BuildingManager : MonoBehaviour
 {
