@@ -48,7 +48,7 @@ public class LongRangeTower : TargetingTower
             maxSize: 100
         );
         //Debug.Log($"[GUNNER] : SETUP DONE");
-        module.AddComponent(ComponentLibrary.PoisonComponent);
+        //module.AddComponent(ComponentLibrary.PoisonComponent);
         base.Start();
     }
 
