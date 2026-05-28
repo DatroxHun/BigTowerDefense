@@ -19352,7 +19352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingManager
   blockingLayers:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 152
   saleMultiplier: 0.8
   mainCamera: {fileID: 298566442}
   NavMeshSurface: {fileID: 1815286229}
