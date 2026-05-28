@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
+using System.Linq;
+using Unity.VectorGraphics;
 
 public class InventoryManager : MonoBehaviour
 {
     private static InventoryManager instance;
 
     private static ComponentModule module = null!;
+    [SerializeField] private ScrollBuy ScrollBuy;
     private List<InventoryItemUI> inventoryItems = new();
 
     [Header("Grid Settings")]
@@ -149,6 +152,25 @@ public class InventoryManager : MonoBehaviour
         return result;
     }
 
+    public static void HandleRotation /* Clockwise */ (InventoryItemUI item)
+    {
+        ClearItemSpace(item);
+        var maxY = item.Component.Shape.Max(s => s.y);
+        var oldShape = item.Shape;
+        item.Component.Shape = item.Component.Shape.Select(coord => new Vector2Int(-coord.y + maxY, coord.x)).ToArray();
+
+        if (!CanPlaceItem(item, item.CurrentGridPos.x, item.CurrentGridPos.y))
+        {
+            item.Shape = oldShape;
+            PlaceItem(item, item.CurrentGridPos.x, item.CurrentGridPos.y);
+            return;
+        }
+
+        PlaceItem(item, item.CurrentGridPos.x, item.CurrentGridPos.y);
+
+        item.ApplyVisualRotation(-90f);
+    }
+
     private static bool CanPlaceItem(InventoryItemUI item, int startX, int startY)
     {
         return module.Placeable(item.Component, startX, startY);
@@ -161,6 +183,15 @@ public class InventoryManager : MonoBehaviour
         // Snap visual position
         item.transform.SetParent(instance.ItemContainer, false);
         item.rectTransform.anchoredPosition = instance.GetSnappedPosition(x, y);
+        for (int i = 0; i < module.grid.GetLength(0); i++)
+        {
+            string str = "";
+            for (int j = 0; j < module.grid.GetLength(1); j++)
+            {
+                str += module.grid[i, j] is null ? "" : $"({i} , {j}) ";
+            }
+            Debug.Log(str);
+        }
     }
 
     public static bool ClearItemSpace(InventoryItemUI item)
@@ -189,7 +220,7 @@ public class InventoryManager : MonoBehaviour
         }
 
         // Initialize UI Components
-        foreach (InventoryItemUI item in instance.inventoryItems)
+        foreach (InventoryItemUI item in instance.inventoryItems.ToList())
         {
             item.Return2Pool();
         }
@@ -209,7 +240,13 @@ public class InventoryManager : MonoBehaviour
         {
             item.transform.SetParent(instance.ItemContainer, false);
 
+            var rot = component.TimesRotated % 4;
+
             item.SetComponent(component);
+            item.ApplyVisualRotation(rot * -90f);
+
+            component.TimesRotated = rot;
+
             poolable.SpawnAction(instance.GetSnappedPosition(component.position));
 
             instance.inventoryItems.Add(item);
@@ -224,6 +261,11 @@ public class InventoryManager : MonoBehaviour
     {
         instance.inventoryItems.Remove(item);
         item.Return2Pool();
+    }
+
+    public static void RefreshBar(List<ComponentType> allowedTypes)
+    {
+        instance.ScrollBuy.Refresh(allowedTypes);
     }
 
     private Vector2 GetGridOrigin()

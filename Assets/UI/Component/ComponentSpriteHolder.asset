@@ -17,3 +17,7 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 60d9fc7c92449264abb93c2914c9e443, type: 3}
   - name: poison
     sprite: {fileID: 21300000, guid: dc118abda9d33214a832d1d3aa894403, type: 3}
+  - name: machine_gun
+    sprite: {fileID: -4607316284443284028, guid: d92d096752983ef42a342d09ce19732f, type: 3}
+  - name: burn
+    sprite: {fileID: 8334651344603559088, guid: 458c07e538bb8034da9e3ffe2ae26753, type: 3}

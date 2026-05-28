@@ -13,25 +13,13 @@ public class ComponentModule
     private Dictionary<TowerStats,(float,float)> _amplificationProvider = new Dictionary<TowerStats, (float, float)>();
 
     public Vector2Int Size { get; private set; }
-    private TowerComponent[,] grid;
+    public TowerComponent[,] grid; // change back to private
 
     public ComponentModule(Vector2Int size)
     {
         this.Size = size;
         grid = new TowerComponent[size.x, size.y];
     }
-
-    /*
-    public string GenerateDescription(String towerDescription, Dictionary<TowerStats, float> stats) // style later, or maybe instead of putting the string together here we should just return a list of string and let the UI handle the putting together
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine(towerDescription);
-        foreach (var component in _advancedComponents)
-        {
-            sb.AppendLine(component.Description(stats));
-        }
-        return sb.ToString();
-    } */
 
     public Dictionary<TowerStats, float> UpdateStats(Dictionary<TowerStats, float>  baseStats)
     {
@@ -67,9 +55,9 @@ public class ComponentModule
         return Components.Select(x => x.AdvancedAttackAlteration?.AttackFactory).Where(x => x is not null).ToList(); // this may need a sort later
     }
 
-    public Func<List<Entity>,List<Entity>,List<Entity>> GetTargettingAletration()
+    public Func<(ITarget, int), (ITarget, int)> GetTargettingAletration()
     {
-        return (x, y) => { foreach (var f in Components.Select(x => x.AdvancedTargettingAlteration?.RePrioritize).Where(x => x is not null)) { y = f(x, y); }; return y; };
+        return (y) => { foreach (var f in Components.Select(x => x.AdvancedTargettingAlteration?.RePrioritize).Where(x => x is not null)) { y = f(y); }; return y; };
     }
 
     public bool AddComponent(TowerComponent component)

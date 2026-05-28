@@ -7,7 +7,7 @@ using UnityEngine;
 
 [DefaultExecutionOrder(-100)]
 public class ComponentLibrary : MonoBehaviour
-{
+{   
     private static ComponentLibrary instance;
 
     // Reference for Sprites
@@ -57,8 +57,34 @@ public class ComponentLibrary : MonoBehaviour
             (0, 0), (1, 0),
                     (1, 1)
         },
-        "Radar Module", "+20% range", 100        
+        "Radar Module", "+20% range", 100, new() {  }
     );
+
+    public static TowerComponent ElectricDamageUpgrade => new TowerComponent
+    (
+        new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.ElectricDamage, 2, 1.1f) }),
+        null, null,
+        Sprites["range"], new (int, int)[]
+        {
+            (0, 0), (1, 0),
+                    (1, 1)
+        },
+        "Battery overload", "+2 electric damage and +10% electric damage", 100, new() { ComponentType.Attack }
+    );
+
+    public static TowerComponent MachineGunUpgrade => new TowerComponent(
+            new StatAlteration(new List<(TowerStats, float, float)> { (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.PhysicalDamage, 0, 0.5f), (TowerStats.ElectricDamage, 0, 0.5f), (TowerStats.FireDamage, 0, 0.5f), (TowerStats.DirectDamage, 0, 0.5f), (TowerStats.PoisonDamage, 0 ,0.5f) }),
+            null,
+            new AdvancedTargettingAlteration((y) => (y.Item1 , y.Item2 + 1)),
+            Sprites["machine_gun"], new (int, int)[]
+            {
+                (0, 0), 
+                (0,1),  (1, 1),
+                (0,2),  
+                (0, 3), (1, 3)
+            },
+        "Machinegun", "Tower now fires twice at enemies, all damage halved", 350, new() { ComponentType.Attack }
+        );
 
     public static TowerComponent PoisonComponent => new TowerComponent
     (
@@ -71,7 +97,21 @@ public class ComponentLibrary : MonoBehaviour
                     (1, 1),
                     (1, 2)
         },
-        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350
+        "Poison Dart Frog Capsule", "5 PODMG / 0.4s", 350, new() { ComponentType.Attack }
+    );
+
+    public static TowerComponent BurnComponent => new TowerComponent
+    (
+        new(new() { (TowerStats.FireDamage, 0, 1) }),
+        new AdvancedAttackAlteration(new List<TowerStats>() { TowerStats.FireDamage }, BurnLogic),
+        null,
+        Sprites["burn"], new (int, int)[]
+        {
+                    (1, 0), 
+             (0, 1),(1, 1),(2, 1),
+                    (1, 2)
+        },
+        "Fiery Projectiles", "4 FDMG ticking down / 0.4s", 350, new() { ComponentType.Attack }
     );
 
     private static IEnumerator PoisonLogic(Dictionary<TowerStats,float> stats,Enemy enemy)
@@ -81,6 +121,19 @@ public class ComponentLibrary : MonoBehaviour
         {
             Debug.Log($"Poisoned for: {stats[TowerStats.PoisonDamage]}");
             enemy.ApplyDamage(new DamageObj() { poison = stats[TowerStats.PoisonDamage] });
+            yield return wait;
+        }
+    }
+
+    private static IEnumerator BurnLogic(Dictionary<TowerStats, float> stats, Enemy enemy)
+    {
+        var wait = new WaitForSeconds(0.5f);
+        int ticks = 6; // 3 seconds total duration
+
+        while (enemy.IsAlive && ticks > 0)
+        {
+            enemy.ApplyDamage(new DamageObj() { fire = stats[TowerStats.FireDamage] / 2f + 4 });
+            ticks--;
             yield return wait;
         }
     }

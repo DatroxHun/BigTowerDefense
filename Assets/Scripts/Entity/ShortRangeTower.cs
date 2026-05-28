@@ -57,11 +57,11 @@ public class ShortRangeTower : TargetingTower
             return;
 
         //Debug.Log($"[TESLA COIL] : DISCHARGING");
-
-        IEnumerable<Vector3> closestTargets = CurrentTarget
+        var (alteredTarget , alteredNum) = module.GetTargettingAletration()((CurrentTarget,3));
+        IEnumerable<Vector3> closestTargets = alteredTarget
             .GetCoordinates()
             .OrderBy(x => Vector3.Distance(transform.position, x))
-            .Take(3);
+            .Take(alteredNum);
 
         DamageObj dmg = AttackDamage;
 
