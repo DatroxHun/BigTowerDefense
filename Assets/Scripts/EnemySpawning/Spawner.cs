@@ -162,8 +162,8 @@ public class Spawner : MonoBehaviour
                         },
                         actionOnDestroy: (obj) => Destroy(obj.Object),
                         collectionCheck: true,
-                        defaultCapacity: 100,
-                        maxSize: 500
+                        defaultCapacity: 500,
+                        maxSize: 2000
                     );
 
                     // add new object pool to dictionary refered to by the spawned enemy type as key

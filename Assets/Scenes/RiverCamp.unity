@@ -3092,7 +3092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   road: {fileID: 1120785920}
-  spawnObject: {fileID: 11400000, guid: 2dbc8ac9bc37ded4b93bbb1e49522340, type: 2}
+  spawnObject: {fileID: 11400000, guid: 48358f0a043dd144ca3bff2c299622a1, type: 2}
   nextWaveButton: {fileID: 778958545}
   spawnRadius: 0.1
 --- !u!1001 &245710517
@@ -47109,7 +47109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   road: {fileID: 1369329747}
-  spawnObject: {fileID: 11400000, guid: 2dbc8ac9bc37ded4b93bbb1e49522340, type: 2}
+  spawnObject: {fileID: 11400000, guid: 7ad32fb6beb09a54483c5fd9eecbf49a, type: 2}
   nextWaveButton: {fileID: 778958545}
   spawnRadius: 0.1
 --- !u!1 &1030724006
@@ -58330,7 +58330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   road: {fileID: 1799923277}
-  spawnObject: {fileID: 11400000, guid: 2dbc8ac9bc37ded4b93bbb1e49522340, type: 2}
+  spawnObject: {fileID: 11400000, guid: c1e013e1a3abf0c479cbcdb1e264ba4d, type: 2}
   nextWaveButton: {fileID: 778958545}
   spawnRadius: 0.1
 --- !u!1001 &2083104218
