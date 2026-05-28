@@ -5701,7 +5701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5132c87f477b07c4e88f20afeea4c6ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
-  ScrollBuy: {fileID: 0}
+  ScrollBuy: {fileID: 2013211236}
   gridLayout: {fileID: 2121323220}
   cellPrefab: {fileID: 7329242711731123908, guid: f08dd9c7393f1624380c4b220f52333b, type: 3}
   <ItemContainer>k__BackingField: {fileID: 989884870}
