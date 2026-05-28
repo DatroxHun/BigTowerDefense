@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
-    [Header("References")]
     [SerializeField] private Road road = null!;
     [SerializeField] private SpawnObject spawnObject = null!;
 
@@ -17,38 +16,33 @@ public class Spawner : MonoBehaviour
 
     [SerializeField] private float spawnRadius = .1f;
 
-    // wave variables
     public int CurrentWave { get; private set; } = 0;
-    private static int waveDeposit = 0;
-    private Coroutine? waveCoroutine = null;
-    public static bool waveOnGoing { get => EnemyManager.instance.Enemies.Any(x => x.IsAlive) || spawners.Any(y => y.waveCoroutine != null); }
 
-    // object pools
-    public Dictionary<int, ObjectPool<IPoolable>> ObjectPools { get; private set; } = new();
-
-    // static variables
     public static Spawner mainSpawner = null!;
     public static List<Spawner> spawners = new();
     public static event System.Action WaveStarted = null!;
     public static event System.Action WaveEnded = null!;
 
+    public Dictionary<int, ObjectPool<IPoolable>> ObjectPools { get; private set; } = new();
 
+
+    private Coroutine? waveCoroutine = null;
+    public static bool waveOnGoing { get => EnemyManager.instance.Enemies.Any(x => x.IsAlive) || spawners.Any(y => y.waveCoroutine != null); }
+    private static int waveDeposit = 0;
 
     void Start()
     {
-        // append spawners list
         spawners.Add(this);
 
-        // select main spawner
         if (mainSpawner == null)
         {
+            // ONLY IF THIS IS MAIN SPAWNER
             mainSpawner = this;
 
-            // MAIN SPAWNER INITIALIZATION: event handling
             WaveStarted += () =>
             {
                 // check if wave ongoing -> return
-                if (waveOnGoing || spawners.All(x => x.CurrentWave >= x.spawnObject.waves.Count))
+                if (waveOnGoing)
                     return;
 
                 // heal towers
@@ -66,14 +60,14 @@ public class Spawner : MonoBehaviour
                 // reset deposit
                 waveDeposit = 0;
 
-                // global sideeffects
+                // global stuff
                 AudioManager.PlayBGM(Clip.BattleBGM);
                 nextWaveButton.interactable = false;
             };
 
             WaveEnded += () =>
             {
-                // global sideeffects
+                // global stuff
                 AudioManager.PlayBGM(Clip.CalmBGM);
                 nextWaveButton.interactable = true;
 
@@ -96,17 +90,20 @@ public class Spawner : MonoBehaviour
             };
         }
 
-        // NORMAL AND MAIN SPAWNER INITS: init object pools
+        // NORMAL AND MAIN SPAWNER INITS
         InitializePools();        
     }
 
-    public void StartWave() => WaveStarted?.Invoke();
+    public void StartWave()
+    {
+        if (!waveOnGoing && spawners.Any(x => x.CurrentWave < x.spawnObject.waves.Count))
+            WaveStarted?.Invoke();
+    }
 
     private void InitializePools()
     {
         ObjectPools.Clear();
 
-        // iterate through all enemies present in spawnObject
         foreach (Wave wave in spawnObject.waves)
         {
             foreach (Batch batch in wave.batches)
@@ -119,18 +116,15 @@ public class Spawner : MonoBehaviour
                     (
                         createFunc: () =>
                         {
-                            // instantiate object
                             GameObject obj = Instantiate(batch.enemy.gameObject);
                             obj.transform.parent = EnemyManager.instance.gameObject.transform;
                             obj.SetActive(false);
 
-                            // set road to follow
                             if (!obj.TryGetComponent<Enemy>(out Enemy enemy))
                                 throw new MissingComponentException("Spawner: Enemy component is missing from enemy.");
 
                             enemy.SetRoad(road);
 
-                            // set parent pool
                             if (!obj.TryGetComponent<IPoolable>(out IPoolable poolable))
                                 throw new MissingComponentException("Spawner: IPoolable component is missing from enemy.");
                             
@@ -143,7 +137,6 @@ public class Spawner : MonoBehaviour
                         {
                             obj.Object.SetActive(true);
 
-                            // track live enemies in enemy manager
                             if (!obj.Object.TryGetComponent<Enemy>(out Enemy enemy))
                                 throw new MissingComponentException("Spawner: Enemy component is missing from enemy.");
                             else
@@ -153,8 +146,6 @@ public class Spawner : MonoBehaviour
                         actionOnRelease: (obj) =>
                         {
                             obj.Object.SetActive(false);
-
-                            // untrack dead enemies in enemy manager
                             if (!obj.Object.TryGetComponent<Enemy>(out Enemy enemy))
                                 throw new MissingComponentException("Spawner: Enemy component is missing from enemy.");
                             else
@@ -162,11 +153,10 @@ public class Spawner : MonoBehaviour
                         },
                         actionOnDestroy: (obj) => Destroy(obj.Object),
                         collectionCheck: true,
-                        defaultCapacity: 500,
-                        maxSize: 2000
+                        defaultCapacity: 100,
+                        maxSize: 500
                     );
 
-                    // add new object pool to dictionary refered to by the spawned enemy type as key
                     ObjectPools.Add(batch.enemy.GetInstanceID(), newPool);
                 }
             }
@@ -180,11 +170,8 @@ public class Spawner : MonoBehaviour
             for (int i = 0; i < batch.amount; i++)
             {
                 IPoolable pooled = ObjectPools[batch.enemy.GetInstanceID()].Get();
-
-                // call spawn action with desired position
                 Vector3 offset = (Vector3)Random.insideUnitCircle * spawnRadius;
-                //Vector3 spawnPos = road.SplineContainer.gameObject.transform.position + offset;
-                Vector3 spawnPos = transform.position + offset;
+                Vector3 spawnPos = road.SplineContainer.gameObject.transform.position + offset;
                 spawnPos.z = 0;
                 pooled.SpawnAction(spawnPos);
 
@@ -193,14 +180,14 @@ public class Spawner : MonoBehaviour
             }
         }
 
-        // start
+        // Start
         Debug.Log($"Starting Wave: {waveIdx}");
         Wave wave = spawnObject.waves[waveIdx];
 
-        // initial delay
+        // Initial Delay
         yield return new WaitForSeconds(wave.delay);
 
-        // batch execution
+        // Batch Execution
         foreach (Batch batch in wave.batches)
         {
             StartCoroutine(ExecuteBatch(batch));
@@ -208,17 +195,17 @@ public class Spawner : MonoBehaviour
             yield return new WaitForSeconds(batch.duration);
         }
 
-        // signal that this Spawner is finished
+        // Signal that this Spawner is finished
         waveDeposit += wave.reward;
         waveCoroutine = null;
 
-        // only end waves if this is the last spawner
+        // I am the last spawner to finish
         if (spawners.All(x => x.waveCoroutine == null))
         {
-            // wait until all enemies are dead
+            // Wait until all enemies are dead
             yield return new WaitWhile(() => EnemyManager.instance.Enemies.Any(x => x.IsAlive));
 
-            // call end wave
+            // Call end wave
             WaveEnded?.Invoke();
         }
     }
@@ -228,13 +215,13 @@ public class Spawner : MonoBehaviour
         // all spawners
         spawners.Remove(this);
 
-        // if this was the main spawner, clean up the global state
+        // If this was the main spawner, clean up the global state
         if (mainSpawner == this)
         {
             mainSpawner = null!;
             spawners.Clear();
 
-            // clear all event subscribers so dead scripts don't listen
+            // Clear all event subscribers so dead scripts don't listen
             WaveStarted = null!;
             WaveEnded = null!;
         }

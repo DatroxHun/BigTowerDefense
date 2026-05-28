@@ -68,7 +68,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 4
+  m_Radius: 3
 --- !u!1 &1896896672562629526
 GameObject:
   m_ObjectHideFlags: 0
@@ -5319,8 +5319,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1571518799934388734}
-  - {fileID: 2578903516831042803}
   - {fileID: 2667444888841809061}
+  - {fileID: 2578903516831042803}
   - {fileID: 5166349852187458724}
   - {fileID: 3747723046819116630}
   m_Father: {fileID: 0}
@@ -5367,7 +5367,7 @@ MonoBehaviour:
     fire: 0
     electric: 0
     poison: 0
-  maxHitPoints: 150
+  maxHitPoints: 100
   <Price>k__BackingField: 300
   moduleSize: {x: 11, y: 5}
   baseStatsInit:
@@ -5376,7 +5376,7 @@ MonoBehaviour:
   sprite: {fileID: 3449611193212260066}
   rangeIndicator: {fileID: 7363862685985636408}
   fireParticleSystem: {fileID: 5908177939585928423}
-  actiondelaySeconds: 1.5
+  actiondelaySeconds: 2
 --- !u!61 &6761880317293435025
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5541,7 +5541,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 1}
+  m_LocalScale: {x: 6, y: 6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2667444888841809061}
@@ -5769,10 +5769,6 @@ PrefabInstance:
     - target: {fileID: 415118027956999507, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2956669621059732525, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
-      propertyPath: tooltipContent
-      value: "240\u20AC"
       objectReference: {fileID: 0}
     - target: {fileID: 3692680741697070841, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_AnchorMax.y

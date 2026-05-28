@@ -3,6 +3,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -29,21 +31,18 @@ public abstract class Enemy : Entity, IPoolable
     // IPoolable
     public GameObject Object => gameObject;
     public IObjectPool<IPoolable> Pool { get; set; } = null!;
+    public void Return2Pool()
+    {
+        // stop cycles        
+        StopAllCycles();
+
+        blackList.Clear();
+        Pool.Release(this);
+    }
 
     // Productivity
     protected HashSet<Tower> blackList = new();
 
-    // Brain Cycles
-    const float scanInterval = 0.5f;
-    const float motivationCheckInterval = 0.5f;
-    [SerializeField] protected float attackInterval = 1f;
-
-    protected Coroutine? scanCycle = null;
-    protected Coroutine? motivationCycle = null;
-    protected Coroutine? attackCycle = null;
-
-
-    #region Life Course
 
     private void TurnSprite(float currentX)
     {
@@ -61,43 +60,30 @@ public abstract class Enemy : Entity, IPoolable
 
     public void SpawnAction(Vector3 position)
     {
-        // emit smoke
         ParticlePool.Emit(position, ParticleType.Smoke);
 
-        // set position and reset target
         transform.position = position;
+        //ResetVisuals();
         CurrentTarget = null;
 
         // regenerate health
         HitPoints = MaxHitPoints;
 
         WalkOnRoad();
+        //walker.WalkOnRoad(road, globalCallback: Return2Pool);
 
-        // reset productivity check    
         blackList.Clear();
     }
 
-    public void Return2Pool()
-    {
-        // reset animation
-        ResetVisuals();
+    // Brain Cycles
+    const float scanInterval = 0.5f;
+    const float motivationCheckInterval = 0.5f;
+    [SerializeField]
+    protected float attackInterval = 1f;
 
-        // stop cycles and reset productivity check    
-        StopAllCycles();
-        blackList.Clear();
-
-        Pool.Release(this);
-    }
-
-    protected override void JustDied()
-    {
-        base.JustDied();
-        Return2Pool();
-    }
-
-    #endregion
-
-    #region Brain
+    Coroutine? scanCycle = null;
+    protected Coroutine? motivationCycle = null;
+    protected Coroutine? attackCycle = null;
 
     private void StopAllCycles()
     {
@@ -106,12 +92,10 @@ public abstract class Enemy : Entity, IPoolable
         if (attackCycle != null) StopCoroutine(attackCycle);
     }
 
-    /// <summary>
-    /// Start walking on asigned road. After specified delay starts scanning.
-    /// </summary>
-    /// <param name="scanDelay">scanning start delay</param>
     protected void WalkOnRoad(float scanDelay = 0f)
     {
+
+
         walker.WalkOnRoad(road, globalCallback: () =>
         {
             // at the end of the road find base tower
@@ -124,11 +108,6 @@ public abstract class Enemy : Entity, IPoolable
         scanCycle = StartCoroutine(Scan(scanDelay));
     }
  
-    /// <summary>
-    /// Start walking towards specified enemy. Stop when desired distance is reached.
-    /// </summary>
-    /// <param name="entity">entity to walk to</param>
-    /// <param name="radius">distance to stop at</param>
     protected virtual void WalkToEntity(Entity entity, float radius)
     {
         walker.WalkOnPath(entity.transform.position, radius, () => 
@@ -154,8 +133,7 @@ public abstract class Enemy : Entity, IPoolable
             // keep searching for target until finding one         
             Target();
 
-            // found target
-            if (CurrentTarget is not null)
+            if (CurrentTarget is not null) // found target
             {
                 doScan = false;
 
@@ -165,7 +143,7 @@ public abstract class Enemy : Entity, IPoolable
                 }
                 else
                 {
-                    Debug.LogError("Not intended target class!");
+                    throw new System.Exception("Not intended target class!");
                 }
             }
         }
@@ -174,7 +152,6 @@ public abstract class Enemy : Entity, IPoolable
     protected IEnumerator MotivationCheck()
     {
         bool doCheck = true;
-        Vector3? prevPos = null;
 
         void LoseInterest()
         {
@@ -182,6 +159,8 @@ public abstract class Enemy : Entity, IPoolable
             CurrentTarget = null;
             WalkOnRoad(scanDelay: 5f); // starts scanning after delay
         }
+
+        Vector3? prevPos = null;
 
         while (doCheck)
         {
@@ -195,8 +174,8 @@ public abstract class Enemy : Entity, IPoolable
             }
             else
             {
-                // if target for any reason not entity
                 LoseInterest();
+                //throw new System.Exception("Not intended target class!");
             }
 
             // calculate average speed for last motivationCheckInterval
@@ -204,14 +183,12 @@ public abstract class Enemy : Entity, IPoolable
             if (prevPos != null)
                 avgSpeed = Vector3.Distance(walker.transform.position, prevPos.Value) / motivationCheckInterval;
 
-            // if not pathfinding OR avg speed is too low OR entity no longer exists
+            // if not pathfinding or avg speed is too low or entity no longer exists -> go back on road and scan
             if (walker.Mode != WalkModes.Pathfind || avgSpeed < walker.Speed / 4f || tower == null || !tower.IsAlive)
             {
-                // go back on road and scan
                 LoseInterest();
             }
 
-            // update prevPos
             prevPos = walker.transform.position;
         }
     }
@@ -219,7 +196,7 @@ public abstract class Enemy : Entity, IPoolable
     protected virtual IEnumerator Attack()
     {
         bool doAttack = true;
-        
+
         void StopAttack()
         {
             doAttack = false;
@@ -227,7 +204,7 @@ public abstract class Enemy : Entity, IPoolable
             WalkOnRoad(scanDelay: 1f); // starts scanning after delay
         }
 
-        // ensure a valid target before starting
+        // Ensure a valid target before starting
         if (CurrentTarget is not EntityTarget initialTarget || initialTarget.entity == null)
             yield break;
 
@@ -235,8 +212,7 @@ public abstract class Enemy : Entity, IPoolable
         int attackCounter = 0;
         float targetHealthSnapshot = initialTarget.entity.HitPoints;
 
-        // rotate sprite correctly
-        TurnSprite(initialTarget.entity.transform.position.x - transform.position.x);
+        TurnSprite((initialTarget.GetCoordinates().First() - transform.position).x);
 
         while (doAttack)
         {
@@ -244,54 +220,51 @@ public abstract class Enemy : Entity, IPoolable
 
             if (CurrentTarget is EntityTarget target)
             {
-                // check if the tower was destroyed or hid WHILE waiting
+                // Check if the tower was destroyed or hid WHILE we were waiting
                 if (target.entity == null || !target.entity.IsAlive || (target.entity is Tower t_hide && t_hide.Hiding))
                 {
                     StopAttack();
-                    yield break;
+                    yield break; // Exit coroutine immediately
                 }
 
                 // Productivity Check
                 if (attackCounter > 0 && attackCounter % 5 == 0)
                 {
-                    // if health stayed the same or increased (except BaseTower)
-                    if (target.entity.HitPoints >= targetHealthSnapshot && target.entity is Tower t && t is not BaseTower)
+                    // if health stayed the same or increased
+                    if (target.entity.HitPoints - targetHealthSnapshot >= 0 && target.entity is Tower t && t is not BaseTower)
                     {
-                        // add to blackList and move on
                         blackList.Add(t);
                         StopAttack();
-                        yield break;
+                        yield break; // Exit immediately
                     }
 
-                    // update snapshot
+                    // Update snapshot
                     targetHealthSnapshot = target.entity.HitPoints;
                 }
 
-                // target is confirmed alive and we are productive, attack!
+                // Target is confirmed alive and we are productive. Attack!
                 Action();
-                attackCounter++;
+                attackCounter++;                
             }
             else
             {
-                Debug.LogError("Not intended target class!");
+                throw new System.Exception("Not intended target class!");
             }
         }
     }
 
-    #endregion
-
-    #region Attack
+    
 
     // protected override void Target()
     protected virtual void Target()
     {
         IEnumerable<Entity> targets = TowerManager.instance.Towers
             .Where(t =>
-                t != null &&                                        // not null
-                t.IsAlive &&                                        // alive
-                !t.Hiding &&                                        // not hiding
-                !blackList.Contains(t) &&                           // not blacklisted
-                rangeCollider.OverlapPoint(t.transform.position))   // inside range
+                t != null &&
+                t.IsAlive &&
+                !t.Hiding &&
+                !blackList.Contains(t) && 
+                rangeCollider.OverlapPoint(t.transform.position))
             .Select(t => t as Entity);
 
         if (targets.Any())
@@ -300,23 +273,24 @@ public abstract class Enemy : Entity, IPoolable
         }
     }
 
-    public override void ApplyDamage(DamageObj dobj)
+    protected override void JustDied()
     {
-        // trigger hurt animation
-        animator.SetTrigger("hurt");
-
-        // apply damage the usual way
-        base.ApplyDamage(dobj);
+        base.JustDied();
+        ResetVisuals();
+        Return2Pool();
     }
 
-    #endregion
+    public override void ApplyDamage(DamageObj dobj)
+    {
+        animator.SetTrigger("hurt");
+        base.ApplyDamage(dobj);
+    }
 
     /// <summary>
     /// Reset animated properties.
     /// </summary>
-    protected void ResetVisuals()
+    void ResetVisuals()
     {
-        // reset sprite
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
         sr.color = Color.white;
         sr.transform.localScale.Set(
@@ -325,7 +299,6 @@ public abstract class Enemy : Entity, IPoolable
             sr.transform.localScale.z
         );
 
-        // reset animation
         Animator anim = GetComponentInChildren<Animator>();
 
         anim.gameObject.transform.position = Vector3.zero;
@@ -335,5 +308,6 @@ public abstract class Enemy : Entity, IPoolable
         anim.Rebind();
         anim.Update(0);
         anim.Play("slime");
+
     }
 }

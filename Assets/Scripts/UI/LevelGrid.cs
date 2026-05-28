@@ -12,7 +12,8 @@ public class LevelGrid : MonoBehaviour
 
     void Start()
     {
-        for (int i = 1; i <= levelCount; i++)
+        //for (int i = 1; i <= levelCount; i++)
+        for (int i = 3; i <= levelCount; i++)
         {
             int localIdx = i;
             GameObject selector = Instantiate(levelSelector);
@@ -28,8 +29,8 @@ public class LevelGrid : MonoBehaviour
             img.color = backgroundGradient.Evaluate((Mathf.PI * i) % 1f);
 
             TextMeshProUGUI text = selector.GetComponentInChildren<TextMeshProUGUI>();
-            text.text = $"{i}";
-            //text.text = "T";
+            //text.text = $"{i}";
+            text.text = "T";
             text.color = backgroundGradient.Evaluate((Mathf.PI * i) % 1f) * Color.grey * Color.lightGray;
         }
     }

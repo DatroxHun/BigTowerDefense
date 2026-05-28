@@ -36,11 +36,7 @@ public class AudioManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-
-            // keeps audio playing between scene loads
-            DontDestroyOnLoad(gameObject);
-
-            // setups
+            DontDestroyOnLoad(gameObject); // keeps audio playing between scene loads
             InitializePool();
             SetupBGMSources();
         }
@@ -52,7 +48,6 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        // start with playing basic background music
         PlayBGM(Clip.CalmBGM);
     }
 
@@ -89,11 +84,9 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public static void PlaySFX(Clip clip, float volume = 1f, float minPitch = 1f, float maxPitch = 1f)
     {
-        ClipElement element = instance.clips.FirstOrDefault(x => x.key == clip);
-
-        if (element != null)
+        if (instance.clips.Any(x => x.key == clip))
         {
-            PlaySFX(element.value, volume, minPitch, maxPitch);
+            PlaySFX(instance.clips.First(x => x.key == clip).value, volume, minPitch, maxPitch);
         }
         else
         {
@@ -102,17 +95,15 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays an SFX. Optionally pass pitch constraints to randomize it.
+    /// Plays an SFX. Optionally pass pitch constraints to randomize it!
     /// </summary>
     public static void PlaySFX(AudioClip clip, float volume = 1f, float minPitch = 1f, float maxPitch = 1f)
     {
         if (clip == null || instance == null) return;
 
-        // get next source to play clip
         AudioSource source = instance.sfxPool[instance.sfxPoolIndex];
         instance.sfxPoolIndex = (instance.sfxPoolIndex + 1) % instance.sfxPoolSize;
 
-        // set and play
         source.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
         source.volume = volume;
         source.clip = clip;
@@ -122,11 +113,9 @@ public class AudioManager : MonoBehaviour
     // --- BACKGROUND MUSIC ---
     public static void PlayBGM(Clip clip, float fadeDuration = 2.5f)
     {
-        ClipElement element = instance.clips.FirstOrDefault(x => x.key == clip);
-
-        if (element != null)
+        if (instance.clips.Any(x => x.key == clip))
         {
-            PlayBGM(element.value, fadeDuration);
+            PlayBGM(instance.clips.First(x => x.key == clip).value, fadeDuration);
         }
         else
         {
@@ -138,30 +127,23 @@ public class AudioManager : MonoBehaviour
     {
         if (newClip == null || instance == null) return;
 
-        // get source indexes
         int activeSource = instance.activeBgmIndex;
         int nextSource = 1 - instance.activeBgmIndex;
 
         // don't restart the track if it's already playing
         if (instance.bgmSources[activeSource].clip == newClip) return;
 
-        // get sources
         AudioSource fadeOutSource = instance.bgmSources[activeSource];
         AudioSource fadeInSource = instance.bgmSources[nextSource];
-
-        // refresh active source
         instance.activeBgmIndex = nextSource;
 
-        // cancel transition if any ongoing
         if (instance.bgmFade != null)
             LeanTween.cancel(instance.gameObject, instance.bgmFade.uniqueId);
 
-        // parameterize new source
         if (fadeInSource.clip != newClip)
         {
             fadeInSource.clip = newClip;
             fadeInSource.volume = 0f;
-            fadeInSource.pitch = 1f;
             fadeInSource.Play();
         }
         else if (!fadeInSource.isPlaying)
@@ -169,7 +151,6 @@ public class AudioManager : MonoBehaviour
             fadeInSource.Play();
         }
 
-        // fade
         float startVolIn = fadeInSource.volume;
         float startVolOut = fadeOutSource.volume;
 
@@ -195,13 +176,11 @@ public class AudioManager : MonoBehaviour
     {
         if (instance == null) return;
 
-        // cancel transition if any ongoing
         if (instance.bgmPitch != null)
             LeanTween.cancel(instance.gameObject, instance.bgmPitch.uniqueId);
 
         float currentPitch = instance.bgmSources[instance.activeBgmIndex].pitch;
 
-        // transition
         instance.bgmPitch = 
         LeanTween.value(instance.gameObject, (float val) =>
         {
