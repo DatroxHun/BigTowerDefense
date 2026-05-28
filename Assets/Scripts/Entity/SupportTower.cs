@@ -36,7 +36,7 @@ public class SupportTower : Tower
 
         List<Func<Tower, IEnumerator>> towerEffects = new()
         {
-            tower => Effects.InstantHeal(tower, 10)
+            tower => Effects.InstantHeal(tower, 20)
         };
 
         List<Func<Enemy, IEnumerator>> enemyEffects = new()
