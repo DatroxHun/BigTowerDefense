@@ -759,7 +759,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a39e055998cf474dae8ea90b865d7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TooltipTrigger
-  tooltipContent: '?'
+  tooltipContent: "1000\u20AC"
 --- !u!224 &6634959798078712522 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5988730577730823123, guid: f0c03f935cc0a02408391c97e6293265, type: 3}

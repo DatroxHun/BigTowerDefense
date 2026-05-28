@@ -86,7 +86,8 @@ public class Road : MonoBehaviour
         List<Vector2> colliderPoints = new List<Vector2>();
         for (int i = 0; i < linePoints.Length; i++)
         {
-            colliderPoints.Add(new Vector2(linePoints[i].x, linePoints[i].y));
+            Debug.Log(SplineContainer.transform.localPosition[0]);
+            colliderPoints.Add(new Vector2(linePoints[i].x + SplineContainer.transform.localPosition[0], this.transform.localPosition[0] + linePoints[i].y + SplineContainer.transform.localPosition[1]));
         }
         edgeCollider.SetPoints(colliderPoints);
 
