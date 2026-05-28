@@ -241,7 +241,6 @@ public class InventoryManager : MonoBehaviour
             item.transform.SetParent(instance.ItemContainer, false);
 
             var rot = component.TimesRotated % 4;
-            Debug.Log("Rot: " + rot);
 
             item.SetComponent(component);
             item.ApplyVisualRotation(rot * -90f);
