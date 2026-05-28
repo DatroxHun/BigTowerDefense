@@ -5492,6 +5492,11 @@ MonoBehaviour:
   baseStatsInit:
   - towerStats: 0
     value: 100
+  - towerStats: 1
+    value: 3
+  - towerStats: 3
+    value: 7
+  allowedTypes: 01000000
   sprite: {fileID: 8737716004245306509}
   rangeIndicator: {fileID: 6924109932476465719}
   fireParticleSystem: {fileID: 8274448620475730624}
