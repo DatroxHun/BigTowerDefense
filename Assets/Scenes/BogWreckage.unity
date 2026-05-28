@@ -21986,7 +21986,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a39e055998cf474dae8ea90b865d7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TooltipTrigger
-  tooltipContent: '?'
+  tooltipContent: "300\u20AC"
 --- !u!1 &1373392161
 GameObject:
   m_ObjectHideFlags: 0
@@ -23038,7 +23038,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a39e055998cf474dae8ea90b865d7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TooltipTrigger
-  tooltipContent: '?'
+  tooltipContent: "500\u20AC"
 --- !u!1 &1463447217
 GameObject:
   m_ObjectHideFlags: 0
@@ -23910,7 +23910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a39e055998cf474dae8ea90b865d7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TooltipTrigger
-  tooltipContent: '?'
+  tooltipContent: "400\u20AC"
 --- !u!1 &1547221028
 GameObject:
   m_ObjectHideFlags: 0

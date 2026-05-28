@@ -5594,6 +5594,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2956669621059732525, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
+      propertyPath: tooltipContent
+      value: "320\u20AC"
+      objectReference: {fileID: 0}
     - target: {fileID: 3497329622584342799, guid: f0c03f935cc0a02408391c97e6293265, type: 3}
       propertyPath: m_Enabled
       value: 1
