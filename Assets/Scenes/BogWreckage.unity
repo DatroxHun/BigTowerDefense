@@ -2596,7 +2596,7 @@ GameObject:
   m_Component:
   - component: {fileID: 234393467}
   - component: {fileID: 234393468}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12321,7 +12321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 441507411}
   - component: {fileID: 441507412}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17710,7 +17710,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1001449326}
   - component: {fileID: 1001449327}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18761,7 +18761,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1088930068}
   - component: {fileID: 1088930067}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Spline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19353,7 +19353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingManager
   blockingLayers:
     serializedVersion: 2
-    m_Bits: 152
+    m_Bits: 2200
   saleMultiplier: 0.8
   mainCamera: {fileID: 298566442}
   NavMeshSurface: {fileID: 1815286229}
@@ -19420,7 +19420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1120785919}
   - component: {fileID: 1120785920}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Road
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19470,7 +19470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1133373426}
   - component: {fileID: 1133373427}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21058,7 +21058,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1284483216}
   - component: {fileID: 1284483215}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Spline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22798,7 +22798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1450340951}
   - component: {fileID: 1450340952}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25735,7 +25735,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1777701049}
   - component: {fileID: 1777701050}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25825,7 +25825,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 408
+    m_Bits: 2456
   m_UseGeometry: 1
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -27706,7 +27706,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2018509482}
   - component: {fileID: 2018509481}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Road (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28840,7 +28840,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2121958679}
   - component: {fileID: 2121958678}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28980,7 +28980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2122685090}
   - component: {fileID: 2122685091}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
