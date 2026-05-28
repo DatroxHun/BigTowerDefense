@@ -110,6 +110,7 @@ public class BuildingManager : MonoBehaviour
         currentGhost = Instantiate(towerPrefab);
         
         Tower script = currentGhost.GetComponent<Tower>();
+        script.SetRangeIndicatorVisiblity(true);
         script.enabled = false;
         TowerManager.instance.RemoveTower(script);
         
