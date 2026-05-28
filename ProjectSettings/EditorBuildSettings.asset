@@ -9,14 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: b6e47829c33b1704493afb00baa998f2
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
-    guid: 66c9d5dded03e184cad9e1186e880bdc
-  - enabled: 1
-    path: Assets/Scenes/Level2.unity
-    guid: 5093e149ae31cc04da379797066aad6c
-  - enabled: 1
     path: Assets/Scenes/Level3.unity
     guid: 6c7fd73067209f34fb16c141cd08bd92
+  - enabled: 1
+    path: Assets/Scenes/BogWreckage.unity
+    guid: d3cd746f9b4270d409ca5069c892a411
+  - enabled: 1
+    path: Assets/Scenes/RiverCamp.unity
+    guid: f1612252c43827f4b8dcf1e4cb2b39b0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
