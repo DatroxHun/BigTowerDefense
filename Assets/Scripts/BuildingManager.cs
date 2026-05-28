@@ -205,6 +205,9 @@ public class BuildingManager : MonoBehaviour
     {
         SellForResources(tower.Price);
         TowerManager.instance.RemoveTower(tower);
+
+        TooltipManager.HideTooltip();
+
         Destroy(tower.gameObject);
         RefreshNavMesh();
     }
@@ -216,6 +219,8 @@ public class BuildingManager : MonoBehaviour
 
         // play vfx (dust particles?)
         ParticlePool.Emit(obstacle.transform.position, ParticleType.Smoke);
+
+        TooltipManager.HideTooltip();
 
         Destroy(obstacle.gameObject);
         RefreshNavMesh();
